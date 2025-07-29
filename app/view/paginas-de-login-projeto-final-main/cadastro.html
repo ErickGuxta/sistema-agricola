@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style-register.css">
+  <title>AgroMiz - Cadastro</title>
+
+</head>
+<body>
+  <div class="container">
+    <div class="form-section">
+      <div class="logo-box">
+        <div class="logo-row">
+          <img src="img/image 6.png" alt="Logo AgroMiz" class="logo-img">
+          <h1 class="logo-title">AgroMiz</h1>
+        </div>
+        <p class="subtitle">Boas-vindas ao FazendaGestor</p>
+      </div>
+
+      <h2>Registre-se</h2>
+
+      <form>
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" placeholder="Nome do proprietário">
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="E-mail">
+
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" placeholder="Senha">
+
+        <div class="termos-botao">
+          <div class="checkbox">
+            <input type="checkbox" id="termos">
+            <label for="termos">Aceito os termos e condições</label>
+          </div>
+          <button type="button" onclick="validarFormulario()">Próximo</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="image-section">
+      <img src="img/571dd391-3b9a-4fdb-a325-f98832f87cd7 1.png" alt="Ilustração de fazendeiro">
+    </div>
+  </div>
+
+  <script>
+    function validarFormulario() {
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const senha = document.getElementById("senha").value.trim();
+      const termos = document.getElementById("termos").checked;
+
+      if (!nome || !email || !senha) {
+        alert("Preencha todos os campos.");
+        return;
+      }
+
+      if (!email.includes("@") || !email.endsWith("@gmail.com")) {
+        alert("O e-mail deve ser do tipo @gmail.com.");
+        return;
+      }
+
+      if (!termos) {
+        alert("Você deve aceitar os termos e condições.");
+        return;
+      }
+
+      window.location.href = "registro.html";
+    }
+  </script>
+</body>
+</html>

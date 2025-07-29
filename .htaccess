@@ -1,0 +1,9 @@
+Options +indexes
+
+RewriteEngine On
+RewriteBase /curso-mvc-mysql/App/
+
+# Redireciona todas as requisições para o arquivo index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
