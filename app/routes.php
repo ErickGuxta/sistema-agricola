@@ -18,9 +18,9 @@ switch ($url) {
     case 'registro': // Adicionada a rota register
         UsuarioController::index();
         break;
-    case 'registro-propriedade':
-        PropriedadeController::index();
-        break;
+    // case 'registro-propriedade':
+    //     PropriedadeController::index();
+    //     break;
     default:
         echo "Pagina não encontrada - 404";
         break;

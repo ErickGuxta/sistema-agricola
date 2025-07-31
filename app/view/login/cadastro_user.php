@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/sistema-agricola/app/view/styles/style-register.css">
   <title>AgroMiz - Cadastro</title>
-  <link rel="stylesheet" href="../styles/style-register.css">
 </head>
 <body>
   <div class="container">
     <div class="form-section">
       <div class="logo-box">
         <div class="logo-row">
-          <img src="img/image 6.png" alt="Logo AgroMiz" class="logo-img">
+          <img src="/sistema-agricola/app/view/img/image 6.png" alt="Logo AgroMiz" class="logo-img">
           <h1 class="logo-title">AgroMiz</h1>
         </div>
         <p class="subtitle">Boas-vindas ao FazendaGestor</p>

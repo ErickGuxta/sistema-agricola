@@ -12,7 +12,7 @@
     <div class="form-section">
       <div class="logo-box">
         <div class="logo-row">
-          <img src="img/image 6.png" alt="Logo AgroMiz" class="logo-img">
+          <img src="../img/image 6.png" alt="Logo AgroMiz" class="logo-img">
           <h1 class="logo-title">AgroMiz</h1>
         </div>
       </div>
