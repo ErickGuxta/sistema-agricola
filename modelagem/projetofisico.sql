@@ -27,10 +27,11 @@ CREATE TABLE Categoria (
 
 CREATE TABLE Propriedade (
     id_propriedade INT UNSIGNED AUTO_INCREMENT,
+    fk_Usuario_id_usuario INT UNSIGNED NOT NULL,
+
     nome_propriedade VARCHAR(100) NOT NULL,
     area_total DECIMAL(10,2) NOT NULL,
     localizacao VARCHAR(200) NOT NULL,
-    fk_Usuario_id_usuario INT UNSIGNED NOT NULL,
 
     PRIMARY KEY(id_propriedade),
     FOREIGN KEY (fk_Usuario_id_usuario) REFERENCES Usuario(id_usuario)
@@ -38,13 +39,14 @@ CREATE TABLE Propriedade (
 
 CREATE TABLE Safra (
     id_safra INT UNSIGNED AUTO_INCREMENT,
+    fk_Propriedade_id_propriedade INT UNSIGNED NOT NULL,
+
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
     data_inicio DATE NOT NULL,
     data_fim DATE,
     area_hectare DECIMAL(10,2) NOT NULL,
     status VARCHAR(20) DEFAULT 'PLANEJADA',
-    fk_Propriedade_id_propriedade INT UNSIGNED NOT NULL,
 
     PRIMARY KEY(id_safra),
     FOREIGN KEY (fk_Propriedade_id_propriedade) REFERENCES Propriedade(id_propriedade)
@@ -52,9 +54,10 @@ CREATE TABLE Safra (
 
 CREATE TABLE Faturamento_Mes (
     id_faturamento INT UNSIGNED AUTO_INCREMENT,
+    fk_Usuario_id_usuario INT UNSIGNED NOT NULL,
+
     mes DATE NOT NULL,
     valor DECIMAL(12,2) NOT NULL,
-    fk_Usuario_id_usuario INT UNSIGNED NOT NULL,
 
     PRIMARY KEY(id_faturamento),
     FOREIGN KEY (fk_Usuario_id_usuario) REFERENCES Usuario(id_usuario)
@@ -70,13 +73,15 @@ CREATE TABLE Baixa_Estoque (
 
 CREATE TABLE Item_Estoque (
     id_item INT UNSIGNED AUTO_INCREMENT,
+    fk_Categoria_id_categoria INT UNSIGNED NOT NULL,
+    fk_Baixa_Estoque_id_estoque INT UNSIGNED NOT NULL,
+
     nome VARCHAR(100) NOT NULL,
     quantidade DECIMAL(10,2) NOT NULL,
     estoque_minimo DECIMAL(10,2) DEFAULT 0,
     validade DATE,
     preco_unitario DECIMAL(10,2) NOT NULL,
-    fk_Categoria_id_categoria INT UNSIGNED NOT NULL,
-    fk_Baixa_Estoque_id_estoque INT UNSIGNED NOT NULL,
+    
     
     PRIMARY KEY(id_item),
     FOREIGN KEY (fk_Categoria_id_categoria) REFERENCES Categoria(id_categoria),
