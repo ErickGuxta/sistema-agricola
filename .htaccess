@@ -1,7 +1,7 @@
 Options +indexes
 
 RewriteEngine On
-RewriteBase /curso-mvc-mysql/App/
+RewriteBase /sistema-agricola/app/
 
 # Redireciona todas as requisições para o arquivo index.php
 RewriteCond %{REQUEST_FILENAME} !-f

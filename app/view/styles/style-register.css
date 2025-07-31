@@ -99,7 +99,7 @@ select {
 }
 
 select {
-  height: 30px;
+  height: auto;
   white-space: normal;
   word-wrap: break-word;
 }

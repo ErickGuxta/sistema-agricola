@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style-register.css">
+  <link rel="stylesheet" href="../styles/style-register.css">
   <title>Cadastro da Propriedade - AgroMiz</title>
 
 </head>
@@ -51,9 +51,9 @@
       </form>
     </div>
 
-    <div class="image-section">
+    <!-- <div class="image-section">
       <img src="img/image 5.png" alt="Ilustração de fazendeira">
-    </div>
+    </div> -->
   </div>
 
   <script>
