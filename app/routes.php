@@ -2,6 +2,7 @@
 
 use app\controller\{
     UsuarioController,
+    PropriedadeController
 };
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -18,9 +19,9 @@ switch ($url) {
     case 'registro': // Adicionada a rota register
         UsuarioController::index();
         break;
-    // case 'registro-propriedade':
-    //     PropriedadeController::index();
-    //     break;
+    case 'registro-propriedade':
+        PropriedadeController::index();
+        break;
     default:
         echo "Pagina não encontrada - 404";
         break;

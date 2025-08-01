@@ -7,6 +7,7 @@ use app\dao\UsuarioDAO;
 
 final class UsuarioController
 {
+    // Declarar propriedades ou métodos de uma classe como estáticos faz deles acessíveis sem a necessidade de instanciar a classe
     public static function index() : void
     {
         $model = new Usuario();

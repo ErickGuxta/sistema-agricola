@@ -6,7 +6,7 @@ use app\dao\UsuarioDAO;
 
 class Usuario
 {
-    public $id, $nome_produtor, $email, $senha;
+    public $id_usuario, $nome_produtor, $email, $senha;
 
     //cadastrar o usuario
     public function registrar() : ?Usuario

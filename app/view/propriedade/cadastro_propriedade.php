@@ -19,34 +19,34 @@
 
       <h2>Quase lá... <br> agora vamos cadastrar sua propriedade</h2>
 
-      <form>
+      <form method="POST" action="/sistema-agricola/app/registro-propriedade" id="formCadastro">
         <div class="input-group">
           <label for="propriedade">Nome da propriedade*</label>
-          <input type="text" id="propriedade" placeholder="Nome da propriedade">
+          <input type="text" id="propriedade" placeholder="Nome da propriedade" name="nome_propriedade">
         </div>
 
         <div class="input-group area-group">
           <label for="area">Medida da área que trabalha*</label>
-          <input type="text" id="area" placeholder="Ex: 100 hectares" maxlength="50" oninput="atualizarContador()">
+          <input type="text" id="area" placeholder="Ex: 100 hectares" maxlength="50" oninput="atualizarContador()" name="area_total">
           <span class="char-counter" id="contador">0/50</span>
         </div>
 
         <div class="input-group">
           <label for="estado">Estado*</label>
-          <select id="estado" onchange="carregarCidades()">
+          <select id="estado" name="estado" onchange="carregarCidades()">
             <option value="">Selecione um estado</option>
           </select>
         </div>
 
         <div class="input-group">
           <label for="cidade">Cidade*</label>
-          <select id="cidade" disabled>
+          <select id="cidade" name="cidade" disabled>
             <option value="">Selecione primeiro o estado</option>
           </select>
         </div>
 
         <div class="btn-container">
-          <button type="button" class="btn-cadastrar">Cadastrar</button>
+          <button type="submit" class="btn-cadastrar">Cadastrar</button>
         </div>
       </form>
     </div>

@@ -11,14 +11,14 @@ final class UsuarioDAO extends DAO
         $sql = "INSERT INTO Usuario (nome_produtor, email, senha) VALUES (?, ?, sha1(?))";
 
         $stmt = parent::$conexao->prepare($sql);
+
         $stmt->bindValue(1, $model->nome_produtor);
         $stmt->bindValue(2, $model->email);
         $stmt->bindValue(3, $model->senha);
 
-        // CORREÇÃO: Executar a query primeiro
         if ($stmt->execute()) {
             // Se a inserção foi bem-sucedida, retornar o objeto com os dados
-            $model->id = parent::$conexao->lastInsertId();
+            $model->id_usuario = parent::$conexao->lastInsertId();
             return $model;
         }
 
