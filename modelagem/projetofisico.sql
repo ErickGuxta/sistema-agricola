@@ -84,7 +84,7 @@ CREATE TABLE Item_Estoque (
     
     
     PRIMARY KEY(id_item),
-    FOREIGN KEY (fk_Categoria_id_categoria) REFERENCES Categoria(id_categoria),
+    FOREIGN KEY (fk_Categoria_id_categoria)   REFERENCES Categoria(id_categoria),
     FOREIGN KEY (fk_Baixa_Estoque_id_estoque) REFERENCES Baixa_Estoque(id_estoque)
 );
 
@@ -93,7 +93,7 @@ CREATE TABLE Safra_Faturamento_Assoc (
     fk_Faturamento_Mes_id_faturamento INT UNSIGNED,
 
     PRIMARY KEY (fk_Safra_id_safra, fk_Faturamento_Mes_id_faturamento),
-    FOREIGN KEY (fk_Safra_id_safra) REFERENCES Safra(id_safra),
+    FOREIGN KEY (fk_Safra_id_safra)                 REFERENCES Safra(id_safra),
     FOREIGN KEY (fk_Faturamento_Mes_id_faturamento) REFERENCES Faturamento_Mes(id_faturamento)
 );
 
@@ -102,7 +102,7 @@ CREATE TABLE Safra_Baixa_Assoc (
     fk_Baixa_Estoque_id_estoque INT UNSIGNED,
 
     PRIMARY KEY (fk_Safra_id_safra, fk_Baixa_Estoque_id_estoque),
-    FOREIGN KEY (fk_Safra_id_safra) REFERENCES Safra(id_safra),
+    FOREIGN KEY (fk_Safra_id_safra)           REFERENCES Safra(id_safra),
     FOREIGN KEY (fk_Baixa_Estoque_id_estoque) REFERENCES Baixa_Estoque(id_estoque)
 );
 

@@ -9,8 +9,24 @@ final class PropriedadeController
 {
     public static function index() : void
     {
-        $model = new Propriedade();
+        // verificando se o usuario já está logado/registrado
+        if(!isset($_SESSION['logado']) || $_SESSION['logado'] !== true )
+        {
+            header("Location: /sistema-agricola/app/view/login/cadastro_user.php");
+            exit;
+        }
 
+        // verificando se a sessão não expirou
+        if (time() - $_SESSION['ultimo_acesso'] > 3600) {
+            session_destroy();
+            header("Location: /sistema-agricola/app/view/login/cadastro_user.php");
+            exit;
+        }
+
+        // atualizada acesso
+        $_SESSION['ultimo_acesso'] = time();
+        
+        $model = new Propriedade();
         $erro = "";
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -24,17 +40,19 @@ final class PropriedadeController
                 $model->area_total = $_POST['area_total'];
                 $model->localizacao = $_POST['estado'] . ' - ' . $_POST['cidade'];
 
-                $model->fk_Usuario_id_usuario = 13; // Temporário - deve vir da sessão
+                //id do usario da sessão
+                $model->fk_Usuario_id_usuario = $_SESSION['usuario_id']; 
 
                 $propriedadeRegistrado = $model->registrar();
 
                 if ($propriedadeRegistrado !== null) {
-                    // Redirecionar para página de cadastro de propriedade
-                    header("Location: /sistema-agricola/app/view/dashboard/home.php");
+                    // guardar a propriedade atual na sessão
+                    $_SESSION['propriedade_id'] = $propriedadeRegistrado->id_propriedade;
+                    // Redirecionar para dashboard 
+                    header("Location: /sistema-agricola/app/dashboard");
                     exit;
                 } else{
                     $erro = "Erro ao cadastrar propriedade. Tente novamente.";
-
                 }
 
             }

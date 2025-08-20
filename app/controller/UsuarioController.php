@@ -34,8 +34,15 @@ final class UsuarioController
 
                     if($usuarioRegistrado !== null)
                     {
+                        // CRIAR SESSÃO DO USUÁRIO
+                        $_SESSION['usuario_id'] = $usuarioRegistrado->id_usuario;
+                        $_SESSION['usuario_nome'] = $usuarioRegistrado->nome_produtor;
+                        $_SESSION['usuario_email'] = $usuarioRegistrado->email;
+                        $_SESSION['logado'] = true;
+                        $_SESSION['ultimo_acesso'] = time();
+                        
                         // Redirecionar para página de cadastro de propriedade
-                        header("Location: /sistema-agricola/app/view/propriedade/cadastro_propriedade.php");
+                        header("Location: /sistema-agricola/app/registro-propriedade");
                         exit;
                     } else {
                         $erro = "Erro ao cadastrar usuário. Tente novamente.";
@@ -46,5 +53,13 @@ final class UsuarioController
 
         // Passar as variáveis para a view
         include VIEWS . '/login/cadastro_user.php';
+
+    }
+
+    public static function logout() : void
+    {
+        session_destroy();
+        header("Location: /sistema-agricola/app/view/login/cadastro_user.php");
+        exit;
     }
 }

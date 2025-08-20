@@ -20,7 +20,7 @@
       <h2>Registre-se</h2>
 
       <?php if (!empty($erro)): ?>
-        <div class="erro" style="color: red; margin-bottom: 10px; padding: 10px; background-color: #ffebee; border: 1px solid #f44336; border-radius: 4px;">
+        <div class="erro">
           <?= htmlspecialchars($erro) ?>
         </div>
       <?php endif; ?>

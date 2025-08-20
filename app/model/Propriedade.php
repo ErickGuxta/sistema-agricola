@@ -14,7 +14,7 @@ class Propriedade
         return (new PropriedadeDAO()) -> inserir($this);
     }
 
-    //listar propriedades do usuário
+    // listar propriedades do usuário
     // Buscar propriedade por ID
     // Atualizar propriedade
     // Deletar propriedade

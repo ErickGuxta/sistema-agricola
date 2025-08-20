@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../styles/style-register.css">
+  <link rel="stylesheet" href="/sistema-agricola/app/view/styles/style-register.css">
   <title>Cadastro da Propriedade - AgroMiz</title>
 
 </head>
@@ -12,7 +12,7 @@
     <div class="form-section">
       <div class="logo-box">
         <div class="logo-row">
-          <img src="../img/image 6.png" alt="Logo AgroMiz" class="logo-img">
+          <img src="/sistema-agricola/app/view/img/image6.png" alt="Logo AgroMiz" class="logo-img">
           <h1 class="logo-title">AgroMiz</h1>
         </div>
       </div>
