@@ -21,6 +21,9 @@ switch ($url) {
     case 'registro': // Adicionada a rota register
         UsuarioController::index();
         break;
+    case 'login':
+        UsuarioController::login();
+        break;
     case 'registro-propriedade':
         PropriedadeController::index();
         break;

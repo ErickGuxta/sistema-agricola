@@ -3,7 +3,7 @@
 namespace app\controller;
 
 use app\model\Propriedade;
-use app\model\PropriedadeDAO;
+use app\dao\PropriedadeDAO;
 
 final class PropriedadeController
 {
@@ -48,6 +48,7 @@ final class PropriedadeController
                 if ($propriedadeRegistrado !== null) {
                     // guardar a propriedade atual na sessão
                     $_SESSION['propriedade_id'] = $propriedadeRegistrado->id_propriedade;
+                    $_SESSION['propriedade_nome'] = $propriedadeRegistrado->nome_propriedade;
                     // Redirecionar para dashboard 
                     header("Location: /sistema-agricola/app/dashboard");
                     exit;

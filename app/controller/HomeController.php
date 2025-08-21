@@ -23,6 +23,12 @@ final class HomeController
         // atualizada acesso
         $_SESSION['ultimo_acesso'] = time();
         
+        // Verificar se o usuário tem propriedade cadastrada
+        if (!isset($_SESSION['propriedade_id'])) {
+            header("Location: /sistema-agricola/app/registro-propriedade");
+            exit;
+        }
+        
         include VIEWS . '/dashboard/home.php';
     }
 }

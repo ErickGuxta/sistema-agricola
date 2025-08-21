@@ -4,6 +4,7 @@ namespace app\controller;
 
 use app\model\Usuario;
 use app\dao\UsuarioDAO;
+use app\dao\PropriedadeDAO;
 
 final class UsuarioController
 {
@@ -59,7 +60,53 @@ final class UsuarioController
     public static function logout() : void
     {
         session_destroy();
-        header("Location: /sistema-agricola/app/view/login/cadastro_user.php");
+        header("Location: /sistema-agricola/app/login");
         exit;
+    }
+
+    public static function login() : void
+    {
+        $erro = "";
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = trim($_POST['email'] ?? '');
+            $senha = trim($_POST['senha'] ?? '');
+
+            if (empty($email) || empty($senha)) {
+                $erro = "Todos os campos são obrigatórios";
+            } else {
+                $usuarioDAO = new UsuarioDAO();
+                $usuario = $usuarioDAO->verificarLogin($email, $senha);
+                
+                if ($usuario) {
+                    // Criar sessão do usuário
+                    $_SESSION['usuario_id'] = $usuario->id_usuario;
+                    $_SESSION['usuario_nome'] = $usuario->nome_produtor;
+                    $_SESSION['usuario_email'] = $usuario->email;
+                    $_SESSION['logado'] = true;
+                    $_SESSION['ultimo_acesso'] = time();
+                    
+                    // Verificar se o usuário já tem propriedade cadastrada
+                    $propriedadeDAO = new PropriedadeDAO();
+                    $propriedade = $propriedadeDAO->buscarPorUsuario($usuario->id_usuario);
+                    
+                    if ($propriedade) {
+                        // Se tem propriedade, salvar na sessão e ir para dashboard
+                        $_SESSION['propriedade_id'] = $propriedade->id_propriedade;
+                        $_SESSION['propriedade_nome'] = $propriedade->nome_propriedade;
+                        header("Location: /sistema-agricola/app/dashboard");
+                    } else {
+                        // Se não tem propriedade, ir para cadastro de propriedade
+                        header("Location: /sistema-agricola/app/registro-propriedade");
+                    }
+                    exit;
+                } else {
+                    $erro = "Email ou senha incorretos";
+                }
+            }
+        }
+
+        // Passar as variáveis para a view
+        include VIEWS . '/login/login.php';
     }
 }

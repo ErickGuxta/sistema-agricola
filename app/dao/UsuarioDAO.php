@@ -36,4 +36,17 @@ final class UsuarioDAO extends DAO
         $model = $stmt->fetchObject("app\model\Usuario");
         return is_object($model) ? $model : null;
     }
+
+    public function verificarLogin(string $email, string $senha) : ?Usuario
+    {
+        $sql = "SELECT * FROM Usuario WHERE email = ? AND senha = sha1(?)";
+        
+        $stmt = parent::$conexao->prepare($sql);
+        $stmt->bindValue(1, $email);
+        $stmt->bindValue(2, $senha);
+        $stmt->execute();
+        
+        $model = $stmt->fetchObject("app\model\Usuario");
+        return is_object($model) ? $model : null;
+    }
 }

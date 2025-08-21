@@ -40,7 +40,10 @@
             <input type="checkbox" id="termos" required>
             <label for="termos">Aceito os termos e condições</label>
           </div>
-          <button type="submit">Cadastrar</button>
+          <div class="botoes">
+            <button type="submit">Cadastrar</button>
+            <a href="/sistema-agricola/app/login" class="btn-login">Fazer Login</a>
+          </div>
         </div>
       </form>
     </div>

@@ -8,6 +8,21 @@ class Safra
 {
     public $id_safra, $fk_Propriedade_id_propriedade, $nome, $descricao, $data_inicio, $data_fim, $area_hectare, $status ;
 
+    // Construtor que aceita array de dados
+    public function __construct(array $dados = [])
+    {
+        if (!empty($dados)) {
+            $this->id_safra = isset($dados['id_safra']) ? (int) $dados['id_safra'] : null;
+            $this->fk_Propriedade_id_propriedade = isset($dados['fk_Propriedade_id_propriedade']) ? (int) $dados['fk_Propriedade_id_propriedade'] : null;
+            $this->nome = $dados['nome'] ?? null;
+            $this->descricao = $dados['descricao'] ?? null;
+            $this->data_inicio = $dados['data_inicio'] ?? null;
+            $this->data_fim = $dados['data_fim'] ?? null;
+            $this->area_hectare = $dados['area_hectare'] ?? null;
+            $this->status = $dados['status'] ?? null;
+        }
+    }
+
     //cadastrar safra
     public function registrar() : ?Safra
     {
@@ -37,6 +52,4 @@ class Safra
     {
         return (new SafraDAO())->deletar($idSafra, $propriedadeId);
     }
-
-
 }

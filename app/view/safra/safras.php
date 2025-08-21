@@ -204,6 +204,16 @@
             background: #c82333;
         }
 
+        .new-safra-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .new-safra-btn:disabled:hover {
+            background: #6c757d;
+        }
+
         /* Tabela de safras */
         .table-container {
             background: white;
@@ -492,10 +502,17 @@
                     </div>
                 </div>
 
-                <button class="new-safra-btn" onclick="openModal()">
+                <button class="new-safra-btn" onclick="openModal()" <?= !isset($_SESSION['propriedade_id']) ? 'disabled' : '' ?>>
                     + nova safra
                 </button>
             </header>
+
+            <?php if (!isset($_SESSION['propriedade_id'])): ?>
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <strong>⚠️ Atenção:</strong> Você precisa cadastrar uma propriedade antes de cadastrar safras. 
+                    <a href="/sistema-agricola/app/registro-propriedade" style="color: #1f5b3c; text-decoration: underline;">Clique aqui para cadastrar sua propriedade</a>.
+                </div>
+            <?php endif; ?>
 
             <!-- Tabela de safras -->
             <div class="table-container">

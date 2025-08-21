@@ -26,4 +26,27 @@ final class PropriedadeDAO extends DAO
 
       return null;
    }
+
+   public function buscarPorUsuario(int $usuarioId) : ?Propriedade
+   {
+      $sql = "SELECT * FROM Propriedade WHERE fk_Usuario_id_usuario = ? LIMIT 1";
+      
+      $stmt = parent::$conexao->prepare($sql);
+      $stmt->bindValue(1, $usuarioId);
+      $stmt->execute();
+      
+      $linha = $stmt->fetch(\PDO::FETCH_ASSOC);
+      if (!$linha) {
+         return null;
+      }
+      
+      $propriedade = new Propriedade();
+      $propriedade->id_propriedade = (int) $linha['id_propriedade'];
+      $propriedade->fk_Usuario_id_usuario = (int) $linha['fk_Usuario_id_usuario'];
+      $propriedade->nome_propriedade = $linha['nome_propriedade'];
+      $propriedade->area_total = $linha['area_total'];
+      $propriedade->localizacao = $linha['localizacao'];
+      
+      return $propriedade;
+   }
 }

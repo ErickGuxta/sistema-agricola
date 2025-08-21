@@ -26,34 +26,39 @@ final class SafraController
         $propriedadeId = $_SESSION['propriedade_id'] ?? null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // validar campos mínimos
-            $nome = trim($_POST['nome'] ?? '');
-            $dataInicio = trim($_POST['dataInicio'] ?? '');
-            $dataTermino = trim($_POST['dataTermino'] ?? '');
-            $status = trim($_POST['status'] ?? '');
-            $descricao = trim($_POST['descricao'] ?? '');
-            $areaHectare = trim($_POST['area_hectare'] ?? '');
-
-            if ($nome === '' || $dataInicio === '' || $status === '') {
-                $erro = 'Preencha os campos obrigatórios';
+            // Verificar se o usuário tem uma propriedade cadastrada
+            if (!$propriedadeId) {
+                $erro = 'Você precisa cadastrar uma propriedade antes de cadastrar safras. <a href="/sistema-agricola/app/registro-propriedade">Clique aqui para cadastrar</a>.';
             } else {
-                $model = new Safra();
-                $model->nome = $nome;
-                $model->descricao = $descricao;
-                $model->data_inicio = $dataInicio;
-                $model->data_fim = $dataTermino !== '' ? $dataTermino : null;
-                $model->status = $status;
-                $model->area_hectare = $areaHectare !== '' ? $areaHectare : null;
+                // validar campos mínimos
+                $nome = trim($_POST['nome'] ?? '');
+                $dataInicio = trim($_POST['dataInicio'] ?? '');
+                $dataTermino = trim($_POST['dataTermino'] ?? '');
+                $status = trim($_POST['status'] ?? '');
+                $descricao = trim($_POST['descricao'] ?? '');
+                $areaHectare = trim($_POST['area_hectare'] ?? '');
 
-                // propriedade atual do usuário (precisa existir na sessão após cadastro de propriedade)
-                $model->fk_Propriedade_id_propriedade = $propriedadeId;
-
-                $safraRegistrada = $model->registrar();
-                if ($safraRegistrada !== null) {
-                    header("Location: /sistema-agricola/app/safra");
-                    exit;
+                if ($nome === '' || $dataInicio === '' || $status === '') {
+                    $erro = 'Preencha os campos obrigatórios';
                 } else {
-                    $erro = 'Erro ao cadastrar safra. Tente novamente.';
+                    $model = new Safra();
+                    $model->nome = $nome;
+                    $model->descricao = $descricao;
+                    $model->data_inicio = $dataInicio;
+                    $model->data_fim = $dataTermino !== '' ? $dataTermino : null;
+                    $model->status = $status;
+                    $model->area_hectare = $areaHectare !== '' ? $areaHectare : null;
+
+                    // propriedade atual do usuário (precisa existir na sessão após cadastro de propriedade)
+                    $model->fk_Propriedade_id_propriedade = $propriedadeId;
+
+                    $safraRegistrada = $model->registrar();
+                    if ($safraRegistrada !== null) {
+                        header("Location: /sistema-agricola/app/safra");
+                        exit;
+                    } else {
+                        $erro = 'Erro ao cadastrar safra. Tente novamente.';
+                    }
                 }
             }
         }

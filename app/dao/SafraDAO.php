@@ -43,7 +43,7 @@ final class SafraDAO extends DAO
         $linhas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $resultado = [];
         foreach ($linhas as $linha) {
-            $resultado[] = $this->hidratarSafra($linha);
+            $resultado[] = new Safra($linha);
         }
         return $resultado;
     }
@@ -68,7 +68,7 @@ final class SafraDAO extends DAO
         if (!$linha) {
             return null;
         }
-        return $this->hidratarSafra($linha);
+        return new Safra($linha);
     }
 
     /**
@@ -109,19 +109,5 @@ final class SafraDAO extends DAO
             $stmt->bindValue(2, $propriedadeId);
         }
         return $stmt->execute();
-    }
-
-    private function hidratarSafra(array $dados) : Safra
-    {
-        $s = new Safra();
-        $s->id_safra = (int) $dados['id_safra'];
-        $s->fk_Propriedade_id_propriedade = (int) $dados['fk_Propriedade_id_propriedade'];
-        $s->nome = $dados['nome'];
-        $s->descricao = $dados['descricao'];
-        $s->data_inicio = $dados['data_inicio'];
-        $s->data_fim = $dados['data_fim'];
-        $s->area_hectare = $dados['area_hectare'];
-        $s->status = $dados['status'];
-        return $s;
     }
 }
