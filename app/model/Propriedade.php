@@ -6,7 +6,7 @@ use app\dao\PropriedadeDAO;
 
 class Propriedade
 {
-    public $id_propriedade, $fk_Usuario_id_usuario, $nome_propriedade, $area_total, $localizacao;
+    public $id_propriedade, $usuario_id, $nome_propriedade, $area_total, $localizacao;
 
     //cadastrar propriedade
     public function registrar() : ?Propriedade

@@ -4,7 +4,8 @@ use app\controller\{
     UsuarioController,
     PropriedadeController,
     HomeController,
-    SafraController
+    SafraController,
+    ItemEstoqueController
 };
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -42,12 +43,24 @@ switch ($url) {
     case 'safra/deletar':
         SafraController::deletar();
         break;
-    // case 'estoque':
-    //     EstoqueController::index();
-    //     break;
-    // case 'faturamento':
-    //     FaturamentoController::index();
-    //     break;
+    case 'estoque':
+        ItemEstoqueController::index();
+        break;
+    case 'estoque/buscar':
+        ItemEstoqueController::index();
+        break;
+    case 'estoque/atualizar':
+        ItemEstoqueController::atualizar();
+        break;
+    case 'estoque/deletar':
+        ItemEstoqueController::deletar();
+        break;
+    case 'estoque/movimentacao':
+        ItemEstoqueController::movimentacao();
+        break;
+    case 'dashboard/setSafra':
+        HomeController::setSafra();
+        break;
     default:
         echo "Pagina não encontrada - 404";
         break;

@@ -8,11 +8,12 @@ final class SafraDAO extends DAO
 {
     public function inserir(Safra $model) : ?Safra
     {
-        $sql = "INSERT INTO Safra (fk_Propriedade_id_propriedade, nome, descricao, data_inicio, data_fim, area_hectare, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO Safra (propriedade_id, nome, descricao, data_inicio, data_fim, area_hectare, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = parent::$conexao->prepare($sql);
 
-        $stmt->bindValue(1, $model->fk_Propriedade_id_propriedade);
+        $stmt->bindValue(1, $model->propriedade_id);
+        
         $stmt->bindValue(2, $model->nome);
         $stmt->bindValue(3, $model->descricao);
         $stmt->bindValue(4, $model->data_inicio);
@@ -33,7 +34,7 @@ final class SafraDAO extends DAO
      */
     public function listarPorPropriedade(int $propriedadeId) : array
     {
-        $sql = "SELECT id_safra, fk_Propriedade_id_propriedade, nome, descricao, data_inicio, data_fim, area_hectare, status FROM Safra WHERE fk_Propriedade_id_propriedade = ? ORDER BY data_inicio DESC, id_safra DESC";
+        $sql = "SELECT id_safra, propriedade_id, nome, descricao, data_inicio, data_fim, area_hectare, status FROM Safra WHERE propriedade_id = ? ORDER BY data_inicio DESC, id_safra DESC";
 
         $stmt = parent::$conexao->prepare($sql);
 
@@ -53,9 +54,10 @@ final class SafraDAO extends DAO
      */
     public function getById(int $idSafra, ?int $propriedadeId = null) : ?Safra
     {
-        $sql = "SELECT id_safra, fk_Propriedade_id_propriedade, nome, descricao, data_inicio, data_fim, area_hectare, status FROM Safra WHERE id_safra = ?";
+        $sql = "SELECT id_safra, propriedade_id, nome, descricao, data_inicio, data_fim, area_hectare, status FROM Safra WHERE id_safra = ?";
+        
         if ($propriedadeId !== null) {
-            $sql .= " AND fk_Propriedade_id_propriedade = ?";
+            $sql .= " AND propriedade_id = ?";
         }
         $stmt = parent::$conexao->prepare($sql);
         $stmt->bindValue(1, $idSafra);
@@ -76,7 +78,7 @@ final class SafraDAO extends DAO
      */
     public function atualizar(Safra $model) : ?Safra
     {
-        $sql = "UPDATE Safra SET nome = ?, descricao = ?, data_inicio = ?, data_fim = ?, area_hectare = ?, status = ? WHERE id_safra = ? AND fk_Propriedade_id_propriedade = ?";
+        $sql = "UPDATE Safra SET nome = ?, descricao = ?, data_inicio = ?, data_fim = ?, area_hectare = ?, status = ? WHERE id_safra = ? AND propriedade_id = ?";
         $stmt = parent::$conexao->prepare($sql);
 
         $stmt->bindValue(1, $model->nome);
@@ -86,7 +88,7 @@ final class SafraDAO extends DAO
         $stmt->bindValue(5, $model->area_hectare);
         $stmt->bindValue(6, $model->status);
         $stmt->bindValue(7, $model->id_safra);
-        $stmt->bindValue(8, $model->fk_Propriedade_id_propriedade);
+        $stmt->bindValue(8, $model->propriedade_id);
 
         if ($stmt->execute()) {
             return $model;
@@ -101,7 +103,7 @@ final class SafraDAO extends DAO
     {
         $sql = "DELETE FROM Safra WHERE id_safra = ?";
         if ($propriedadeId !== null) {
-            $sql .= " AND fk_Propriedade_id_propriedade = ?";
+            $sql .= " AND propriedade_id = ?";
         }
         $stmt = parent::$conexao->prepare($sql);
         $stmt->bindValue(1, $idSafra);
@@ -109,5 +111,19 @@ final class SafraDAO extends DAO
             $stmt->bindValue(2, $propriedadeId);
         }
         return $stmt->execute();
+    }
+
+    public function listarPorUsuario(int $usuarioId) : array
+    {
+        $sql = "SELECT s.id_safra, s.propriedade_id, s.nome, s.descricao, s.data_inicio, s.data_fim, s.area_hectare, s.status FROM Safra s JOIN Propriedade p ON s.propriedade_id = p.id_propriedade WHERE p.usuario_id = ? ORDER BY s.data_inicio DESC";
+        $stmt = parent::$conexao->prepare($sql);
+        $stmt->bindValue(1, $usuarioId);
+        $stmt->execute();
+        
+        $safras = [];
+        while ($linha = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $safras[] = new Safra($linha);
+        }
+        return $safras;
     }
 }

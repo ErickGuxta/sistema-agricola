@@ -618,7 +618,7 @@ if (isset($_GET['logout'])) {
             <nav class="nav-menu">
                 <div class="nav-item active">Página Inicial</div>
                 <div class="nav-item"><a href="/sistema-agricola/app/safra">Safras</a></div>
-                <div class="nav-item">Estoque</div>
+                <div class="nav-item"><a href="/sistema-agricola/app/estoque">Estoque</a></div>
                 <div class="nav-item">Faturamento</div>
             </nav>
 
@@ -634,7 +634,14 @@ if (isset($_GET['logout'])) {
         <main class="main-content">
             <header class="header-main">
                 <div class="header-left">
-                    <h1 class="farm-name">Fazenda Silva</h1>
+                    <h1 class="farm-name">
+                    <?php
+                        
+                        $nomeProprie = $_SESSION['nome_propriedade'];
+                        echo htmlspecialchars($nomeProprie);
+
+                    ?>
+                    </h1>
                     <div class="divider"></div>
                     <div class="year-selector">
                         2025 <span>▼</span>

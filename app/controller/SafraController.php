@@ -31,26 +31,26 @@ final class SafraController
                 $erro = 'Você precisa cadastrar uma propriedade antes de cadastrar safras. <a href="/sistema-agricola/app/registro-propriedade">Clique aqui para cadastrar</a>.';
             } else {
                 // validar campos mínimos
-                $nome = trim($_POST['nome'] ?? '');
-                $dataInicio = trim($_POST['dataInicio'] ?? '');
+                $nome        = trim($_POST['nome'] ?? '');
+                $dataInicio  = trim($_POST['dataInicio'] ?? '');
                 $dataTermino = trim($_POST['dataTermino'] ?? '');
-                $status = trim($_POST['status'] ?? '');
-                $descricao = trim($_POST['descricao'] ?? '');
+                $status      = trim($_POST['status'] ?? '');
+                $descricao   = trim($_POST['descricao'] ?? '');
                 $areaHectare = trim($_POST['area_hectare'] ?? '');
 
                 if ($nome === '' || $dataInicio === '' || $status === '') {
                     $erro = 'Preencha os campos obrigatórios';
                 } else {
                     $model = new Safra();
-                    $model->nome = $nome;
-                    $model->descricao = $descricao;
-                    $model->data_inicio = $dataInicio;
-                    $model->data_fim = $dataTermino !== '' ? $dataTermino : null;
-                    $model->status = $status;
-                    $model->area_hectare = $areaHectare !== '' ? $areaHectare : null;
+                    $model -> nome         = $nome;
+                    $model -> descricao    = $descricao;
+                    $model -> data_inicio  = $dataInicio;
+                    $model -> data_fim     = $dataTermino !== '' ? $dataTermino : null;
+                    $model -> status       = $status;
+                    $model -> area_hectare = $areaHectare !== '' ? $areaHectare : null;
 
                     // propriedade atual do usuário (precisa existir na sessão após cadastro de propriedade)
-                    $model->fk_Propriedade_id_propriedade = $propriedadeId;
+                    $model->propriedade_id = $propriedadeId;
 
                     $safraRegistrada = $model->registrar();
                     if ($safraRegistrada !== null) {
@@ -64,8 +64,19 @@ final class SafraController
         }
         // Dados para listagem na view
         $safras = [];
+        $total_hectares = 0.0;
+        $safras_ativas = 0;
         if ($propriedadeId) {
             $safras = Safra::listarPorPropriedade($propriedadeId);
+            // calcular métricas dos cards
+            foreach ($safras as $s) {
+                $area = isset($s->area_hectare) && $s->area_hectare !== null && $s->area_hectare !== '' ? (float)$s->area_hectare : 0.0;
+                $total_hectares += $area;
+                $status = strtolower(trim((string)$s->status));
+                if ($status === 'andamento' || $status === 'em andamento') {
+                    $safras_ativas++;
+                }
+            }
         }
 
         include VIEWS . '/safra/safras.php';
@@ -119,14 +130,14 @@ final class SafraController
         }
 
         $model = new Safra();
-        $model->id_safra = $idSafra;
-        $model->fk_Propriedade_id_propriedade = $propriedadeId;
-        $model->nome = trim($_POST['nome'] ?? $existente->nome);
-        $model->descricao = trim($_POST['descricao'] ?? $existente->descricao);
-        $model->data_inicio = trim($_POST['dataInicio'] ?? $existente->data_inicio);
-        $model->data_fim = trim($_POST['dataTermino'] ?? '') ?: $existente->data_fim;
-        $model->area_hectare = trim($_POST['area_hectare'] ?? '') ?: $existente->area_hectare;
-        $model->status = trim($_POST['status'] ?? $existente->status);
+        $model-> id_safra       = $idSafra;
+        $model-> propriedade_id = $propriedadeId;
+        $model-> nome           = trim($_POST['nome'] ?? $existente->nome);
+        $model-> descricao      = trim($_POST['descricao'] ?? $existente->descricao);
+        $model-> data_inicio    = trim($_POST['dataInicio'] ?? $existente->data_inicio);
+        $model-> data_fim       = trim($_POST['dataTermino'] ?? '') ?: $existente->data_fim;
+        $model-> area_hectare   = trim($_POST['area_hectare'] ?? '') ?: $existente->area_hectare;
+        $model-> status         = trim($_POST['status'] ?? $existente->status);
 
         $ok = $model->atualizar();
         header("Location: /sistema-agricola/app/safra");

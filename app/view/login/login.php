@@ -270,7 +270,7 @@
     <div class="form-section">
       <div class="logo-box">
         <div class="logo-row">
-          <img src="/sistema-agricola/app/view/img/image 6.png" alt="Logo AgroMiz" class="logo-img">
+          <img src="/sistema-agricola/app/view/img/image6.png" alt="Logo AgroMiz" class="logo-img">
           <h1 class="logo-title">AgroMiz</h1>
         </div>
         <p class="subtitle">Faça login no FazendaGestor</p>

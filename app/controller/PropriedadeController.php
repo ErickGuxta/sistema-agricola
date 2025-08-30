@@ -41,7 +41,7 @@ final class PropriedadeController
                 $model->localizacao = $_POST['estado'] . ' - ' . $_POST['cidade'];
 
                 //id do usario da sessão
-                $model->fk_Usuario_id_usuario = $_SESSION['usuario_id']; 
+                $model->usuario_id = $_SESSION['usuario_id']; 
 
                 $propriedadeRegistrado = $model->registrar();
 

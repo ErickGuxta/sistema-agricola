@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -466,6 +465,7 @@
                 <div class="logo-circle">🌿</div>
                 <div class="logo-text">
                     <?php
+                    
                         $nomeCompleto = $_SESSION['usuario_nome'];
                         $primeiroNome = explode(' ', $nomeCompleto)[0];
                         echo htmlspecialchars($primeiroNome);
@@ -478,9 +478,9 @@
 
             <!-- Menu lateral -->
             <nav class="nav-menu">
-                <div class="nav-item"><a href="/sistema-agricola/app/dashboard">Página Inicial</a></div>
+                <div class="nav-item">    <a href="/sistema-agricola/app/dashboard">Página Inicial</a></div>
                 <div class="nav-item active">Safras</div>
-                <div class="nav-item">Estoque</div>
+                <div class="nav-item">    <a href="/sistema-agricola/app/estoque">Estoque</a></div>
                 <div class="nav-item">Faturamento</div>
             </nav>
 
@@ -519,7 +519,7 @@
                 <table class="safras-table">
                     <thead>
                         <tr>
-                            <th>Safra</th>
+                            <th>Safra </th>
                             <th>Início</th>
                             <th>Término</th>
                             <th>Status</th>
@@ -531,13 +531,30 @@
                         <?php if (isset($safras) && is_array($safras) && count($safras) > 0): ?>
                             <?php foreach ($safras as $safra): ?>
                                 <tr>
-                                    <td><?= htmlspecialchars($safra->nome) ?></td>
-                                    <td><?= htmlspecialchars($safra->data_inicio) ?></td>
-                                    <td><?= htmlspecialchars($safra->data_fim ?? '') ?></td>
-                                    <td><span class="status-badge <?= $safra->status === 'concluida' ? 'status-concluida' : ($safra->status === 'encerrada' ? 'status-encerrada' : 'status-andamento') ?>"><?= htmlspecialchars($safra->status) ?></span></td>
+                                    <td><?= htmlspecialchars($safra->nome)           ?> </td>
+                                    <td><?= htmlspecialchars($safra->data_inicio)    ?> </td>
+                                    <td><?= htmlspecialchars($safra->data_fim ?? '') ?> </td>
+                                    <td>
+                                        <span class="status-badge 
+   
+                                            <?= $safra->status === 'concluida' ? 'status-concluida' : ($safra->status === 'encerrada' ? 'status-encerrada' : 'status-andamento') ?>"><?= htmlspecialchars($safra->status) ?>
+                                            
+                                        </span>
+                                    </td>
+
                                     <td><?= htmlspecialchars($safra->area_hectare ?? '-') ?></td>
                                     <td class="actions">
-                                        <button class="action-btn edit" onclick="openEditModal(<?= (int) $safra->id_safra ?>, '<?= htmlspecialchars($safra->nome) ?>', '<?= htmlspecialchars($safra->data_inicio) ?>', '<?= htmlspecialchars($safra->data_fim ?? '') ?>', '<?= htmlspecialchars($safra->area_hectare ?? '') ?>', '<?= htmlspecialchars($safra->status) ?>', '<?= htmlspecialchars($safra->descricao ?? '') ?>')">✏️</button>
+                                        <button class="action-btn edit" onclick="openEditModal(<?= (int) $safra->id_safra ?>, 
+
+                                            '<?= htmlspecialchars($safra->nome)               ?>', 
+                                            '<?= htmlspecialchars($safra->data_inicio)        ?>', 
+                                            '<?= htmlspecialchars($safra->data_fim ?? '')     ?>', 
+                                            '<?= htmlspecialchars($safra->area_hectare ?? '') ?>', 
+                                            '<?= htmlspecialchars($safra->status)             ?>', 
+                                            '<?= htmlspecialchars($safra->descricao ?? '')    ?>')">
+
+                                        ✏️</button>
+
                                         <form method="POST" action="/sistema-agricola/app/safra/deletar" style="display:inline">
                                             <input type="hidden" name="id_safra" value="<?= (int) $safra->id_safra ?>">
                                             <button class="action-btn delete" onclick="return confirm('Deseja excluir esta safra?')">🗑️</button>
@@ -555,15 +572,19 @@
             <!-- Cards informativos -->
             <div class="info-cards">
                 <div class="info-card">
-                    <div class="info-value">26 °C</div>
+                    <div class="info-value">—</div>
                     <div class="info-label">Temperatura</div>
                 </div>
                 <div class="info-card">
-                    <div class="info-value">320 ha</div>
+                    <div class="info-value"><?php 
+                        $hect = isset($total_hectares) ? (float)$total_hectares : 0;
+                        $fmt = (floor($hect) == $hect) ? number_format($hect, 0, ',', '.') : number_format($hect, 2, ',', '.');
+                        echo $fmt . ' ha';
+                    ?></div>
                     <div class="info-label">Total Hectares</div>
                 </div>
                 <div class="info-card">
-                    <div class="info-value">3</div>
+                    <div class="info-value"><?php echo isset($safras_ativas) ? (int)$safras_ativas : 0; ?></div>
                     <div class="info-label">Safras Ativas</div>
                 </div>
             </div>

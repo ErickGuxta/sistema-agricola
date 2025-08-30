@@ -2,6 +2,8 @@
 
 namespace app\controller;
 
+use app\dao\PropriedadeDAO;
+
 final class HomeController
 {
     public static function index() : void
@@ -28,7 +30,28 @@ final class HomeController
             header("Location: /sistema-agricola/app/registro-propriedade");
             exit;
         }
+
+        // Buscar nome da propriedade do usuário e guardar na sessão para uso no dashboard
+        if (isset($_SESSION['usuario_id'])) {
+            $propriedadeDao = new PropriedadeDAO();
+            $propriedade = $propriedadeDao->buscarPorUsuario((int) $_SESSION['usuario_id']);
+            if ($propriedade) {
+                $_SESSION['nome_propriedade'] = $propriedade->nome_propriedade;
+            }
+        }
         
         include VIEWS . '/dashboard/home.php';
+    }
+
+    public static function setSafra() : void
+    {
+        if (isset($_GET['safr-id'])) {
+            $_SESSION['safr-id'] = (int)$_GET['safr-id'];
+            $_SESSION['sucesso'] = "Safra selecionada com sucesso!";
+        } else {
+            $_SESSION['erro'] = "Erro: Safra não especificada.";
+        }
+        header('Location: /estoque');
+        exit();
     }
 }

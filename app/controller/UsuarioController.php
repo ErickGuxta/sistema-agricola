@@ -87,7 +87,7 @@ final class UsuarioController
                     $_SESSION['ultimo_acesso'] = time();
                     
                     // Verificar se o usuário já tem propriedade cadastrada
-                    $propriedadeDAO = new PropriedadeDAO();
+                    $propriedadeDAO = new \app\dao\PropriedadeDAO();
                     $propriedade = $propriedadeDAO->buscarPorUsuario($usuario->id_usuario);
                     
                     if ($propriedade) {
