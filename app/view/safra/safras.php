@@ -480,8 +480,8 @@
             <nav class="nav-menu">
                 <div class="nav-item">    <a href="/sistema-agricola/app/dashboard">Página Inicial</a></div>
                 <div class="nav-item active">Safras</div>
-                <div class="nav-item">    <a href="/sistema-agricola/app/estoque">Estoque</a></div>
-                <div class="nav-item">Faturamento</div>
+                <div class="nav-item">    <a href="/sistema-agricola/app/estoque">Estoque    </a></div>
+                <div class="nav-item">    <a href="/sistema-agricola/app/faturamento">Faturamento</a></div>
             </nav>
 
             <!-- Clima -->
@@ -498,7 +498,7 @@
                     <h1 class="page-title">Safras</h1>
                     <div class="divider"></div>
                     <div class="year-selector">
-                        2025 <span>▼</span>
+                        2025 
                     </div>
                 </div>
 

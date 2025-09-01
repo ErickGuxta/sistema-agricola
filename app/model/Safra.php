@@ -59,4 +59,10 @@ class Safra
     {
         return (new SafraDAO())->listarPorUsuario($usuarioId);
     }
+
+    // Listar todas as safras disponíveis
+    public static function listarTodas() : array
+    {
+        return (new SafraDAO())->listarTodas();
+    }
 }

@@ -126,6 +126,7 @@ CREATE TABLE Safra_Movimentacao_Assoc (
 CREATE TABLE Faturamento_Mes (
     id_faturamento INT UNSIGNED AUTO_INCREMENT,
     usuario_id     INT UNSIGNED NOT NULL,
+    safra_id       INT UNSIGNED NOT NULL,
 
     mes          DATE NOT NULL,
     valor        DECIMAL(12,2) NOT NULL,
@@ -133,20 +134,21 @@ CREATE TABLE Faturamento_Mes (
 
     PRIMARY KEY(id_faturamento),
     FOREIGN KEY (usuario_id) REFERENCES Usuario(id_usuario)
+    FOREIGN KEY (safra_id)   REFERENCES Safra(id_safra) 
 );
 
 -- ============================================
 -- ASSOCIAÇÃO SAFRA COM FATURAMENTO (OPCIONAL)
 -- ============================================
 
-CREATE TABLE Safra_Faturamento_Assoc (
-    safra_id         INT UNSIGNED,
-    faturamento_id INT UNSIGNED,
+-- CREATE TABLE Safra_Faturamento_Assoc (
+--     safra_id         INT UNSIGNED,
+--     faturamento_id INT UNSIGNED,
 
-    PRIMARY KEY (safra_id, faturamento_id),
-    FOREIGN KEY (safra_id)         REFERENCES Safra(id_safra),
-    FOREIGN KEY (faturamento_id)   REFERENCES Faturamento_Mes(id_faturamento)
-);
+--     PRIMARY KEY (safra_id, faturamento_id),
+--     FOREIGN KEY (safra_id)         REFERENCES Safra(id_safra),
+--     FOREIGN KEY (faturamento_id)   REFERENCES Faturamento_Mes(id_faturamento)
+-- );
 
 -- ============================================
 -- DADOS INICIAIS

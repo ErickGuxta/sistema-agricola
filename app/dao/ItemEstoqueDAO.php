@@ -32,14 +32,15 @@ final class ItemEstoqueDAO extends DAO
     // getById
     public function getById(int $idItem, ?int $safraId = null) : ?ItemEstoque
     {
-        $sql = 
-            " SELECT id_item, usuario_id, categoria_id, safra_id, nome, categoria, estoque_atual, estoque_minimo, validade, valor_unitario
-            FROM Item_Estoque WHERE id_item = ? ";
+        $sql =
+            " SELECT ie.id_item, ie.usuario_id, ie.categoria_id, ie.safra_id, ie.nome, c.nome AS categoria, ie.estoque_atual, ie.estoque_minimo, ie.validade, ie.valor_unitario
+              FROM Item_Estoque ie
+              JOIN Categoria c ON ie.categoria_id = c.id_categoria
+              WHERE ie.id_item = ? ";
 
         $params = [$idItem];
-        
         if ($safraId !== null) {
-            $sql .= " AND safra_id = ?";
+            $sql .= " AND ie.safra_id = ?";
             $params[] = $safraId;
         }
 
@@ -69,21 +70,21 @@ final class ItemEstoqueDAO extends DAO
     // atualizar Item
     public function atualizar(ItemEstoque $model) : ?ItemEstoque
     {
-        $sql = 
-            " UPDATE Item_Estoque 
-              SET nome = ?, categoria = ?, estoque_atual = ?, estoque_minimo = ?, valor_unitario = ?, validade = ?
+        $sql =
+            " UPDATE Item_Estoque
+              SET nome = ?, categoria_id = ?, estoque_atual = ?, estoque_minimo = ?, valor_unitario = ?, validade = ?
               WHERE id_item = ?";
 
         $stmt = parent::$conexao->prepare($sql);
-        
+
         $stmt->bindValue(1, $model->nome);
-        $stmt->bindValue(2, $model->categoria);
+        $stmt->bindValue(2, $model->categoria_id);
         $stmt->bindValue(3, $model->estoque_atual);
         $stmt->bindValue(4, $model->estoque_minimo);
         $stmt->bindValue(5, $model->valor_unitario);
         $stmt->bindValue(6, $model->validade);
         $stmt->bindValue(7, $model->id_item);
-        
+
         if ($stmt->execute()) {
             return $model;
         }
@@ -108,25 +109,25 @@ final class ItemEstoqueDAO extends DAO
     // listar por categoria e por safra
     public function listarPorCategoria(int $categoriaId, ?int $safraId = null) : array
     {
-        $sql = 
+        $sql =
             " SELECT id_item, usuario_id, categoria_id, safra_id, nome, estoque_atual, estoque_minimo, validade
             FROM Item_Estoque WHERE categoria_id = ?";
 
         $params = [$categoriaId];
-        
+
         if ($safraId !== null) {
             $sql .= " AND safra_id = ?";
             $params[] = $safraId;
         }
-        
+
         $sql .= " ORDER BY nome";
-        
+
         $stmt = parent::$conexao->prepare($sql);
         foreach ($params as $i => $param) {
             $stmt->bindValue($i + 1, $param);
         }
         $stmt->execute();
-        
+
         $itens = [];
         while ($linha = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $itens[] = new ItemEstoque($linha);
@@ -136,16 +137,16 @@ final class ItemEstoqueDAO extends DAO
 
     public function listarTodosPorSafra(int $usuarioId, int $safraId) : array
     {
-        $sql = 
+        $sql =
             " SELECT id_item, usuario_id, categoria_id, safra_id, nome, estoque_atual, estoque_minimo, validade
-            FROM Item_Estoque WHERE usuario_id = ? 
+            FROM Item_Estoque WHERE usuario_id = ?
             AND safra_id = ? ORDER BY nome";
-            
+
         $stmt = parent::$conexao->prepare($sql);
         $stmt->bindValue(1, $usuarioId);
         $stmt->bindValue(2, $safraId);
         $stmt->execute();
-        
+
         $itens = [];
         while ($linha = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $itens[] = new ItemEstoque($linha);

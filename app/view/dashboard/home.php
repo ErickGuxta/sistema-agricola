@@ -619,7 +619,7 @@ if (isset($_GET['logout'])) {
                 <div class="nav-item active">Página Inicial</div>
                 <div class="nav-item"><a href="/sistema-agricola/app/safra">Safras</a></div>
                 <div class="nav-item"><a href="/sistema-agricola/app/estoque">Estoque</a></div>
-                <div class="nav-item">Faturamento</div>
+                <div class="nav-item"><a href="/sistema-agricola/app/faturamento">Faturamento</a></div>
             </nav>
 
             <!-- clima -->
@@ -644,7 +644,7 @@ if (isset($_GET['logout'])) {
                     </h1>
                     <div class="divider"></div>
                     <div class="year-selector">
-                        2025 <span>▼</span>
+                        2025 
                     </div>
                 </div>
 

@@ -170,6 +170,27 @@
             cursor: pointer;
         }
 
+        .year-selector select {
+            font-size: clamp(18px, 3vw, 24px);
+            font-weight: bold;
+            color: #333;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+        .year-selector select:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .year-selector select:focus {
+            outline: none;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
         .divider {
             width: 2px;
             height: 40px;
@@ -220,6 +241,10 @@
             background: var(--color-light-red);
         }
 
+        .info-card.info {
+            background: var(--color-light-orange);
+        }
+
         .info-card-icon {
             width: 50px;
             height: 50px;
@@ -237,6 +262,11 @@
 
         .danger .info-card-icon {
             background: var(--color-button-red);
+            color: white;
+        }
+
+        .info .info-card-icon {
+            background: var(--color-orange);
             color: white;
         }
 
@@ -494,14 +524,22 @@
         <header class="header-sidebar">
             <nav class="perfil">
                 <div class="logo-circle">🌿</div>
-                <div class="logo-text">perfil</div>
+                <div class="logo-text">
+                <?php
+                        
+                        $nomeCompleto = $_SESSION['usuario_nome'];
+                        $primeiroNome = explode(' ', $nomeCompleto)[0];
+                        echo htmlspecialchars($primeiroNome);
+
+                    ?>
+                </div>
                 <div class="logo-subtext">Produtor Rural</div>
             </nav>
 
             <nav class="nav-menu">
-                <div class="nav-item">Página Inicial</div>
-                <div class="nav-item">Safras</div>
-                <div class="nav-item">Estoque</div>
+                <a href="/sistema-agricola/app/dashboard" class="nav-item">Página Inicial</a>
+                <a href="/sistema-agricola/app/safra" class="nav-item">Safras</a>
+                <a href="/sistema-agricola/app/estoque" class="nav-item">Estoque</a>
                 <div class="nav-item active">Faturamento</div>
             </nav>
 
@@ -518,7 +556,14 @@
                     <h1 class="page-title">Faturamento</h1>
                     <div class="divider"></div>
                     <div class="year-selector">
-                        Milho 2025 <span>▼</span>
+                        <select id="yearSelector">
+                            <option value="">Todas as Safras</option>
+                            <?php if (isset($todasSafras) && is_array($todasSafras)) {
+                                foreach ($todasSafras as $safra) {
+                                    echo '<option value="' . htmlspecialchars($safra->id_safra) . '">' . htmlspecialchars($safra->nome) . '</option>';
+                                }
+                            } ?>
+                        </select>
                     </div>
                 </div>
 
@@ -532,15 +577,22 @@
                 <div class="info-card success">
                     <div class="info-card-icon">💰</div>
                     <div class="info-card-content">
-                        <h3>Faturamento total</h3>
-                        <p>R$ 150.000,00</p>
+                        <h3>Lucro</h3>
+                        <p id="receitaTotal">R$ <?php echo isset($lucro) ? number_format($lucro, 2, ',', '.') : '0,00'; ?></p>
                     </div>
                 </div>
                 <div class="info-card danger">
                     <div class="info-card-icon">💸</div>
                     <div class="info-card-content">
                         <h3>Custos</h3>
-                        <p>-R$ 50.000,00</p>
+                        <p>-R$ <?php echo isset($custoTotal) ? number_format($custoTotal, 2, ',', '.') : '0,00'; ?></p>
+                    </div>
+                </div>
+                <div class="info-card info">
+                    <div class="info-card-icon">📊</div>
+                    <div class="info-card-content">
+                        <h3>Faturamento Bruto</h3>
+                        <p>R$ <?php echo isset($receitaTotal) ? number_format($receitaTotal, 2, ',', '.') : '0,00'; ?></p>
                     </div>
                 </div>
             </div>
@@ -550,36 +602,43 @@
                 <table class="products-table">
                     <thead>
                         <tr>
-                            <th>Receitas registradas</th>
+                            <th>Mês</th>
+                            <th>Safra</th>
                             <th>Valor Bruto</th>
+                            <th>Descrição</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php if (isset($faturamentos) && is_array($faturamentos) && count($faturamentos) > 0) {
+                            foreach ($faturamentos as $fat) {
+                                $safraNome = '';
+                                if (isset($safras) && is_array($safras)) {
+                                    foreach ($safras as $safra) {
+                                        if ($safra->id_safra == $fat->safra_id) {
+                                            $safraNome = $safra->nome;
+                                            break;
+                                        }
+                                    }
+                                }
+                        ?>
                         <tr>
-                            <td>Abril</td>
-                            <td>R$ 80.000,00</td>
+                            <td><?php echo htmlspecialchars($fat->mes); ?></td>
+                            <td><?php echo htmlspecialchars($safraNome); ?></td>
+                            <td>R$ <?php echo number_format($fat->valor, 2, ',', '.'); ?></td>
+                            <td><?php echo htmlspecialchars($fat->descricao); ?></td>
                             <td class="actions">
-                                <button class="action-btn" onclick="editReceita('Abril', '80000')" title="Editar">✏️</button>
-                                <button class="action-btn" onclick="deleteReceita('Abril')" title="Excluir">🗑️</button>
+                                <button class="action-btn" onclick="openEditModal(<?php echo $fat->id_faturamento; ?>, '<?php echo htmlspecialchars($fat->mes); ?>', '<?php echo htmlspecialchars($fat->valor); ?>', '<?php echo htmlspecialchars($fat->descricao); ?>', '<?php echo htmlspecialchars($fat->safra_id); ?>')" title="Editar">✏️</button>
+                                <form method="POST" action="/sistema-agricola/app/faturamento/deletar" style="display:inline;" onsubmit="return confirm('Deseja excluir este faturamento?')">
+                                    <input type="hidden" name="id_faturamento" value="<?php echo $fat->id_faturamento; ?>">
+                                    <button type="submit" class="action-btn" title="Excluir">🗑️</button>
+                                </form>
                             </td>
                         </tr>
-                        <tr>
-                            <td>Maio</td>
-                            <td>R$ 50.000,00</td>
-                            <td class="actions">
-                                <button class="action-btn" onclick="editReceita('Maio', '50000')" title="Editar">✏️</button>
-                                <button class="action-btn" onclick="deleteReceita('Maio')" title="Excluir">🗑️</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Junho</td>
-                            <td>R$ 100.000,00</td>
-                            <td class="actions">
-                                <button class="action-btn" onclick="editReceita('Junho', '100000')" title="Editar">✏️</button>
-                                <button class="action-btn" onclick="deleteReceita('Junho')" title="Excluir">🗑️</button>
-                            </td>
-                        </tr>
+                        <?php }
+                        } else { ?>
+                        <tr><td colspan="5">Nenhum faturamento registrado.</td></tr>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -594,202 +653,210 @@
         </main>
     </div>
 
-    <!-- Modal de cadastro/edição -->
-    <div id="modal-overlay" class="modal-overlay" onclick="closeModal()">
+    <!-- Modal de cadastro -->
+    <div id="modal-cadastro" class="modal-overlay" onclick="closeCadastroModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 class="modal-title" id="modal-title">Adicionar Receita</h2>
-
-            <form class="form" id="receita-form" onsubmit="handleSubmit(event)">
+            <h2 class="modal-title">Adicionar Receita</h2>
+            <form class="form" method="POST" action="/sistema-agricola/app/faturamento/atualizar">
                 <div class="form-group">
-                    <label for="mes">Mês</label>
-                    <select id="mes" name="mes" required>
+                    <label for="cadastro-mes">Mês</label>
+                    <select id="cadastro-mes" name="mes" required>
                         <option value="">Selecione o mês</option>
-                        <option value="Janeiro">Janeiro</option>
-                        <option value="Fevereiro">Fevereiro</option>
-                        <option value="Março">Março</option>
-                        <option value="Abril">Abril</option>
-                        <option value="Maio">Maio</option>
-                        <option value="Junho">Junho</option>
-                        <option value="Julho">Julho</option>
-                        <option value="Agosto">Agosto</option>
-                        <option value="Setembro">Setembro</option>
-                        <option value="Outubro">Outubro</option>
-                        <option value="Novembro">Novembro</option>
-                        <option value="Dezembro">Dezembro</option>
+                        <option value="01">Janeiro</option>
+                        <option value="02">Fevereiro</option>
+                        <option value="03">Março</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Maio</option>
+                        <option value="06">Junho</option>
+                        <option value="07">Julho</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
                     </select>
                 </div>
-
                 <div class="form-group">
-                    <label for="valor">Valor (R$)</label>
-                    <input type="number" id="valor" name="valor" min="0" step="0.01" placeholder="50000.00" required>
+                    <label for="cadastro-valor">Valor (R$)</label>
+                    <input type="number" id="cadastro-valor" name="valor" min="0" step="0.01" placeholder="50000.00" required>
                 </div>
-
-                <button type="submit" class="submit-btn" id="submit-btn">Adicionar</button>
+                <div class="form-group">
+                    <label for="cadastro-descricao">Descrição</label>
+                    <input type="text" id="cadastro-descricao" name="descricao" placeholder="Descrição opcional">
+                </div>
+                <div class="form-group">
+                    <label for="cadastro-safra">Safra</label>
+                    <select id="cadastro-safra" name="safra_id" required>
+                        <option value="">Selecione a safra</option>
+                        <?php if (isset($safras) && is_array($safras)) {
+                            foreach ($safras as $safra) {
+                                echo '<option value="' . htmlspecialchars($safra->id_safra) . '">' . htmlspecialchars($safra->nome) . '</option>';
+                            }
+                        } ?>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Adicionar</button>
+            </form>
+        </div>
+    </div>
+    <!-- Modal de edição -->
+    <div id="modal-editar" class="modal-overlay" onclick="closeEditModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 class="modal-title">Editar Receita</h2>
+            <form class="form" method="POST" action="/sistema-agricola/app/faturamento/atualizar">
+                <input type="hidden" id="edit-id-faturamento" name="id_faturamento">
+                <div class="form-group">
+                    <label for="edit-mes">Mês</label>
+                    <select id="edit-mes" name="mes" required>
+                        <option value="">Selecione o mês</option>
+                        <option value="01">Janeiro</option>
+                        <option value="02">Fevereiro</option>
+                        <option value="03">Março</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Maio</option>
+                        <option value="06">Junho</option>
+                        <option value="07">Julho</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-valor">Valor (R$)</label>
+                    <input type="number" id="edit-valor" name="valor" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-descricao">Descrição</label>
+                    <input type="text" id="edit-descricao" name="descricao">
+                </div>
+                <div class="form-group">
+                    <label for="edit-safra">Safra</label>
+                    <select id="edit-safra" name="safra_id" required>
+                        <option value="">Selecione a safra</option>
+                        <?php if (isset($safras) && is_array($safras)) {
+                            foreach ($safras as $safra) {
+                                echo '<option value="' . htmlspecialchars($safra->id_safra) . '">' . htmlspecialchars($safra->nome) . '</option>';
+                            }
+                        } ?>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Atualizar</button>
             </form>
         </div>
     </div>
 
     <script>
-        // // Dados do gráfico
-        // const chartData = {
-        //     labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
-        //     values: [10000, 15000, 25000, 30000, 35000]
-        // };
-
-        // // Desenhar gráfico
-        // function drawChart() {
-        //     const canvas = document.getElementById('faturamentoChart');
-        //     const ctx = canvas.getContext('2d');
-            
-        //     // Configurar canvas
-        //     canvas.width = canvas.offsetWidth;
-        //     canvas.height = canvas.offsetHeight;
-            
-        //     const width = canvas.width;
-        //     const height = canvas.height;
-        //     const padding = 60;
-            
-        //     // Limpar canvas
-        //     ctx.clearRect(0, 0, width, height);
-            
-        //     // Configurações do gráfico
-        //     const chartWidth = width - 2 * padding;
-        //     const chartHeight = height - 2 * padding;
-        //     const maxValue = Math.max(...chartData.values);
-        //     const minValue = 0;
-        //     const valueRange = maxValue - minValue;
-            
-        //     // Desenhar eixos
-        //     ctx.strokeStyle = '#333';
-        //     ctx.lineWidth = 2;
-        //     ctx.beginPath();
-        //     ctx.moveTo(padding, padding);
-        //     ctx.lineTo(padding, height - padding);
-        //     ctx.lineTo(width - padding, height - padding);
-        //     ctx.stroke();
-            
-        //     // Desenhar labels do eixo Y
-        //     ctx.fillStyle = '#666';
-        //     ctx.font = '12px Arial';
-        //     ctx.textAlign = 'right';
-        //     for (let i = 0; i <= 7; i++) {
-        //         const value = (maxValue / 7) * i;
-        //         const y = height - padding - (chartHeight / 7) * i;
-        //         ctx.fillText(`R$ ${(value / 1000).toFixed(0)}.000`, padding - 10, y + 4);
-                
-        //         // Linhas de grade
-        //         if (i > 0) {
-        //             ctx.strokeStyle = '#eee';
-        //             ctx.lineWidth = 1;
-        //             ctx.beginPath();
-        //             ctx.moveTo(padding, y);
-        //             ctx.lineTo(width - padding, y);
-        //             ctx.stroke();
-        //         }
-        //     }
-            
-        //     // Desenhar labels do eixo X
-        //     ctx.textAlign = 'center';
-        //     chartData.labels.forEach((label, index) => {
-        //         const x = padding + (chartWidth / (chartData.labels.length - 1)) * index;
-        //         ctx.fillText(label, x, height - padding + 20);
-        //     });
-            
-        //     // Desenhar linha do gráfico
-        //     ctx.strokeStyle = '#1e472d';
-        //     ctx.lineWidth = 3;
-        //     ctx.beginPath();
-            
-        //     chartData.values.forEach((value, index) => {
-        //         const x = padding + (chartWidth / (chartData.labels.length - 1)) * index;
-        //         const y = height - padding - ((value - minValue) / valueRange) * chartHeight;
-                
-        //         if (index === 0) {
-        //             ctx.moveTo(x, y);
-        //         } else {
-        //             ctx.lineTo(x, y);
-        //         }
-                
-        //         // Desenhar pontos
-        //         ctx.fillStyle = '#1e472d';
-        //         ctx.beginPath();
-        //         ctx.arc(x, y, 4, 0, 2 * Math.PI);
-        //         ctx.fill();
-        //     });
-            
-        //     ctx.stroke();
-            
-        //     // Preencher área sob a curva
-        //     ctx.fillStyle = 'rgba(30, 71, 45, 0.1)';
-        //     ctx.beginPath();
-        //     ctx.moveTo(padding, height - padding);
-        //     chartData.values.forEach((value, index) => {
-        //         const x = padding + (chartWidth / (chartData.labels.length - 1)) * index;
-        //         const y = height - padding - ((value - minValue) / valueRange) * chartHeight;
-        //         ctx.lineTo(x, y);
-        //     });
-        //     ctx.lineTo(width - padding, height - padding);
-        //     ctx.closePath();
-        //     ctx.fill();
-        // }
-
-        // Abrir modal de cadastro
         function openCadastroModal() {
-            const modal = document.getElementById("modal-overlay");
-            modal.classList.add("active");
+            document.getElementById("modal-cadastro").classList.add("active");
             document.body.style.overflow = "hidden";
-            document.getElementById("modal-title").textContent = "Adicionar Receita";
-            document.getElementById("submit-btn").textContent = "Adicionar";
-            document.getElementById("receita-form").reset();
         }
-
-        // Editar receita
-        function editReceita(mes, valor) {
-            const modal = document.getElementById("modal-overlay");
-            modal.classList.add("active");
-            document.body.style.overflow = "hidden";
-            document.getElementById("modal-title").textContent = "Editar Receita";
-            document.getElementById("submit-btn").textContent = "Atualizar";
-            document.getElementById("mes").value = mes;
-            document.getElementById("valor").value = valor;
-        }
-
-        // Deletar receita
-        function deleteReceita(mes) {
-            if (confirm(`Deseja excluir a receita de ${mes}?`)) {
-                alert(`Receita de ${mes} excluída com sucesso!`);
-            }
-        }
-
-        // Fechar modal
-        function closeModal() {
-            const modal = document.getElementById("modal-overlay");
-            modal.classList.remove("active");
+        function closeCadastroModal() {
+            document.getElementById("modal-cadastro").classList.remove("active");
             document.body.style.overflow = "auto";
-            document.getElementById("receita-form").reset();
         }
-
-        // Handle form submission
-        function handleSubmit(event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            const mes = formData.get('mes');
-            const valor = parseFloat(formData.get('valor'));
-            
-            alert(`Receita de ${mes} no valor de R$ ${valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})} salva com sucesso!`);
-            closeModal();
+        function openEditModal(id, mes, valor, descricao, safra_id) {
+            document.getElementById("edit-id-faturamento").value = id;
+            document.getElementById("edit-mes").value = mes;
+            document.getElementById("edit-valor").value = valor;
+            document.getElementById("edit-descricao").value = descricao;
+            document.getElementById("edit-safra").value = safra_id;
+            document.getElementById("modal-editar").classList.add("active");
+            document.body.style.overflow = "hidden";
         }
-
-        // Fechar modal com ESC
+        function closeEditModal() {
+            document.getElementById("modal-editar").classList.remove("active");
+            document.body.style.overflow = "auto";
+        }
         document.addEventListener("keydown", function(event) {
             if (event.key === "Escape") {
-                closeModal();
+                closeCadastroModal();
+                closeEditModal();
             }
         });
 
-        // Inicializar gráfico quando a página carregar
-        window.addEventListener('load', drawChart);
-        window.addEventListener('resize', drawChart);
+        // Função para filtrar faturamentos por safra
+        function filtrarPorSafra(safraId) {
+            const url = safraId ? `/sistema-agricola/app/faturamento/buscar?safra_id=${safraId}` : `/sistema-agricola/app/faturamento/buscar`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Erro:', data.error);
+                        return;
+                    }
+                    
+                    // Atualizar a tabela
+                    atualizarTabela(data.faturamentos);
+                    
+                    // Atualizar o valor total
+                    atualizarValorTotal(data.receitaTotal);
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar dados:', error);
+                });
+        }
+
+        // Função para atualizar a tabela
+        function atualizarTabela(faturamentos) {
+            const tbody = document.querySelector('.products-table tbody');
+            if (!tbody) return;
+
+            let html = '';
+            if (faturamentos && faturamentos.length > 0) {
+                faturamentos.forEach(fat => {
+                    // Buscar o nome da safra
+                    const safraSelect = document.getElementById('yearSelector');
+                    let safraNome = 'N/A';
+                    if (fat.safra_id && safraSelect) {
+                        const option = safraSelect.querySelector(`option[value="${fat.safra_id}"]`);
+                        if (option) {
+                            safraNome = option.textContent;
+                        }
+                    }
+                    
+                    html += `
+                        <tr>
+                            <td>${fat.mes}</td>
+                            <td>${safraNome}</td>
+                            <td>R$ ${parseFloat(fat.valor).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                            <td>${fat.descricao || ''}</td>
+                            <td class="actions">
+                                <button class="action-btn" onclick="openEditModal(${fat.id_faturamento}, '${fat.mes}', '${fat.valor}', '${fat.descricao || ''}', '${fat.safra_id}')" title="Editar">✏️</button>
+                                <form method="POST" action="/sistema-agricola/app/faturamento/deletar" style="display:inline;" onsubmit="return confirm('Deseja excluir este faturamento?')">
+                                    <input type="hidden" name="id_faturamento" value="${fat.id_faturamento}">
+                                    <button type="submit" class="action-btn" title="Excluir">🗑️</button>
+                                </form>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } else {
+                html = '<tr><td colspan="5">Nenhum faturamento registrado.</td></tr>';
+            }
+            
+            tbody.innerHTML = html;
+        }
+
+        // Função para atualizar o valor total
+        function atualizarValorTotal(receitaTotal) {
+            const valorElement = document.getElementById('receitaTotal');
+            if (valorElement) {
+                valorElement.textContent = `R$ ${parseFloat(receitaTotal).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            }
+        }
+
+        // Event listener para o seletor de safras
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearSelector = document.getElementById('yearSelector');
+            if (yearSelector) {
+                yearSelector.addEventListener('change', function() {
+                    filtrarPorSafra(this.value);
+                });
+            }
+        });
     </script>
 </body>
 </html>

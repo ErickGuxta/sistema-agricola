@@ -570,7 +570,7 @@
                 <a href="/sistema-agricola/app/dashboard" class="nav-item">Página Inicial</a>
                 <a href="/sistema-agricola/app/safra" class="nav-item">Safras</a>
                 <div class="nav-item active">Estoque</div>
-                <div class="nav-item">Faturamento</div>
+                <a href="/sistema-agricola/app/faturamento" class="nav-item">Faturamento</a>            
             </nav>
 
             <div class="weather">

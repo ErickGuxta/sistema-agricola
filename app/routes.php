@@ -5,7 +5,8 @@ use app\controller\{
     PropriedadeController,
     HomeController,
     SafraController,
-    ItemEstoqueController
+    ItemEstoqueController,
+    FaturamentoController
 };
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -57,6 +58,18 @@ switch ($url) {
         break;
     case 'estoque/movimentacao':
         ItemEstoqueController::movimentacao();
+        break;
+    case 'faturamento':
+        FaturamentoController::index();
+        break;
+    case 'faturamento/buscar':
+        FaturamentoController::buscar();
+        break;
+    case 'faturamento/atualizar':
+        FaturamentoController::atualizar();
+        break;
+    case 'faturamento/deletar':
+        FaturamentoController::deletar();
         break;
     case 'dashboard/setSafra':
         HomeController::setSafra();

@@ -126,4 +126,22 @@ final class SafraDAO extends DAO
         }
         return $safras;
     }
+
+    /**
+     * Lista todas as safras disponíveis
+     */
+    public function listarTodas() : array
+    {
+        $sql = "SELECT id_safra, propriedade_id, nome, descricao, data_inicio, data_fim, area_hectare, status FROM Safra ORDER BY data_inicio DESC, id_safra DESC";
+        
+        $stmt = parent::$conexao->prepare($sql);
+        $stmt->execute();
+
+        $linhas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $resultado = [];
+        foreach ($linhas as $linha) {
+            $resultado[] = new Safra($linha);
+        }
+        return $resultado;
+    }
 }
