@@ -1,6 +1,5 @@
 <?php
 
-// Remover o var_dump que está causando a exibição da string
 define('BASE_DIR', dirname(__FILE__, 2));
 define('VIEWS', BASE_DIR . '/app/view');
 

@@ -194,6 +194,7 @@ final class ItemEstoqueController
             $tipo        = $_POST['tipo']                ?? null;
             $quantidade  = floatval($_POST['quantidade'] ?? 0);
             $motivo      = trim($_POST['motivo']         ?? '');
+            
             if ($item_id && $tipo && $quantidade > 0) {
                 // Buscar item
                 $item = \app\model\ItemEstoque::getById((int)$item_id);

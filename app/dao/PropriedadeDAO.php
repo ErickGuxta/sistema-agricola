@@ -41,11 +41,11 @@ final class PropriedadeDAO extends DAO
       }
       
       $propriedade = new Propriedade();
-      $propriedade->id_propriedade = (int) $linha['id_propriedade'];
-      $propriedade->usuario_id = (int) $linha['usuario_id'];
-      $propriedade->nome_propriedade = $linha['nome_propriedade'];
-      $propriedade->area_total = $linha['area_total'];
-      $propriedade->localizacao = $linha['localizacao'];
+      $propriedade->id_propriedade    = (int) $linha['id_propriedade'];
+      $propriedade->usuario_id        = (int) $linha['usuario_id'];
+      $propriedade->nome_propriedade  = $linha['nome_propriedade'];
+      $propriedade->area_total        = $linha['area_total'];
+      $propriedade->localizacao       = $linha['localizacao'];
       
       return $propriedade;
    }

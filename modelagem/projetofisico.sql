@@ -15,6 +15,7 @@ CREATE TABLE Usuario (
     nome_produtor VARCHAR(100) NOT NULL,
     email         VARCHAR(100) UNIQUE NOT NULL,
     senha         VARCHAR(255) NOT NULL,
+    foto_perfil   VARCHAR(255) NOT NULL,
 
     PRIMARY KEY(id_usuario)
 );
@@ -74,7 +75,6 @@ CREATE TABLE Item_Estoque (
     safra_id         INT UNSIGNED NOT NULL, 
 
     nome             VARCHAR(100) NOT NULL,
-    -- Coluna 'categoria' removida por ser redundante
     estoque_atual    DECIMAL(10,3) DEFAULT 0,
     estoque_minimo   DECIMAL(10,3) DEFAULT 0,
     valor_unitario   DECIMAL(10,2),
@@ -112,7 +112,7 @@ CREATE TABLE Movimentacao_Estoque (
 CREATE TABLE Safra_Movimentacao_Assoc (
     id_associacao    INT UNSIGNED AUTO_INCREMENT,
     safra_id         INT UNSIGNED NOT NULL,
-    movimentacao_id  INT UNSIGNED NOT NULL, -- Corrigido de 'bINT UNSIGNED' para 'INT UNSIGNED'
+    movimentacao_id  INT UNSIGNED NOT NULL, 
 
     PRIMARY KEY(id_associacao),
     FOREIGN KEY (safra_id)         REFERENCES Safra(id_safra),
@@ -133,12 +133,12 @@ CREATE TABLE Faturamento_Mes (
     descricao    VARCHAR(200),
 
     PRIMARY KEY(id_faturamento),
-    FOREIGN KEY (usuario_id) REFERENCES Usuario(id_usuario)
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(id_usuario),
     FOREIGN KEY (safra_id)   REFERENCES Safra(id_safra) 
 );
 
 -- ============================================
--- ASSOCIAÇÃO SAFRA COM FATURAMENTO (OPCIONAL)
+-- ASSOCIAÇÃO SAFRA COM FATURAMENTO 
 -- ============================================
 
 -- CREATE TABLE Safra_Faturamento_Assoc (

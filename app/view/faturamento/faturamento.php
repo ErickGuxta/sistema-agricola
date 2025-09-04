@@ -558,8 +558,8 @@
                     <div class="year-selector">
                         <select id="yearSelector">
                             <option value="">Todas as Safras</option>
-                            <?php if (isset($todasSafras) && is_array($todasSafras)) {
-                                foreach ($todasSafras as $safra) {
+                            <?php if (isset($safras) && is_array($safras)) {
+                                foreach ($safras as $safra) {
                                     echo '<option value="' . htmlspecialchars($safra->id_safra) . '">' . htmlspecialchars($safra->nome) . '</option>';
                                 }
                             } ?>
@@ -578,21 +578,21 @@
                     <div class="info-card-icon">💰</div>
                     <div class="info-card-content">
                         <h3>Lucro</h3>
-                        <p id="receitaTotal">R$ <?php echo isset($lucro) ? number_format($lucro, 2, ',', '.') : '0,00'; ?></p>
+                        <p id="card-lucro">R$ <?php echo isset($lucro) ? number_format($lucro, 2, ',', '.') : '0,00'; ?></p>
                     </div>
                 </div>
                 <div class="info-card danger">
                     <div class="info-card-icon">💸</div>
                     <div class="info-card-content">
                         <h3>Custos</h3>
-                        <p>-R$ <?php echo isset($custoTotal) ? number_format($custoTotal, 2, ',', '.') : '0,00'; ?></p>
+                        <p id="card-custo">-R$ <?php echo isset($custoTotal) ? number_format($custoTotal, 2, ',', '.') : '0,00'; ?></p>
                     </div>
                 </div>
                 <div class="info-card info">
                     <div class="info-card-icon">📊</div>
                     <div class="info-card-content">
                         <h3>Faturamento Bruto</h3>
-                        <p>R$ <?php echo isset($receitaTotal) ? number_format($receitaTotal, 2, ',', '.') : '0,00'; ?></p>
+                        <p id="card-bruto">R$ <?php echo isset($receitaTotal) ? number_format($receitaTotal, 2, ',', '.') : '0,00'; ?></p>
                     </div>
                 </div>
             </div>
@@ -623,7 +623,7 @@
                                 }
                         ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($fat->mes); ?></td>
+                            <td><?php echo htmlspecialchars($fat->mes ? date('m/Y', strtotime($fat->mes)) : ''); ?></td>
                             <td><?php echo htmlspecialchars($safraNome); ?></td>
                             <td>R$ <?php echo number_format($fat->valor, 2, ',', '.'); ?></td>
                             <td><?php echo htmlspecialchars($fat->descricao); ?></td>
@@ -791,8 +791,8 @@
                     // Atualizar a tabela
                     atualizarTabela(data.faturamentos);
                     
-                    // Atualizar o valor total
-                    atualizarValorTotal(data.receitaTotal);
+                    // Atualizar cards
+                    atualizarCards(data.receitaTotal, data.custoTotal, data.lucro);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados:', error);
@@ -819,7 +819,7 @@
                     
                     html += `
                         <tr>
-                            <td>${fat.mes}</td>
+                            <td>${(fat.mes ? new Date(fat.mes).toLocaleDateString('pt-BR', { month: '2-digit', year: 'numeric' }).replace(' de ', '/') : '')}</td>
                             <td>${safraNome}</td>
                             <td>R$ ${parseFloat(fat.valor).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                             <td>${fat.descricao || ''}</td>
@@ -842,9 +842,22 @@
 
         // Função para atualizar o valor total
         function atualizarValorTotal(receitaTotal) {
-            const valorElement = document.getElementById('receitaTotal');
-            if (valorElement) {
-                valorElement.textContent = `R$ ${parseFloat(receitaTotal).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            // Mantido por compatibilidade; delega para atualizarCards apenas com receita
+            atualizarCards(receitaTotal, undefined, undefined);
+        }
+
+        function atualizarCards(receitaTotal, custoTotal, lucro) {
+            const elBruto = document.getElementById('card-bruto');
+            const elCusto = document.getElementById('card-custo');
+            const elLucro = document.getElementById('card-lucro');
+            if (typeof receitaTotal !== 'undefined' && elBruto) {
+                elBruto.textContent = `R$ ${parseFloat(receitaTotal).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            }
+            if (typeof custoTotal !== 'undefined' && elCusto) {
+                elCusto.textContent = `-R$ ${parseFloat(custoTotal).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            }
+            if (typeof lucro !== 'undefined' && elLucro) {
+                elLucro.textContent = `R$ ${parseFloat(lucro).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             }
         }
 

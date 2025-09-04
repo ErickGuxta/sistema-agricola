@@ -21,26 +21,26 @@ final class UsuarioController
                 $erro = "Todos os campos são obrigatórios";
             } else {
                 // Verificar se o email já existe
-                $usuarioDAO = new UsuarioDAO();
+                $usuarioDAO  = new UsuarioDAO();
                 $emailExiste = $usuarioDAO->verificarEmail($_POST['email']);
                 
                 if ($emailExiste) {
                     $erro = "Este email já está cadastrado";
                 } else {
                     $model->nome_produtor = $_POST['nome_produtor'];
-                    $model->email = $_POST['email'];
-                    $model->senha = $_POST['senha'];
+                    $model->email         = $_POST['email'];
+                    $model->senha         = $_POST['senha'];
                     
-                    $usuarioRegistrado = $model->registrar();
+                    $usuarioRegistrado = $model-> registrar();
 
                     if($usuarioRegistrado !== null)
                     {
                         // CRIAR SESSÃO DO USUÁRIO
-                        $_SESSION['usuario_id'] = $usuarioRegistrado->id_usuario;
-                        $_SESSION['usuario_nome'] = $usuarioRegistrado->nome_produtor;
-                        $_SESSION['usuario_email'] = $usuarioRegistrado->email;
-                        $_SESSION['logado'] = true;
-                        $_SESSION['ultimo_acesso'] = time();
+                        $_SESSION['usuario_id']     = $usuarioRegistrado->id_usuario;
+                        $_SESSION['usuario_nome']   = $usuarioRegistrado->nome_produtor;
+                        $_SESSION['usuario_email']  = $usuarioRegistrado->email;
+                        $_SESSION['logado']         = true;
+                        $_SESSION['ultimo_acesso']  = time();
                         
                         // Redirecionar para página de cadastro de propriedade
                         header("Location: /sistema-agricola/app/registro-propriedade");
@@ -80,20 +80,21 @@ final class UsuarioController
                 
                 if ($usuario) {
                     // Criar sessão do usuário
-                    $_SESSION['usuario_id'] = $usuario->id_usuario;
-                    $_SESSION['usuario_nome'] = $usuario->nome_produtor;
-                    $_SESSION['usuario_email'] = $usuario->email;
-                    $_SESSION['logado'] = true;
+                    $_SESSION['usuario_id']    = $usuario-> id_usuario;
+                    $_SESSION['usuario_nome']  = $usuario-> nome_produtor;
+                    $_SESSION['usuario_email'] = $usuario-> email;
+                    $_SESSION['logado']        = true;
                     $_SESSION['ultimo_acesso'] = time();
                     
                     // Verificar se o usuário já tem propriedade cadastrada
-                    $propriedadeDAO = new \app\dao\PropriedadeDAO();
-                    $propriedade = $propriedadeDAO->buscarPorUsuario($usuario->id_usuario);
+                    $propriedadeDAO = new PropriedadeDAO();
+                    $propriedade = $propriedadeDAO-> buscarPorUsuario($usuario->id_usuario);
                     
                     if ($propriedade) {
                         // Se tem propriedade, salvar na sessão e ir para dashboard
-                        $_SESSION['propriedade_id'] = $propriedade->id_propriedade;
+                        $_SESSION['propriedade_id']  = $propriedade->id_propriedade;
                         $_SESSION['propriedade_nome'] = $propriedade->nome_propriedade;
+
                         header("Location: /sistema-agricola/app/dashboard");
                     } else {
                         // Se não tem propriedade, ir para cadastro de propriedade

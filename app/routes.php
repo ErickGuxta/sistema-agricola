@@ -20,7 +20,8 @@ $url = trim($url, '/');
 //rotas
 switch ($url) {
     case '':
-    case 'registro': // Adicionada a rota register
+    // Adicionada a rota register
+    case 'registro': 
         UsuarioController::index();
         break;
     case 'login':
@@ -32,6 +33,7 @@ switch ($url) {
     case 'dashboard':
         HomeController::index();
         break;
+    // Adicionada a rota safra
     case 'safra':
         SafraController::index();
         break;
@@ -44,6 +46,7 @@ switch ($url) {
     case 'safra/deletar':
         SafraController::deletar();
         break;
+    // Adicionada a rota estoque
     case 'estoque':
         ItemEstoqueController::index();
         break;
@@ -59,6 +62,7 @@ switch ($url) {
     case 'estoque/movimentacao':
         ItemEstoqueController::movimentacao();
         break;
+    // Adicionada a rota faturamento
     case 'faturamento':
         FaturamentoController::index();
         break;

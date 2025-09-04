@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,6 +83,42 @@
     .pagina-propriedade h2 {
       font-size: 18px;
       margin-bottom: 20px;
+    }
+
+    .container-register {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 48px;
+    }
+    .container-register > div:first-child {
+      flex: 3 1 420px;
+      min-width: 340px;
+      max-width: 600px;
+    }
+    .container-register .profile-pic-upload {
+      flex: 0 1 100px;
+      min-width: 100px;
+      max-width: 140px;
+      margin-top: 32px;
+    }
+    @media (max-width: 900px) {
+      .container-register {
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+      }
+      .container-register > div:first-child {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+      .container-register .profile-pic-upload {
+        margin-top: 0;
+        min-width: 80px;
+        max-width: 120px;
+      }
     }
 
     /* Espaçamento entre formulário e botões */
@@ -261,8 +298,67 @@
         max-width: none !important;
       }
     }
+    .profile-pic-upload {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+      gap: 6px;
+    }
+    .profile-pic-label {
+      cursor: pointer;
+      width: 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .profile-pic-preview {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      border: 2px dashed #b2b2b2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 4px;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .profile-pic-label:hover .profile-pic-preview {
+      border-color: #1f5b3c;
+    }
+    .profile-pic-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #profilePicPlaceholder {
+      color: #888;
+      font-size: 13px;
+      text-align: center;
+    }
+    .profile-pic-instructions {
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+      margin-top: 2px;
+    }
+    @media (max-width: 768px) {
+      .profile-pic-label {
+        width: 100px;
+      }
+      .profile-pic-preview {
+        width: 80px;
+        height: 80px;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="form-section">
@@ -282,15 +378,30 @@
         </div>
       <?php endif; ?>
 
-      <form method="POST" action="/sistema-agricola/app/registro" id="formCadastro">
-        <label for="nome">Nome</label>
-        <input type="text" id="nome" placeholder="Nome do proprietário" name="nome_produtor" required value="<?= isset($_POST['nome_produtor']) ? htmlspecialchars($_POST['nome_produtor']) : '' ?>">
+      <form method="POST" action="/sistema-agricola/app/registro" id="formCadastro" enctype="multipart/form-data">
+        <div class="container-register">
+          <div>
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" placeholder="Nome do proprietário" name="nome_produtor" required value="<?= isset($_POST['nome_produtor']) ? htmlspecialchars($_POST['nome_produtor']) : '' ?>">
 
-        <label for="email">E-mail</label>
-        <input type="email" id="email" placeholder="E-mail" name="email" required value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="E-mail" name="email" required value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>">
 
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" placeholder="Senha" name="senha" required>
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" placeholder="Senha" name="senha" required>
+          </div>
+          <div class="profile-pic-upload">
+            <label for="profileImage" class="profile-pic-label">
+              <span>Foto de Perfil</span>
+              <div class="profile-pic-preview" id="profilePicPreview">
+                <img src="/sistema-agricola/app/view/img/image5.png" alt="Pré-visualização" id="profilePicImg" style="display: none;" />
+                <span id="profilePicPlaceholder">Clique para escolher</span>
+              </div>
+              <input type="file" name="image" id="profileImage" accept="image/*" style="display: none;">
+            </label>
+            <small class="profile-pic-instructions">Formatos aceitos: JPG, PNG. Tamanho máximo: 2MB.</small>
+          </div>
+        </div>
 
         <div class="termos-botao">
           <div class="checkbox">
@@ -312,25 +423,52 @@
       const nome = document.getElementById('nome').value.trim();
       const email = document.getElementById('email').value.trim();
       const senha = document.getElementById('senha').value.trim();
-      
+
       if (!nome || !email || !senha) {
         alert('Por favor, preencha todos os campos.');
         e.preventDefault();
         return false;
       }
-      
+
       if (!email.includes('@')) {
         alert('Por favor, insira um e-mail válido.');
         e.preventDefault();
         return false;
       }
-      
+
       if (senha.length < 6) {
         alert('A senha deve ter pelo menos 6 caracteres.');
         e.preventDefault();
         return false;
       }
     });
+    // Preview da imagem de perfil
+    document.addEventListener('DOMContentLoaded', function() {
+      const input = document.getElementById('profileImage');
+      const preview = document.getElementById('profilePicPreview');
+      const img = document.getElementById('profilePicImg');
+      const placeholder = document.getElementById('profilePicPlaceholder');
+      input.addEventListener('change', function(e) {
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(ev) {
+            img.src = ev.target.result;
+            img.style.display = 'block';
+            placeholder.style.display = 'none';
+          };
+          reader.readAsDataURL(input.files[0]);
+        } else {
+          img.src = '';
+          img.style.display = 'none';
+          placeholder.style.display = 'block';
+        }
+      });
+      // Clique na área de preview abre o input
+      preview.addEventListener('click', function() {
+        input.click();
+      });
+    });
   </script>
 </body>
+
 </html>

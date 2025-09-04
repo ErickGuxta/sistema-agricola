@@ -67,7 +67,6 @@ if (isset($_GET['logout'])) {
             top: 0;
             z-index: 1000;
 
-
             border: 2px solid salmon;
         }
 
@@ -89,6 +88,7 @@ if (isset($_GET['logout'])) {
             align-items: center;
             justify-content: center;
             font-size: 24px;
+            cursor: pointer;
         }
 
         .perfil .logo-text {
@@ -96,7 +96,7 @@ if (isset($_GET['logout'])) {
             font-weight: bold;
         }
 
-        .perfil .logo-subtitle {
+        .perfil .logo-subtext {
             font-size: 14px;
             opacity: 0.8;
             text-align: center;
@@ -108,7 +108,6 @@ if (isset($_GET['logout'])) {
             gap: 5px;
 
             border: 1px solid #BF3F4A;
-
         }
 
         .nav-item {
@@ -119,7 +118,6 @@ if (isset($_GET['logout'])) {
             text-align: center;
 
             border: 1px solid #bb3fbf;
-
         }
 
         .nav-item:hover {
@@ -134,7 +132,6 @@ if (isset($_GET['logout'])) {
             list-style: none;
             text-decoration: none;
             color: white;
-
         }
 
         .weather {
@@ -155,8 +152,6 @@ if (isset($_GET['logout'])) {
             justify-content: center;
         }
 
-
-
         /* conteudo principal */
         .main-content {
             flex: 1;
@@ -166,7 +161,6 @@ if (isset($_GET['logout'])) {
             margin-left: 240px;
             min-height: 100vh;
             overflow-x: hidden;
-
 
             border: 2px solid rgb(0, 75, 136);
         }
@@ -298,7 +292,6 @@ if (isset($_GET['logout'])) {
             margin-bottom: 30px;
 
             border: 2px solid salmon;
-
         }
 
         .dashboard-card {
@@ -365,7 +358,6 @@ if (isset($_GET['logout'])) {
             gap: 20px;
 
             border: 2px solid salmon;
-
         }
 
         .bottom-card {
@@ -559,8 +551,6 @@ if (isset($_GET['logout'])) {
         }
 
         /* Estilos para informações do usuário */
-
-
         .user-name {
             color: #fff;
             font-size: 16px;
@@ -581,13 +571,180 @@ if (isset($_GET['logout'])) {
         }
 
         .logout-btn:hover {
-            background: linear-gradient(135deg,rgb(248, 104, 104),rgb(197, 63, 63));
+            background: linear-gradient(135deg, rgb(248, 104, 104), rgb(197, 63, 63));
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
         }
 
         .logout-btn:active {
             transform: translateY(0);
+        }
+
+        /* Modal styles for profile and property editing */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-secondary);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
         }
     </style>
 </head>
@@ -598,7 +755,7 @@ if (isset($_GET['logout'])) {
         <header class="header-sidebar">
             <!-- perfil -->
             <nav class="perfil">
-                <div class="logo-circle">🌿</div>
+                <div class="logo-circle" onclick="openProfileModal()" style="cursor: pointer;">🌿</div>
                 <div class="logo-text">
                     <?php
                     $nomeCompleto = $_SESSION['usuario_nome'];
@@ -635,16 +792,14 @@ if (isset($_GET['logout'])) {
             <header class="header-main">
                 <div class="header-left">
                     <h1 class="farm-name">
-                    <?php
-                        
+                        <?php
                         $nomeProprie = $_SESSION['nome_propriedade'];
                         echo htmlspecialchars($nomeProprie);
-
-                    ?>
+                        ?>
                     </h1>
                     <div class="divider"></div>
                     <div class="year-selector">
-                        2025 
+                        2025
                     </div>
                 </div>
 
@@ -703,10 +858,189 @@ if (isset($_GET['logout'])) {
 
         </main>
 
-        
+        <!-- Modal for profile and property editing -->
+        <div id="profileModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Editar Perfil e Propriedade</h2>
+                    <span class="close" onclick="closeProfileModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" onclick="showTab('profile')">Perfil</button>
+                        <button class="tab-button" onclick="showTab('property')">Propriedade</button>
+                    </div>
+
+                    <!-- Profile Tab -->
+                    <div id="profile-tab" class="tab-content active">
+                        <form id="profileForm">
+                            <div class="form-group">
+                                <label class="form-label">Nome Completo</label>
+                                <input type="text" class="form-input" id="userName" placeholder="Digite seu nome completo">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" id="userEmail" placeholder="Digite seu email">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Nova Senha</label>
+                                <input type="password" class="form-input" id="newPassword" placeholder="Digite a nova senha">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirmar Nova Senha</label>
+                                <input type="password" class="form-input" id="confirmPassword" placeholder="Confirme a nova senha">
+                            </div>
+                            <button type="submit" class="btn-primary">Salvar Alterações do Perfil</button>
+                        </form>
+                    </div>
+
+                    <!-- Property Tab -->
+                    <div id="property-tab" class="tab-content">
+                        <form id="propertyForm">
+                            <div class="form-group">
+                                <label class="form-label">Nome da Propriedade</label>
+                                <input type="text" class="form-input" id="propertyName" placeholder="Digite o nome da propriedade">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Estado</label>
+                                    <select class="form-input" id="propertyState">
+                                        <option value="">Selecione o estado</option>
+                                        <option value="AC">Acre</option>
+                                        <option value="AL">Alagoas</option>
+                                        <option value="AP">Amapá</option>
+                                        <option value="AM">Amazonas</option>
+                                        <option value="BA">Bahia</option>
+                                        <option value="CE">Ceará</option>
+                                        <option value="DF">Distrito Federal</option>
+                                        <option value="ES">Espírito Santo</option>
+                                        <option value="GO">Goiás</option>
+                                        <option value="MA">Maranhão</option>
+                                        <option value="MT">Mato Grosso</option>
+                                        <option value="MS">Mato Grosso do Sul</option>
+                                        <option value="MG">Minas Gerais</option>
+                                        <option value="PA">Pará</option>
+                                        <option value="PB">Paraíba</option>
+                                        <option value="PR">Paraná</option>
+                                        <option value="PE">Pernambuco</option>
+                                        <option value="PI">Piauí</option>
+                                        <option value="RJ">Rio de Janeiro</option>
+                                        <option value="RN">Rio Grande do Norte</option>
+                                        <option value="RS">Rio Grande do Sul</option>
+                                        <option value="RO">Rondônia</option>
+                                        <option value="RR">Roraima</option>
+                                        <option value="SC">Santa Catarina</option>
+                                        <option value="SP">São Paulo</option>
+                                        <option value="SE">Sergipe</option>
+                                        <option value="TO">Tocantins</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Cidade</label>
+                                    <input type="text" class="form-input" id="propertyCity" placeholder="Digite a cidade">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Área (hectares)</label>
+                                <input type="number" class="form-input" id="propertyArea" placeholder="Digite a área em hectares" step="0.01" min="0">
+                            </div>
+                            <button type="submit" class="btn-primary">Salvar Alterações da Propriedade</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
+
+    <!-- JavaScript for modal functionality -->
+    <script>
+        // Modal functions
+        function openProfileModal() {
+            document.getElementById('profileModal').style.display = 'block';
+            // Load current data (in a real application, this would come from the server)
+            loadCurrentData();
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Load current data (placeholder function)
+        function loadCurrentData() {
+            // In a real application, you would fetch this data from the server
+            // For now, we'll use placeholder values
+            document.getElementById('userName').value = '';
+            document.getElementById('userEmail').value = '';
+            document.getElementById('propertyName').value = '';
+            document.getElementById('propertyState').value = '';
+            document.getElementById('propertyCity').value = '';
+            document.getElementById('propertyArea').value = '';
+        }
+
+        // Form submissions
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword && newPassword !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+
+            // Here you would send the data to the server
+            alert('Perfil atualizado com sucesso!');
+            closeProfileModal();
+        });
+
+        document.getElementById('propertyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const area = document.getElementById('propertyArea').value;
+            if (area && area < 0) {
+                alert('A área deve ser um valor positivo!');
+                return;
+            }
+
+            // Here you would send the data to the server
+            alert('Propriedade atualizada com sucesso!');
+            closeProfileModal();
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('profileModal');
+            if (event.target === modal) {
+                closeProfileModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeProfileModal();
+            }
+        });
+    </script>
 </body>
-<script src="js/script.js"></script>
 
 </html>

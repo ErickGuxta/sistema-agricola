@@ -117,7 +117,8 @@ final class SafraController
             exit;
         }
         $propriedadeId = $_SESSION['propriedade_id'] ?? null;
-        $idSafra = (int) ($_POST['id_safra'] ?? 0);
+        $idSafra       = (int) ($_POST['id_safra'] ?? 0);
+
         if (!$propriedadeId || $idSafra <= 0) {
             header("Location: /sistema-agricola/app/safra");
             exit;
@@ -132,12 +133,12 @@ final class SafraController
         $model = new Safra();
         $model-> id_safra       = $idSafra;
         $model-> propriedade_id = $propriedadeId;
-        $model-> nome           = trim($_POST['nome'] ?? $existente->nome);
-        $model-> descricao      = trim($_POST['descricao'] ?? $existente->descricao);
-        $model-> data_inicio    = trim($_POST['dataInicio'] ?? $existente->data_inicio);
-        $model-> data_fim       = trim($_POST['dataTermino'] ?? '') ?: $existente->data_fim;
-        $model-> area_hectare   = trim($_POST['area_hectare'] ?? '') ?: $existente->area_hectare;
-        $model-> status         = trim($_POST['status'] ?? $existente->status);
+        $model-> nome           = trim($_POST['nome']          ?? $existente->nome);
+        $model-> descricao      = trim($_POST['descricao']     ?? $existente->descricao);
+        $model-> data_inicio    = trim($_POST['dataInicio']    ?? $existente->data_inicio);
+        $model-> data_fim       = trim($_POST['dataTermino']   ?? '') ?: $existente->data_fim;
+        $model-> area_hectare   = trim($_POST['area_hectare']  ?? '') ?: $existente->area_hectare;
+        $model-> status         = trim($_POST['status']        ?? $existente->status);
 
         $ok = $model->atualizar();
         header("Location: /sistema-agricola/app/safra");
@@ -155,7 +156,8 @@ final class SafraController
             exit;
         }
         $propriedadeId = $_SESSION['propriedade_id'] ?? null;
-        $idSafra = (int) ($_POST['id_safra'] ?? 0);
+        $idSafra       = (int) ($_POST['id_safra'] ?? 0);
+        
         if ($idSafra > 0 && $propriedadeId) {
             Safra::deletar($idSafra, $propriedadeId);
         }

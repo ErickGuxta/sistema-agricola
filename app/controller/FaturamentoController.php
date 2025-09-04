@@ -5,6 +5,7 @@ namespace app\controller;
 use app\model\Faturamento;
 use app\model\Safra;
 use app\model\Usuario;
+use app\dao\ItemEstoqueDAO;
 
 class FaturamentoController
 {
@@ -18,13 +19,14 @@ class FaturamentoController
             header('Location: /sistema-agricola/app/login');
             exit;
         }
-        $safras = Safra::listarPorPropriedade($propriedadeId);
-        $todasSafras = Safra::listarTodas();
+        $safras       = Safra::listarPorPropriedade($propriedadeId);
+        $todasSafras  = Safra::listarTodas();
         $faturamentos = Faturamento::listarPorPropriedade($propriedadeId);
         $receitaTotal = Faturamento::receitaTotalPropriedade($propriedadeId);
         
-        // Buscar custos do estoque
-        $custoTotal = self::calcularCustoEstoque($propriedadeId);
+        // Buscar custos do estoque (valor total do estoque)
+        $itemDao = new ItemEstoqueDAO();
+        $custoTotal = $itemDao->valorTotalEstoque($propriedadeId, null);
         
         // Calcular lucro
         $lucro = $receitaTotal - $custoTotal;
@@ -48,16 +50,24 @@ class FaturamentoController
         $safraId = $_GET['safra_id'] ?? null;
         
         if ($safraId && $safraId !== '') {
-            $faturamentos = Faturamento::getBySafra($safraId, $propriedadeId);
+            $faturamentos = Faturamento::getBySafra((int)$safraId, $propriedadeId);
         } else {
             $faturamentos = Faturamento::listarPorPropriedade($propriedadeId);
+            $safraId = null;
         }
         
         // Calcular receita total
         $receitaTotal = 0;
         foreach ($faturamentos as $fat) {
-            $receitaTotal += $fat->valor;
+            $receitaTotal += (float)$fat->valor;
         }
+        
+        // Calcular custo (valor total do estoque) possivelmente filtrado pela safra
+        $itemDao = new ItemEstoqueDAO();
+        $custoTotal = $itemDao->valorTotalEstoque($propriedadeId, $safraId ? (int)$safraId : null);
+        
+        // Calcular lucro
+        $lucro = $receitaTotal - $custoTotal;
         
         // Buscar nomes das safras para exibição
         $safras = Safra::listarPorPropriedade($propriedadeId);
@@ -66,14 +76,15 @@ class FaturamentoController
             $safrasMap[$safra->id_safra] = $safra->nome;
         }
         
-        // Adicionar nome da safra a cada faturamento
         foreach ($faturamentos as $fat) {
             $fat->safra_nome = $safrasMap[$fat->safra_id] ?? 'N/A';
         }
         
         echo json_encode([
             'faturamentos' => $faturamentos,
-            'receitaTotal' => $receitaTotal
+            'receitaTotal' => $receitaTotal,
+            'custoTotal' => $custoTotal,
+            'lucro' => $lucro,
         ]);
     }
 
@@ -129,9 +140,9 @@ class FaturamentoController
     // Método para calcular custos do estoque
     private static function calcularCustoEstoque($propriedadeId)
     {
-        // Por enquanto, retorna um valor fixo
-        // TODO: Implementar cálculo real baseado no estoque
-        return 50000.00;
+        // Mantido para compatibilidade, mas usando o DAO novo
+        $itemDao = new ItemEstoqueDAO();
+        return $itemDao->valorTotalEstoque($propriedadeId, null);
     }
 
     // Método simples para converter mês em data

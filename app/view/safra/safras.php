@@ -532,8 +532,24 @@
                             <?php foreach ($safras as $safra): ?>
                                 <tr>
                                     <td><?= htmlspecialchars($safra->nome)           ?> </td>
-                                    <td><?= htmlspecialchars($safra->data_inicio)    ?> </td>
-                                    <td><?= htmlspecialchars($safra->data_fim ?? '') ?> </td>
+                                    <td><?php 
+                                        $di = $safra->data_inicio ?? '';
+                                        $fmt = '';
+                                        if (!empty($di)) {
+                                            $dt = date_create($di);
+                                            if ($dt) { $fmt = date_format($dt, 'd/m/Y'); }
+                                        }
+                                        echo htmlspecialchars($fmt);
+                                    ?> </td>
+                                    <td><?php 
+                                        $df = $safra->data_fim ?? '';
+                                        $fmt2 = '';
+                                        if (!empty($df)) {
+                                            $dt2 = date_create($df);
+                                            if ($dt2) { $fmt2 = date_format($dt2, 'd/m/Y'); }
+                                        }
+                                        echo htmlspecialchars($fmt2);
+                                    ?> </td>
                                     <td>
                                         <span class="status-badge 
    
@@ -724,18 +740,25 @@
         // Função para abrir o modal de edição
         function openEditModal(id, nome, dataInicio, dataFim, areaHectare, status, descricao) {
             // Preencher os campos do formulário de edição
-            document.getElementById('edit_id_safra').value = id
-            document.getElementById('edit_nome').value = nome
-            document.getElementById('edit_dataInicio').value = dataInicio
-            document.getElementById('edit_dataTermino').value = dataFim
-            document.getElementById('edit_area_hectare').value = areaHectare
-            document.getElementById('edit_status').value = status
-            document.getElementById('edit_descricao').value = descricao
-
+            document.getElementById('edit_id_safra').value = id;
+            document.getElementById('edit_nome').value = nome;
+            document.getElementById('edit_dataInicio').value = dataInicio;
+            document.getElementById('edit_dataTermino').value = dataFim;
+            document.getElementById('edit_area_hectare').value = areaHectare;
+            document.getElementById('edit_status').value = status;
+            document.getElementById('edit_descricao').value = descricao;
+            // Garantir que o campo hidden não será resetado antes do submit
+            const form = document.querySelector('#edit-modal-overlay .edit-form');
+            form.addEventListener('submit', function(e) {
+                if (!document.getElementById('edit_id_safra').value) {
+                    e.preventDefault();
+                    alert('Erro: ID da safra não encontrado. Tente novamente.');
+                }
+            }, { once: true });
             // Abrir o modal
-            const modal = document.getElementById("edit-modal-overlay")
-            modal.classList.add("active")
-            document.body.style.overflow = "hidden"
+            const modal = document.getElementById("edit-modal-overlay");
+            modal.classList.add("active");
+            document.body.style.overflow = "hidden";
         }
 
         // Função para fechar o modal de edição

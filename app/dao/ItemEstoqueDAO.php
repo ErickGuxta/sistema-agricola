@@ -110,17 +110,17 @@ final class ItemEstoqueDAO extends DAO
     public function listarPorCategoria(int $categoriaId, ?int $safraId = null) : array
     {
         $sql =
-            " SELECT id_item, usuario_id, categoria_id, safra_id, nome, estoque_atual, estoque_minimo, validade
-            FROM Item_Estoque WHERE categoria_id = ?";
+            " SELECT ie.id_item, ie.usuario_id, ie.categoria_id, ie.safra_id, ie.nome, c.nome AS categoria, ie.estoque_atual, ie.estoque_minimo, ie.validade, ie.valor_unitario
+            FROM Item_Estoque ie JOIN Categoria c ON ie.categoria_id = c.id_categoria WHERE c.id_categoria = ?";
 
         $params = [$categoriaId];
 
         if ($safraId !== null) {
-            $sql .= " AND safra_id = ?";
+            $sql .= " AND ie.safra_id = ?";
             $params[] = $safraId;
         }
 
-        $sql .= " ORDER BY nome";
+        $sql .= " ORDER BY ie.nome";
 
         $stmt = parent::$conexao->prepare($sql);
         foreach ($params as $i => $param) {
@@ -138,9 +138,9 @@ final class ItemEstoqueDAO extends DAO
     public function listarTodosPorSafra(int $usuarioId, int $safraId) : array
     {
         $sql =
-            " SELECT id_item, usuario_id, categoria_id, safra_id, nome, estoque_atual, estoque_minimo, validade
-            FROM Item_Estoque WHERE usuario_id = ?
-            AND safra_id = ? ORDER BY nome";
+            " SELECT ie.id_item, ie.usuario_id, ie.categoria_id, ie.safra_id, ie.nome, c.nome AS categoria, ie.estoque_atual, ie.estoque_minimo, ie.validade, ie.valor_unitario
+            FROM Item_Estoque ie JOIN Categoria c ON ie.categoria_id = c.id_categoria WHERE ie.usuario_id = ?
+            AND ie.safra_id = ? ORDER BY ie.nome";
 
         $stmt = parent::$conexao->prepare($sql);
         $stmt->bindValue(1, $usuarioId);
@@ -157,7 +157,7 @@ final class ItemEstoqueDAO extends DAO
     // listar todos por usuario
     public static function listarTodosPorUsuario($usuarioId) : array
     {
-        $sql = "SELECT * FROM Item_Estoque WHERE usuario_id = ? ORDER BY nome";
+        $sql = "SELECT ie.*, c.nome AS categoria FROM Item_Estoque ie JOIN Categoria c ON ie.categoria_id = c.id_categoria WHERE ie.usuario_id = ? ORDER BY ie.nome";
         $stmt = parent::$conexao->prepare($sql);
         $stmt->bindValue(1, $usuarioId);
         $stmt->execute();
@@ -170,7 +170,7 @@ final class ItemEstoqueDAO extends DAO
 
     public function buscarPorUsuarioNomeCategoria($usuarioId, $nome = '', $categoria = '') : array
     {
-        $sql = "SELECT ie.* FROM Item_Estoque ie JOIN Categoria c ON ie.categoria_id = c.id_categoria WHERE ie.usuario_id = ?";
+        $sql = "SELECT ie.*, c.nome AS categoria FROM Item_Estoque ie JOIN Categoria c ON ie.categoria_id = c.id_categoria WHERE ie.usuario_id = ?";
         $params = [$usuarioId];
         if ($nome !== '') {
             $sql .= " AND ie.nome LIKE ?";
@@ -191,5 +191,25 @@ final class ItemEstoqueDAO extends DAO
             $itens[] = new \app\model\ItemEstoque($linha);
         }
         return $itens;
+    }
+
+    public function valorTotalEstoque(int $propriedadeId, ?int $safraId = null) : float
+    {
+        $sql = "SELECT SUM(ie.estoque_atual * COALESCE(ie.valor_unitario,0)) AS total
+                FROM Item_Estoque ie
+                INNER JOIN Safra s ON ie.safra_id = s.id_safra
+                WHERE s.propriedade_id = ?";
+        $params = [$propriedadeId];
+        if ($safraId !== null) {
+            $sql .= " AND s.id_safra = ?";
+            $params[] = $safraId;
+        }
+        $stmt = parent::$conexao->prepare($sql);
+        foreach ($params as $i => $param) {
+            $stmt->bindValue($i + 1, $param);
+        }
+        $stmt->execute();
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $row && isset($row['total']) ? (float)$row['total'] : 0.0;
     }
 }

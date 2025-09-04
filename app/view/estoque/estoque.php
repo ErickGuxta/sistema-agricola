@@ -170,6 +170,27 @@
             cursor: pointer;
         }
 
+        .year-selector select {
+            font-size: clamp(18px, 3vw, 24px);
+            font-weight: bold;
+            color: #333;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+        .year-selector select:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .year-selector select:focus {
+            outline: none;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
         .divider {
             width: 2px;
             height: 40px;
@@ -587,7 +608,7 @@
                     <div class="divider"></div>
                     <div class="year-selector">
                         <form method="GET" action="/sistema-agricola/app/estoque" id="filtroSafraForm" style="display:inline;">
-                            <select name="safra_id" class="category-select" onchange="document.getElementById('filtroSafraForm').submit()" style="font-size:inherit; font-weight:bold; background:transparent; border:none; color:#333;">
+                            <select name="safra_id" id="yearSelector" onchange="document.getElementById('filtroSafraForm').submit()">
                                 <option value="">Todas as Safras</option>
                                 <?php 
                                 $safraSelecionada = isset($_GET['safra_id']) ? intval($_GET['safra_id']) : '';
@@ -723,7 +744,17 @@
                 $min = (float)$item->estoque_minimo; 
                 echo htmlspecialchars( (floor($min)==$min) ? number_format($min,0,',','.') : number_format($min,2,',','.') );
             ?></td>
-            <td><?php echo htmlspecialchars($item->validade); ?></td>
+            <td><?php 
+                $val = $item->validade ?? '';
+                $fmt = '';
+                if (!empty($val)) {
+                    $dt = date_create($val);
+                    if ($dt) {
+                        $fmt = date_format($dt, 'd/m/Y');
+                    }
+                }
+                echo htmlspecialchars($fmt !== '' ? $fmt : '');
+            ?></td>
             <td>R$ <?php 
                 $preco = (float)$item->valor_unitario; 
                 echo (floor($preco)==$preco) ? number_format($preco,0,',','.') : number_format($preco,2,',','.'); 
