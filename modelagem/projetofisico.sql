@@ -1,5 +1,10 @@
 -- ============================================
 -- MODELO FÍSICO  - SISTEMA AGRÍCOLA
+
+    -- Trabalho Interdisciplinar – Banco de Dados
+    -- Nome do(s) aluno(s): Erick Gustavo Costa de Souza / Gabrielly Dias da Silva / Paulo Gabriel Wisniewski Puga Silva / Cinthia Nunes dos Anjos / Gustavo Oliveira Tolentino / Gleimerson Rodrigo Santos Guimarães / Lara Vitória Almeida Ferreira
+    -- Turma: 2AII
+    -- Título do projeto: Sistema Agrícola
 -- ============================================
 
 CREATE DATABASE sistema_agricola;
@@ -78,6 +83,7 @@ CREATE TABLE Item_Estoque (
     estoque_atual    DECIMAL(10,3) DEFAULT 0,
     estoque_minimo   DECIMAL(10,3) DEFAULT 0,
     valor_unitario   DECIMAL(10,2),
+    unidade_medida   ENUM('UNIDADE', 'KG', 'L', 'M', 'SACA') NOT NULL,
     validade         DATE,
 
     PRIMARY KEY (id_item),
@@ -95,8 +101,8 @@ CREATE TABLE Movimentacao_Estoque (
     item_id              INT UNSIGNED NOT NULL,
     usuario_id           INT UNSIGNED NOT NULL,
 
-    tipo_movimentacao ENUM('ENTRADA', 'SAIDA') NOT NULL,
-    quantidade         DECIMAL(10,3) NOT NULL,
+    tipo_movimentacao  ENUM('ENTRADA', 'SAIDA') NOT NULL,
+    quantidade         DECIMAL(10,3) NOT NULL check (quantidade >= 0),
     observacao         TEXT,
     data_movimentacao  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -137,22 +143,6 @@ CREATE TABLE Faturamento_Mes (
     FOREIGN KEY (safra_id)   REFERENCES Safra(id_safra) 
 );
 
--- ============================================
--- ASSOCIAÇÃO SAFRA COM FATURAMENTO 
--- ============================================
-
--- CREATE TABLE Safra_Faturamento_Assoc (
---     safra_id         INT UNSIGNED,
---     faturamento_id INT UNSIGNED,
-
---     PRIMARY KEY (safra_id, faturamento_id),
---     FOREIGN KEY (safra_id)         REFERENCES Safra(id_safra),
---     FOREIGN KEY (faturamento_id)   REFERENCES Faturamento_Mes(id_faturamento)
--- );
-
--- ============================================
--- DADOS INICIAIS
--- ============================================
 
 INSERT INTO Categoria (nome) VALUES
 ('Sementes'),

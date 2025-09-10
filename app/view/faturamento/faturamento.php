@@ -72,6 +72,13 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: filter 0.2s, box-shadow 0.2s;
+        }
+        .perfil .logo-circle:hover {
+            filter: brightness(0.7);
+            box-shadow: 0 0 0 3px #1e472d44;
         }
 
         .perfil .logo-text {
@@ -523,7 +530,12 @@
         <!-- Sidebar -->
         <header class="header-sidebar">
             <nav class="perfil">
-                <div class="logo-circle">🌿</div>
+                <div class="logo-circle" style="overflow: hidden;">
+                    <?php
+                        $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
+                    ?>
+                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                </div>
                 <div class="logo-text">
                 <?php
                         

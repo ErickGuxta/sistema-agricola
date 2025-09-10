@@ -75,6 +75,12 @@ switch ($url) {
     case 'faturamento/deletar':
         FaturamentoController::deletar();
         break;
+    case 'usuario/atualizar':
+        UsuarioController::atualizar();
+        break;
+    case 'usuario/deletar':
+        UsuarioController::deletar();
+        break;
     case 'dashboard/setSafra':
         HomeController::setSafra();
         break;

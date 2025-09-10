@@ -30,6 +30,26 @@ final class UsuarioController
                     $model->nome_produtor = $_POST['nome_produtor'];
                     $model->email         = $_POST['email'];
                     $model->senha         = $_POST['senha'];
+
+                    // Upload da foto de perfil
+                    $foto_perfil = '/sistema-agricola/app/view/img/image5.png'; // Caminho padrão
+                    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                        $ext = strtolower($ext);
+                        $permitidas = ['jpg', 'jpeg', 'png'];
+                        if (in_array($ext, $permitidas)) {
+                            $dir = __DIR__ . '/../view/uploads/perfil/';
+                            if (!is_dir($dir)) {
+                                mkdir($dir, 0777, true);
+                            }
+                            $nome_arquivo = uniqid('perfil_') . '.' . $ext;
+                            $destino = $dir . $nome_arquivo;
+                            if (move_uploaded_file($_FILES['image']['tmp_name'], $destino)) {
+                                $foto_perfil = '/sistema-agricola/app/view/uploads/perfil/' . $nome_arquivo;
+                            }
+                        }
+                    }
+                    $model->foto_perfil = $foto_perfil;
                     
                     $usuarioRegistrado = $model-> registrar();
 
@@ -39,6 +59,7 @@ final class UsuarioController
                         $_SESSION['usuario_id']     = $usuarioRegistrado->id_usuario;
                         $_SESSION['usuario_nome']   = $usuarioRegistrado->nome_produtor;
                         $_SESSION['usuario_email']  = $usuarioRegistrado->email;
+                        $_SESSION['usuario_foto']   = $usuarioRegistrado->foto_perfil;
                         $_SESSION['logado']         = true;
                         $_SESSION['ultimo_acesso']  = time();
                         
@@ -109,5 +130,82 @@ final class UsuarioController
 
         // Passar as variáveis para a view
         include VIEWS . '/login/login.php';
+    }
+
+    public static function atualizar() : void
+    {
+        session_start();
+        $erro = "";
+        $usuarioDAO = new UsuarioDAO();
+        $id_usuario = $_SESSION['usuario_id'];
+        $usuario = $usuarioDAO->verificarEmail($_SESSION['usuario_email']);
+        if (!$usuario) {
+            $erro = "Usuário não encontrado.";
+            header("Location: /sistema-agricola/app/dashboard?erro=1");
+            exit;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nome = trim($_POST['nome_produtor'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $senha = trim($_POST['senha'] ?? '');
+            $foto_perfil = $usuario->foto_perfil;
+            // Upload de nova foto
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                $ext = strtolower($ext);
+                $permitidas = ['jpg', 'jpeg', 'png'];
+                if (in_array($ext, $permitidas)) {
+                    $dir = __DIR__ . '/../view/uploads/perfil/';
+                    if (!is_dir($dir)) {
+                        mkdir($dir, 0777, true);
+                    }
+                    $nome_arquivo = uniqid('perfil_') . '.' . $ext;
+                    $destino = $dir . $nome_arquivo;
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $destino)) {
+                        $foto_perfil = '/sistema-agricola/app/view/uploads/perfil/' . $nome_arquivo;
+                    }
+                }
+            }
+            // Atualizar dados
+            $usuario->nome_produtor = $nome;
+            $usuario->email = $email;
+            $usuario->foto_perfil = $foto_perfil;
+            if (!empty($senha)) {
+                $usuario->senha = $senha;
+            } else {
+                $usuario->senha = null;
+            }
+            $atualizado = $usuarioDAO->atualizar($usuario);
+            if ($atualizado) {
+                $_SESSION['usuario_nome'] = $usuario->nome_produtor;
+                $_SESSION['usuario_email'] = $usuario->email;
+                $_SESSION['usuario_foto'] = $usuario->foto_perfil;
+                header("Location: /sistema-agricola/app/dashboard?sucesso=1");
+                exit;
+            } else {
+                $erro = "Erro ao atualizar perfil.";
+                header("Location: /sistema-agricola/app/dashboard?erro=1");
+                exit;
+            }
+        }
+    }
+
+    public static function deletar() : void
+    {
+        session_start();
+        if (!isset($_SESSION['usuario_id'])) {
+            header("Location: /sistema-agricola/app/login");
+            exit;
+        }
+        $usuarioId = $_SESSION['usuario_id'];
+        $usuarioDAO = new \app\dao\UsuarioDAO();
+        $ok = $usuarioDAO->deletarCascata($usuarioId);
+        session_destroy();
+        if ($ok) {
+            header("Location: /sistema-agricola/app/view/login/cadastro_user.php?msg=Conta+excluida+com+sucesso");
+        } else {
+            header("Location: /sistema-agricola/app/dashboard?erro=Erro+ao+deletar+conta");
+        }
+        exit;
     }
 }

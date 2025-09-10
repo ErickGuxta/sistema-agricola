@@ -89,6 +89,12 @@ if (isset($_GET['logout'])) {
             justify-content: center;
             font-size: 24px;
             cursor: pointer;
+            overflow: hidden;
+            transition: filter 0.2s, box-shadow 0.2s;
+        }
+        .perfil .logo-circle:hover {
+            filter: brightness(0.7);
+            box-shadow: 0 0 0 3px #1e472d44;
         }
 
         .perfil .logo-text {
@@ -747,6 +753,25 @@ if (isset($_GET['logout'])) {
             }
         }
     </style>
+    <style>
+        .profile-pic-preview:hover .edit-icon {
+            display: flex !important;
+        }
+        .edit-icon {
+            pointer-events: none;
+            transition: opacity 0.2s;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            padding: 8px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -755,7 +780,12 @@ if (isset($_GET['logout'])) {
         <header class="header-sidebar">
             <!-- perfil -->
             <nav class="perfil">
-                <div class="logo-circle" onclick="openProfileModal()" style="cursor: pointer;">🌿</div>
+                <div class="logo-circle" onclick="openProfileModal()" style="cursor: pointer; overflow: hidden;">
+                    <?php
+                        $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
+                    ?>
+                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                </div>
                 <div class="logo-text">
                     <?php
                     $nomeCompleto = $_SESSION['usuario_nome'];
@@ -873,18 +903,28 @@ if (isset($_GET['logout'])) {
 
                     <!-- Profile Tab -->
                     <div id="profile-tab" class="tab-content active">
-                        <form id="profileForm">
+                        <form id="profileForm" method="POST" action="/sistema-agricola/app/usuario/atualizar" enctype="multipart/form-data">
+                            <div class="form-group" style="display: flex; flex-direction: column; align-items: center;">
+                                <label class="form-label">Foto de Perfil</label>
+                                <div class="profile-pic-preview" id="editProfilePicPreview" style="width: 110px; height: 110px; border-radius: 50%; background: #f0f0f0; border: 2px dashed #b2b2b2; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; cursor: pointer; position: relative;">
+                                    <img src="<?= htmlspecialchars(isset($_SESSION['usuario_foto']) ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png') ?>" alt="Pré-visualização" id="editProfilePicImg" style="width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%;" />
+                                    <span class="edit-icon" style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 6px; display: none; align-items: center; justify-content: center;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z"/></svg>
+                                    </span>
+                                </div>
+                                <input type="file" name="image" id="editProfileImage" accept="image/*" style="display: none;">
+                            </div>
                             <div class="form-group">
                                 <label class="form-label">Nome Completo</label>
-                                <input type="text" class="form-input" id="userName" placeholder="Digite seu nome completo">
+                                <input type="text" class="form-input" id="userName" name="nome_produtor" placeholder="Digite seu nome completo" value="<?= htmlspecialchars($_SESSION['usuario_nome']) ?>">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-input" id="userEmail" placeholder="Digite seu email">
+                                <input type="email" class="form-input" id="userEmail" name="email" placeholder="Digite seu email" value="<?= htmlspecialchars($_SESSION['usuario_email']) ?>">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Nova Senha</label>
-                                <input type="password" class="form-input" id="newPassword" placeholder="Digite a nova senha">
+                                <input type="password" class="form-input" id="newPassword" name="senha" placeholder="Digite a nova senha (opcional)">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Confirmar Nova Senha</label>
@@ -892,6 +932,11 @@ if (isset($_GET['logout'])) {
                             </div>
                             <button type="submit" class="btn-primary">Salvar Alterações do Perfil</button>
                         </form>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 24px;">
+                            <form id="deleteUserForm" method="POST" action="/sistema-agricola/app/usuario/deletar" onsubmit="return confirm('Tem certeza que deseja deletar sua conta? Todos os dados vinculados serão excluídos de forma permanente!');">
+                                <button type="submit" class="btn-primary" style="background: #bf3f4a; border: none; width: 100%;">Deletar Conta</button>
+                            </form>
+                        </div>
                     </div>
 
                     <!-- Property Tab -->
@@ -899,12 +944,12 @@ if (isset($_GET['logout'])) {
                         <form id="propertyForm">
                             <div class="form-group">
                                 <label class="form-label">Nome da Propriedade</label>
-                                <input type="text" class="form-input" id="propertyName" placeholder="Digite o nome da propriedade">
+                                <input type="text" class="form-input" id="propertyName" name="nome_propriedade" placeholder="Digite o nome da propriedade">
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">Estado</label>
-                                    <select class="form-input" id="propertyState">
+                                    <select class="form-input" id="propertyState" name="estado">
                                         <option value="">Selecione o estado</option>
                                         <option value="AC">Acre</option>
                                         <option value="AL">Alagoas</option>
@@ -937,12 +982,12 @@ if (isset($_GET['logout'])) {
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Cidade</label>
-                                    <input type="text" class="form-input" id="propertyCity" placeholder="Digite a cidade">
+                                    <input type="text" class="form-input" id="propertyCity" name="cidade" placeholder="Digite a cidade">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Área (hectares)</label>
-                                <input type="number" class="form-input" id="propertyArea" placeholder="Digite a área em hectares" step="0.01" min="0">
+                                <input type="number" class="form-input" id="propertyArea" name="area_total" placeholder="Digite a área em hectares" step="0.01" min="0">
                             </div>
                             <button type="submit" class="btn-primary">Salvar Alterações da Propriedade</button>
                         </form>
@@ -987,29 +1032,68 @@ if (isset($_GET['logout'])) {
         function loadCurrentData() {
             // In a real application, you would fetch this data from the server
             // For now, we'll use placeholder values
-            document.getElementById('userName').value = '';
-            document.getElementById('userEmail').value = '';
-            document.getElementById('propertyName').value = '';
-            document.getElementById('propertyState').value = '';
-            document.getElementById('propertyCity').value = '';
-            document.getElementById('propertyArea').value = '';
+            document.getElementById('userName').value = "<?= htmlspecialchars($_SESSION['usuario_nome']) ?>";
+            document.getElementById('userEmail').value = "<?= htmlspecialchars($_SESSION['usuario_email']) ?>";
+            // Propriedade (busca via PHP para o usuário logado)
+            <?php
+            $propriedade = null;
+            if (isset($_SESSION['usuario_id'])) {
+                $propriedadeDAO = new \app\dao\PropriedadeDAO();
+                $propriedade = $propriedadeDAO->buscarPorUsuario($_SESSION['usuario_id']);
+            }
+            if ($propriedade) {
+                $estado = '';
+                $cidade = '';
+                if (strpos($propriedade->localizacao, ' - ') !== false) {
+                    list($estado, $cidade) = explode(' - ', $propriedade->localizacao, 2);
+                }
+                echo 'document.getElementById("propertyName").value = "' . htmlspecialchars($propriedade->nome_propriedade) . '";';
+                echo 'document.getElementById("propertyArea").value = "' . htmlspecialchars($propriedade->area_total) . '";';
+                echo 'document.getElementById("propertyState").value = "' . htmlspecialchars($estado) . '";';
+                echo 'document.getElementById("propertyCity").value = "' . htmlspecialchars($cidade) . '";';
+            } else {
+                echo 'document.getElementById("propertyName").value = "";';
+                echo 'document.getElementById("propertyArea").value = "";';
+                echo 'document.getElementById("propertyState").value = "";';
+                echo 'document.getElementById("propertyCity").value = "";';
+            }
+            ?>
         }
 
-        // Form submissions
+        // Preview da imagem de perfil no modal de edição + hover do ícone
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('editProfileImage');
+            const preview = document.getElementById('editProfilePicPreview');
+            const img = document.getElementById('editProfilePicImg');
+            const editIcon = preview.querySelector('.edit-icon');
+            preview.addEventListener('mouseenter', function() {
+                editIcon.style.display = 'flex';
+            });
+            preview.addEventListener('mouseleave', function() {
+                editIcon.style.display = 'none';
+            });
+            preview.addEventListener('click', function() {
+                input.click();
+            });
+            input.addEventListener('change', function(e) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        img.src = ev.target.result;
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            });
+        });
+        // Validação de senha no modal de edição
         document.getElementById('profileForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-
             if (newPassword && newPassword !== confirmPassword) {
                 alert('As senhas não coincidem!');
-                return;
+                e.preventDefault();
+                return false;
             }
-
-            // Here you would send the data to the server
-            alert('Perfil atualizado com sucesso!');
-            closeProfileModal();
         });
 
         document.getElementById('propertyForm').addEventListener('submit', function(e) {
