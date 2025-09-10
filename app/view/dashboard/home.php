@@ -1129,30 +1129,12 @@ if (isset($_GET['logout'])) {
             // For now, we'll use placeholder values
             document.getElementById('userName').value = "<?= htmlspecialchars($_SESSION['usuario_nome']) ?>";
             document.getElementById('userEmail').value = "<?= htmlspecialchars($_SESSION['usuario_email']) ?>";
-            // Propriedade (busca via PHP para o usuário logado)
-            <?php
-            $propriedade = null;
-            if (isset($_SESSION['usuario_id'])) {
-                $propriedadeDAO = new \app\dao\PropriedadeDAO();
-                $propriedade = $propriedadeDAO->buscarPorUsuario($_SESSION['usuario_id']);
+            
+            // Carregar dados da propriedade atualmente selecionada
+            const currentPropertyId = <?= isset($_SESSION['propriedade_id']) ? $_SESSION['propriedade_id'] : 'null' ?>;
+            if (currentPropertyId) {
+                updatePropertyModalData(currentPropertyId);
             }
-            if ($propriedade) {
-                $estado = '';
-                $cidade = '';
-                if (strpos($propriedade->localizacao, ' - ') !== false) {
-                    list($estado, $cidade) = explode(' - ', $propriedade->localizacao, 2);
-                }
-                echo 'document.getElementById("propertyName").value = "' . htmlspecialchars($propriedade->nome_propriedade) . '";';
-                echo 'document.getElementById("propertyArea").value = "' . htmlspecialchars($propriedade->area_total) . '";';
-                echo 'document.getElementById("propertyState").value = "' . htmlspecialchars($estado) . '";';
-                echo 'document.getElementById("propertyCity").value = "' . htmlspecialchars($cidade) . '";';
-            } else {
-                echo 'document.getElementById("propertyName").value = "";';
-                echo 'document.getElementById("propertyArea").value = "";';
-                echo 'document.getElementById("propertyState").value = "";';
-                echo 'document.getElementById("propertyCity").value = "";';
-            }
-            ?>
         }
 
         // Preview da imagem de perfil no modal de edição + hover do ícone
@@ -1250,9 +1232,22 @@ if (isset($_GET['logout'])) {
             }
         });
 
+        // Dados das propriedades para uso no JavaScript
+        const propriedadesData = <?php
+            $propriedades = [];
+            if (isset($_SESSION['usuario_id'])) {
+                $propriedadeDAO = new \app\dao\PropriedadeDAO();
+                $propriedades = $propriedadeDAO->listarPorUsuario($_SESSION['usuario_id']);
+            }
+            echo json_encode($propriedades);
+        ?>;
+
         // Função para trocar propriedade
         function changeProperty(propriedadeId) {
             if (propriedadeId) {
+                // Atualizar dados do modal de edição com a propriedade selecionada
+                updatePropertyModalData(propriedadeId);
+                
                 // Criar formulário temporário para enviar POST
                 const form = document.createElement('form');
                 form.method = 'POST';
@@ -1266,6 +1261,25 @@ if (isset($_GET['logout'])) {
                 form.appendChild(input);
                 document.body.appendChild(form);
                 form.submit();
+            }
+        }
+
+        // Função para atualizar dados do modal com a propriedade selecionada
+        function updatePropertyModalData(propriedadeId) {
+            const propriedade = propriedadesData.find(p => p.id_propriedade == propriedadeId);
+            if (propriedade) {
+                // Separar estado e cidade da localização
+                let estado = '';
+                let cidade = '';
+                if (propriedade.localizacao && propriedade.localizacao.includes(' - ')) {
+                    [estado, cidade] = propriedade.localizacao.split(' - ');
+                }
+                
+                // Atualizar campos do modal de edição de propriedade
+                document.getElementById('propertyName').value = propriedade.nome_propriedade || '';
+                document.getElementById('propertyArea').value = propriedade.area_total || '';
+                document.getElementById('propertyState').value = estado;
+                document.getElementById('propertyCity').value = cidade;
             }
         }
     </script>
