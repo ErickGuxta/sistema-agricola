@@ -49,4 +49,23 @@ final class PropriedadeDAO extends DAO
       
       return $propriedade;
    }
+
+   public function listarPorUsuario(int $usuarioId) : array
+   {
+      $sql = "SELECT * FROM Propriedade WHERE usuario_id = ? ORDER BY nome_propriedade";
+      $stmt = parent::$conexao->prepare($sql);
+      $stmt->bindValue(1, $usuarioId);
+      $stmt->execute();
+      $propriedades = [];
+      while ($linha = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+         $propriedade = new Propriedade();
+         $propriedade->id_propriedade    = (int) $linha['id_propriedade'];
+         $propriedade->usuario_id        = (int) $linha['usuario_id'];
+         $propriedade->nome_propriedade  = $linha['nome_propriedade'];
+         $propriedade->area_total        = $linha['area_total'];
+         $propriedade->localizacao       = $linha['localizacao'];
+         $propriedades[] = $propriedade;
+      }
+      return $propriedades;
+   }
 }

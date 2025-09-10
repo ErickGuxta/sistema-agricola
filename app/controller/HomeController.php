@@ -54,4 +54,22 @@ final class HomeController
         header('Location: /estoque');
         exit();
     }
+
+    public static function setPropriedade() : void
+    {
+        if (isset($_POST['propriedade_id'])) {
+            $_SESSION['propriedade_id'] = (int)$_POST['propriedade_id'];
+            // Atualiza nome da propriedade na sessão
+            $propriedadeDao = new PropriedadeDAO();
+            $propriedades = $propriedadeDao->listarPorUsuario((int) $_SESSION['usuario_id']);
+            foreach ($propriedades as $p) {
+                if ($p->id_propriedade == $_SESSION['propriedade_id']) {
+                    $_SESSION['nome_propriedade'] = $p->nome_propriedade;
+                    break;
+                }
+            }
+        }
+        header('Location: /sistema-agricola/app/dashboard');
+        exit();
+    }
 }

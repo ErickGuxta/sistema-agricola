@@ -565,7 +565,7 @@
                                     <td>
                                         <span class="status-badge 
    
-                                            <?= $safra->status === 'concluida' ? 'status-concluida' : ($safra->status === 'encerrada' ? 'status-encerrada' : 'status-andamento') ?>"><?= htmlspecialchars($safra->status) ?>
+                                            <?= $safra->status === 'FINALIZADA' ? 'status-concluida' : ($safra->status === 'CANCELADA' ? 'status-encerrada' : 'status-andamento') ?>"><?= htmlspecialchars($safra->status) ?>
                                             
                                         </span>
                                     </td>
@@ -585,7 +585,7 @@
 
                                         <form method="POST" action="/sistema-agricola/app/safra/deletar" style="display:inline">
                                             <input type="hidden" name="id_safra" value="<?= (int) $safra->id_safra ?>">
-                                            <button class="action-btn delete" onclick="return confirm('Deseja excluir esta safra?')">🗑️</button>
+                                            <button class="action-btn delete" onclick="return confirm('Deseja excluir esta safra?\n\nATENÇÃO: Todos os itens do estoque relacionados a esta safra também serão excluídos!')">🗑️</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -650,10 +650,10 @@
                     <label for="status">Status</label>
                     <select id="status" name="status" required>
                         <option value="">Selecione o status</option>
-                        <option value="planejada">Planejada</option>
-                        <option value="andamento">Em andamento</option>
-                        <option value="concluida">Concluída</option>
-                        <option value="encerrada">Encerrada</option>
+                        <option value="PLANEJADA">Planejada</option>
+                        <option value="EM_ANDAMENTO">Em andamento</option>
+                        <option value="FINALIZADA">Finalizada</option>
+                        <option value="CANCELADA">Cancelada</option>
                     </select>
                 </div>
 
@@ -700,10 +700,10 @@
                     <label for="edit_status">Status</label>
                     <select id="edit_status" name="status" required>
                         <option value="">Selecione o status</option>
-                        <option value="planejada">Planejada</option>
-                        <option value="andamento">Em andamento</option>
-                        <option value="concluida">Concluída</option>
-                        <option value="encerrada">Encerrada</option>
+                        <option value="PLANEJADA">Planejada</option>
+                        <option value="EM_ANDAMENTO">Em andamento</option>
+                        <option value="FINALIZADA">Finalizada</option>
+                        <option value="CANCELADA">Cancelada</option>
                     </select>
                 </div>
 

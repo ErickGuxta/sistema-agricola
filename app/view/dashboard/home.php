@@ -66,13 +66,9 @@ if (isset($_GET['logout'])) {
             left: 0;
             top: 0;
             z-index: 1000;
-
-            border: 2px solid salmon;
         }
 
         .perfil {
-            border: 1px solid #BF3F4A;
-
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -112,8 +108,6 @@ if (isset($_GET['logout'])) {
             display: flex;
             flex-direction: column;
             gap: 5px;
-
-            border: 1px solid #BF3F4A;
         }
 
         .nav-item {
@@ -122,8 +116,6 @@ if (isset($_GET['logout'])) {
             cursor: pointer;
             transition: background 0.2s;
             text-align: center;
-
-            border: 1px solid #bb3fbf;
         }
 
         .nav-item:hover {
@@ -167,8 +159,6 @@ if (isset($_GET['logout'])) {
             margin-left: 240px;
             min-height: 100vh;
             overflow-x: hidden;
-
-            border: 2px solid rgb(0, 75, 136);
         }
 
         .header-main {
@@ -178,8 +168,6 @@ if (isset($_GET['logout'])) {
             margin-bottom: 30px;
             flex-wrap: wrap;
             gap: 20px;
-
-            border: 1px solid rgb(0, 26, 255);
         }
 
         .header-left {
@@ -203,6 +191,27 @@ if (isset($_GET['logout'])) {
             font-weight: bold;
             color: #333;
             cursor: pointer;
+        }
+
+        .property-selector {
+            font-size: clamp(24px, 4vw, 32px);
+            font-weight: bold;
+            color: #333;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: 16px;
+            padding-right: 24px;
+        }
+
+        .property-selector:focus {
+            outline: none;
         }
 
         .divider {
@@ -231,8 +240,6 @@ if (isset($_GET['logout'])) {
 
         /* Cards de Métricas */
         .metrics-row {
-            border: 1px solid rgb(0, 26, 255);
-
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
@@ -296,8 +303,6 @@ if (isset($_GET['logout'])) {
             grid-template-columns: 1fr;
             gap: 20px;
             margin-bottom: 30px;
-
-            border: 2px solid salmon;
         }
 
         .dashboard-card {
@@ -362,8 +367,6 @@ if (isset($_GET['logout'])) {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
-
-            border: 2px solid salmon;
         }
 
         .bottom-card {
@@ -752,26 +755,46 @@ if (isset($_GET['logout'])) {
                 gap: 0;
             }
         }
-    </style>
-    <style>
-        .profile-pic-preview:hover .edit-icon {
-            display: flex !important;
+        /* Centralizar e destacar o ícone de edição da foto de perfil */
+        .profile-pic-preview {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            border: 2px dashed #b2b2b2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 8px;
+            cursor: pointer;
+            position: relative;
         }
-        .edit-icon {
-            pointer-events: none;
-            transition: opacity 0.2s;
+        .profile-pic-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 50%;
+        }
+        .profile-pic-preview .edit-icon {
             position: absolute;
-            top: 50%;
             left: 50%;
+            top: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0,0,0,0.6);
             border-radius: 50%;
             padding: 8px;
-            display: none;
             align-items: center;
             justify-content: center;
+            z-index: 2;
+            display: none;
+        }
+        .profile-pic-preview:hover .edit-icon {
+            display: flex;
         }
     </style>
+
 </head>
 
 <body>
@@ -780,11 +803,14 @@ if (isset($_GET['logout'])) {
         <header class="header-sidebar">
             <!-- perfil -->
             <nav class="perfil">
-                <div class="logo-circle" onclick="openProfileModal()" style="cursor: pointer; overflow: hidden;">
+                <div class="logo-circle profile-pic-preview" onclick="openProfileModal()" style="cursor: pointer; overflow: hidden; position: relative;">
                     <?php
                         $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
                     ?>
                     <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                    <span class="edit-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z"/></svg>
+                    </span>
                 </div>
                 <div class="logo-text">
                     <?php
@@ -821,20 +847,27 @@ if (isset($_GET['logout'])) {
         <main class="main-content">
             <header class="header-main">
                 <div class="header-left">
-                    <h1 class="farm-name">
+                    <select class="property-selector" onchange="changeProperty(this.value)">
                         <?php
-                        $nomeProprie = $_SESSION['nome_propriedade'];
-                        echo htmlspecialchars($nomeProprie);
+                        // Buscar todas as propriedades do usuário
+                        if (isset($_SESSION['usuario_id'])) {
+                            $propriedadeDAO = new \app\dao\PropriedadeDAO();
+                            $propriedades = $propriedadeDAO->listarPorUsuario($_SESSION['usuario_id']);
+                            foreach ($propriedades as $propriedade) {
+                                $selected = ($propriedade->id_propriedade == $_SESSION['propriedade_id']) ? 'selected' : '';
+                                echo '<option value="' . $propriedade->id_propriedade . '" ' . $selected . '>' . htmlspecialchars($propriedade->nome_propriedade) . '</option>';
+                            }
+                        }
                         ?>
-                    </h1>
+                    </select>
                     <div class="divider"></div>
                     <div class="year-selector">
                         2025
                     </div>
                 </div>
 
-                <button class="new-safra-btn" onclick="openModal()">
-                    + nova safra
+                <button class="new-safra-btn" onclick="openNewPropertyModal()">
+                    + nova propriedade
                 </button>
             </header>
 
@@ -906,10 +939,10 @@ if (isset($_GET['logout'])) {
                         <form id="profileForm" method="POST" action="/sistema-agricola/app/usuario/atualizar" enctype="multipart/form-data">
                             <div class="form-group" style="display: flex; flex-direction: column; align-items: center;">
                                 <label class="form-label">Foto de Perfil</label>
-                                <div class="profile-pic-preview" id="editProfilePicPreview" style="width: 110px; height: 110px; border-radius: 50%; background: #f0f0f0; border: 2px dashed #b2b2b2; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; cursor: pointer; position: relative;">
-                                    <img src="<?= htmlspecialchars(isset($_SESSION['usuario_foto']) ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png') ?>" alt="Pré-visualização" id="editProfilePicImg" style="width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%;" />
-                                    <span class="edit-icon" style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 6px; display: none; align-items: center; justify-content: center;">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z"/></svg>
+                                <div class="profile-pic-preview" id="editProfilePicPreview">
+                                    <img src="<?= htmlspecialchars(isset($_SESSION['usuario_foto']) ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png') ?>" alt="Pré-visualização" id="editProfilePicImg" />
+                                    <span class="edit-icon">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z"/></svg>
                                     </span>
                                 </div>
                                 <input type="file" name="image" id="editProfileImage" accept="image/*" style="display: none;">
@@ -992,6 +1025,68 @@ if (isset($_GET['logout'])) {
                             <button type="submit" class="btn-primary">Salvar Alterações da Propriedade</button>
                         </form>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de cadastro de nova propriedade -->
+        <div id="newPropertyModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Cadastrar Nova Propriedade</h2>
+                    <span class="close" onclick="closeNewPropertyModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="newPropertyForm" method="POST" action="/sistema-agricola/app/registro-propriedade">
+                        <div class="form-group">
+                            <label class="form-label">Nome da Propriedade*</label>
+                            <input type="text" class="form-input" id="newPropertyName" name="nome_propriedade" placeholder="Digite o nome da propriedade" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Estado*</label>
+                                <select class="form-input" id="newPropertyState" name="estado" required>
+                                    <option value="">Selecione o estado</option>
+                                    <option value="AC">Acre</option>
+                                    <option value="AL">Alagoas</option>
+                                    <option value="AP">Amapá</option>
+                                    <option value="AM">Amazonas</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="CE">Ceará</option>
+                                    <option value="DF">Distrito Federal</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="MA">Maranhão</option>
+                                    <option value="MT">Mato Grosso</option>
+                                    <option value="MS">Mato Grosso do Sul</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="PA">Pará</option>
+                                    <option value="PB">Paraíba</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="PI">Piauí</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="RN">Rio Grande do Norte</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="RO">Rondônia</option>
+                                    <option value="RR">Roraima</option>
+                                    <option value="SC">Santa Catarina</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="SE">Sergipe</option>
+                                    <option value="TO">Tocantins</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Cidade*</label>
+                                <input type="text" class="form-input" id="newPropertyCity" name="cidade" placeholder="Digite a cidade" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Área (hectares)*</label>
+                            <input type="number" class="form-input" id="newPropertyArea" name="area_total" placeholder="Digite a área em hectares" step="0.01" min="0" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Cadastrar Propriedade</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1124,6 +1219,55 @@ if (isset($_GET['logout'])) {
                 closeProfileModal();
             }
         });
+
+        // Modal Nova Propriedade
+        function openNewPropertyModal() {
+            document.getElementById('newPropertyModal').style.display = 'block';
+        }
+        function closeNewPropertyModal() {
+            document.getElementById('newPropertyModal').style.display = 'none';
+        }
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('newPropertyModal');
+            if (event.target === modal) {
+                closeNewPropertyModal();
+            }
+        });
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeNewPropertyModal();
+            }
+        });
+        // Validação simples do formulário
+        document.getElementById('newPropertyForm').addEventListener('submit', function(e) {
+            const area = document.getElementById('newPropertyArea').value;
+            if (area && area < 0) {
+                alert('A área deve ser um valor positivo!');
+                e.preventDefault();
+                return;
+            }
+        });
+
+        // Função para trocar propriedade
+        function changeProperty(propriedadeId) {
+            if (propriedadeId) {
+                // Criar formulário temporário para enviar POST
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/sistema-agricola/app/dashboard/setPropriedade';
+                
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'propriedade_id';
+                input.value = propriedadeId;
+                
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
     </script>
 </body>
 

@@ -84,6 +84,9 @@ switch ($url) {
     case 'dashboard/setSafra':
         HomeController::setSafra();
         break;
+    case 'dashboard/setPropriedade':
+        HomeController::setPropriedade();
+        break;
     default:
         echo "Pagina não encontrada - 404";
         break;

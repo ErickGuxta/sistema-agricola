@@ -772,7 +772,19 @@
                 echo (floor($preco)==$preco) ? number_format($preco,0,',','.') : number_format($preco,2,',','.'); 
             ?></td>
             <td class="actions">
-                <button class="action-btn" onclick="openEditModal(<?php echo $item->id_item; ?>, '<?php echo htmlspecialchars($item->nome); ?>', '<?php echo htmlspecialchars($item->categoria); ?>', '<?php echo $item->estoque_atual; ?>', '<?php echo $item->estoque_minimo; ?>', '<?php echo $item->valor_unitario; ?>', '<?php echo $item->validade; ?>')" title="Editar">✏️</button>
+                <button class="action-btn"
+    onclick="openEditModal(
+        <?php echo (int)$item->id_item; ?>,
+        '<?php echo addslashes(htmlspecialchars($item->nome ?? '')); ?>',
+        '<?php echo addslashes(htmlspecialchars($item->categoria ?? '')); ?>',
+        '<?php echo addslashes($item->estoque_atual ?? ''); ?>',
+        '<?php echo addslashes($item->estoque_minimo ?? ''); ?>',
+        '<?php echo addslashes($item->valor_unitario ?? ''); ?>',
+        '<?php echo addslashes(htmlspecialchars($item->unidade_medida ?? '')); ?>',
+        '<?php echo addslashes($item->validade ?? ''); ?>'
+    )"
+    title="Editar">✏️
+</button>
                 <button class="action-btn" onclick="openMovementModal(<?php echo $item->id_item; ?>, '<?php echo htmlspecialchars($item->nome); ?>', '<?php echo $item->estoque_atual; ?>')" title="Movimentar">📦</button>
                 <form method="POST" action="/sistema-agricola/app/estoque/deletar" style="display:inline;" onsubmit="return confirm('Deseja excluir este produto?')">
                     <input type="hidden" name="id" value="<?php echo $item->id_item; ?>">
@@ -840,7 +852,19 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="preco">Preço Unitário</label>
-                        <input type="number" id="preco" name="valor_unitario" min="0" step="0.01" placeholder="7.50" required <?php if (isset($propriedade) && !$propriedade) echo 'disabled'; ?>>
+                        <input type="number" id="preco" name="valor_unitario" min="0" step="0.01" placeholder="7.50" required <?php if (isset(
+                            $propriedade) && !$propriedade) echo 'disabled'; ?>>
+                    </div>
+                    <div class="form-group">
+                        <label for="unidade_medida">Unidade de Medida</label>
+                        <select id="unidade_medida" name="unidade_medida" required <?php if (isset($propriedade) && !$propriedade) echo 'disabled'; ?>>
+                            <option value="">Selecione</option>
+                            <option value="UNIDADE">Unidade</option>
+                            <option value="KG">Kg</option>
+                            <option value="L">Litro</option>
+                            <option value="M">Metro</option>
+                            <option value="SACA">Saca</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="data-validade">Data de Validade</label>
@@ -893,6 +917,17 @@
                     <div class="form-group">
                         <label for="edit-preco">Preço Unitário</label>
                         <input type="number" id="edit-preco" name="valor_unitario" min="0" step="0.01" placeholder="7.50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-unidade_medida">Unidade de Medida</label>
+                        <select id="edit-unidade_medida" name="unidade_medida" required>
+                            <option value="">Selecione</option>
+                            <option value="UNIDADE">Unidade</option>
+                            <option value="KG">Kg</option>
+                            <option value="L">Litro</option>
+                            <option value="M">Metro</option>
+                            <option value="SACA">Saca</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="edit-data-validade">Data de Validade</label>
@@ -959,7 +994,9 @@
         }
 
         // Abrir modal de edição
-        function openEditModal(id, nome, categoria, quantidade, estoque_minimo, preco, data_validade) {
+        function openEditModal(id, nome, categoria, quantidade, estoque_minimo, preco, unidade_medida, data_validade) {
+            // Remover alert de debug
+            console.log('openEditModal', id, nome, categoria, quantidade, estoque_minimo, preco, unidade_medida, data_validade);
             // Preencher os campos
             document.getElementById("edit-product-id").value = id;
             document.getElementById("edit-nome").value = nome;
@@ -967,8 +1004,8 @@
             document.getElementById("edit-quantidade").value = quantidade;
             document.getElementById("edit-estoque-minimo").value = estoque_minimo;
             document.getElementById("edit-preco").value = preco;
+            document.getElementById("edit-unidade_medida").value = unidade_medida;
             document.getElementById("edit-data-validade").value = data_validade;
-            
             // Abrir modal
             const modal = document.getElementById("edit-modal-overlay");
             modal.classList.add("active");

@@ -134,7 +134,6 @@ final class UsuarioController
 
     public static function atualizar() : void
     {
-        session_start();
         $erro = "";
         $usuarioDAO = new UsuarioDAO();
         $id_usuario = $_SESSION['usuario_id'];
@@ -192,7 +191,6 @@ final class UsuarioController
 
     public static function deletar() : void
     {
-        session_start();
         if (!isset($_SESSION['usuario_id'])) {
             header("Location: /sistema-agricola/app/login");
             exit;

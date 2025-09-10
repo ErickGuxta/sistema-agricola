@@ -73,7 +73,7 @@ final class SafraController
                 $area = isset($s->area_hectare) && $s->area_hectare !== null && $s->area_hectare !== '' ? (float)$s->area_hectare : 0.0;
                 $total_hectares += $area;
                 $status = strtolower(trim((string)$s->status));
-                if ($status === 'andamento' || $status === 'em andamento') {
+                if ($status === 'EM_ANDAMENTO') {
                     $safras_ativas++;
                 }
             }

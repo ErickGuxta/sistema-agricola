@@ -74,34 +74,53 @@ final class UsuarioDAO extends DAO
 
     public function deletarCascata(int $usuarioId) : bool
     {
-        // Excluir movimentações de estoque vinculadas aos itens do usuário
-        $sqlMov = "DELETE FROM Movimentacao_Estoque WHERE usuario_id = ?";
-        $stmtMov = parent::$conexao->prepare($sqlMov);
-        $stmtMov->bindValue(1, $usuarioId);
-        $stmtMov->execute();
+        try {
+            // 1. Excluir movimentações de estoque vinculadas aos itens do usuário
+            $sqlMov = "DELETE FROM Movimentacao_Estoque WHERE usuario_id = ?";
+            $stmtMov = parent::$conexao->prepare($sqlMov);
+            $stmtMov->bindValue(1, $usuarioId);
+            $stmtMov->execute();
 
-        // Excluir faturamentos do usuário
-        $sqlFat = "DELETE FROM Faturamento_Mes WHERE usuario_id = ?";
-        $stmtFat = parent::$conexao->prepare($sqlFat);
-        $stmtFat->bindValue(1, $usuarioId);
-        $stmtFat->execute();
+            // 2. Excluir associações safra-movimentação
+            $sqlAssoc = "DELETE FROM Safra_Movimentacao_Assoc WHERE safra_id IN (SELECT s.id_safra FROM Safra s INNER JOIN Propriedade p ON s.propriedade_id = p.id_propriedade WHERE p.usuario_id = ?)";
+            $stmtAssoc = parent::$conexao->prepare($sqlAssoc);
+            $stmtAssoc->bindValue(1, $usuarioId);
+            $stmtAssoc->execute();
 
-        // Excluir itens de estoque do usuário
-        $sqlItem = "DELETE FROM Item_Estoque WHERE usuario_id = ?";
-        $stmtItem = parent::$conexao->prepare($sqlItem);
-        $stmtItem->bindValue(1, $usuarioId);
-        $stmtItem->execute();
+            // 3. Excluir faturamentos do usuário
+            $sqlFat = "DELETE FROM Faturamento_Mes WHERE usuario_id = ?";
+            $stmtFat = parent::$conexao->prepare($sqlFat);
+            $stmtFat->bindValue(1, $usuarioId);
+            $stmtFat->execute();
 
-        // Excluir propriedades do usuário
-        $sqlProp = "DELETE FROM Propriedade WHERE usuario_id = ?";
-        $stmtProp = parent::$conexao->prepare($sqlProp);
-        $stmtProp->bindValue(1, $usuarioId);
-        $stmtProp->execute();
+            // 4. Excluir itens de estoque do usuário
+            $sqlItem = "DELETE FROM Item_Estoque WHERE usuario_id = ?";
+            $stmtItem = parent::$conexao->prepare($sqlItem);
+            $stmtItem->bindValue(1, $usuarioId);
+            $stmtItem->execute();
 
-        // Excluir usuário
-        $sqlUser = "DELETE FROM Usuario WHERE id_usuario = ?";
-        $stmtUser = parent::$conexao->prepare($sqlUser);
-        $stmtUser->bindValue(1, $usuarioId);
-        return $stmtUser->execute();
+            // 5. Excluir safras das propriedades do usuário
+            $sqlSafra = "DELETE FROM Safra WHERE propriedade_id IN (SELECT id_propriedade FROM Propriedade WHERE usuario_id = ?)";
+            $stmtSafra = parent::$conexao->prepare($sqlSafra);
+            $stmtSafra->bindValue(1, $usuarioId);
+            $stmtSafra->execute();
+
+            // 6. Excluir propriedades do usuário
+            $sqlProp = "DELETE FROM Propriedade WHERE usuario_id = ?";
+            $stmtProp = parent::$conexao->prepare($sqlProp);
+            $stmtProp->bindValue(1, $usuarioId);
+            $stmtProp->execute();
+
+            // 7. Excluir usuário
+            $sqlUser = "DELETE FROM Usuario WHERE id_usuario = ?";
+            $stmtUser = parent::$conexao->prepare($sqlUser);
+            $stmtUser->bindValue(1, $usuarioId);
+            $stmtUser->execute();
+
+            return true;
+        } catch (\Exception $e) {
+            error_log("Erro ao deletar usuário: " . $e->getMessage());
+            return false;
+        }
     }
 }

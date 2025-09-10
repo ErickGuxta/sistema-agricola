@@ -101,8 +101,8 @@ CREATE TABLE Item_Estoque (
     CONSTRAINT fk_item_categoria FOREIGN KEY (categoria_id) 
         REFERENCES Categoria(id_categoria),
 
-    CONSTRAINT fk_item_safra     FOREIGN KEY (safra_id) 
-        REFERENCES Safra(id_safra),
+    CONSTRAINT fk_item_safra FOREIGN KEY (safra_id) 
+        REFERENCES safra(id_safra) ON DELETE CASCADE,
 
     CONSTRAINT ck_item_estoque CHECK (estoque_atual >= 0),
     CONSTRAINT ck_item_minimo  CHECK (estoque_minimo >= 0),
