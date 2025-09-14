@@ -460,6 +460,36 @@
                 min-width: 600px;
             }
         }
+
+        /* Classes para limpeza de estilos inline */
+        .logo-circle {
+            overflow: hidden;
+        }
+
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .warning-card {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .warning-link {
+            color: #1f5b3c;
+            text-decoration: underline;
+        }
+
+        .inline-form {
+            display: inline;
+        }
     </style>
 </head>
 
@@ -469,11 +499,11 @@
         <header class="header-sidebar">
             <!-- Perfil -->
             <nav class="perfil">
-                <div class="logo-circle" style="overflow: hidden;">
+                <div class="logo-circle">
                     <?php
                         $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
                     ?>
-                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" />
                 </div>
                 <div class="logo-text">
                     <?php
@@ -520,9 +550,9 @@
             </header>
 
             <?php if (!isset($_SESSION['propriedade_id'])): ?>
-                <div style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <div class="warning-card">
                     <strong>⚠️ Atenção:</strong> Você precisa cadastrar uma propriedade antes de cadastrar safras. 
-                    <a href="/sistema-agricola/app/registro-propriedade" style="color: #1f5b3c; text-decoration: underline;">Clique aqui para cadastrar sua propriedade</a>.
+                    <a href="/sistema-agricola/app/registro-propriedade" class="warning-link">Clique aqui para cadastrar sua propriedade</a>.
                 </div>
             <?php endif; ?>
 
@@ -583,9 +613,9 @@
 
                                         ✏️</button>
 
-                                        <form method="POST" action="/sistema-agricola/app/safra/deletar" style="display:inline">
+                                        <form method="POST" action="/sistema-agricola/app/safra/deletar" class="inline-form">
                                             <input type="hidden" name="id_safra" value="<?= (int) $safra->id_safra ?>">
-                                            <button class="action-btn delete" onclick="return confirm('Deseja excluir esta safra?\n\nATENÇÃO: Todos os itens do estoque relacionados a esta safra também serão excluídos!')">🗑️</button>
+                                            <button class="action-btn delete" onclick="return confirm('Deseja excluir esta safra?\n\nATENÇÃO: Todos os dados relacionados serão excluídos:\n• Itens do estoque da safra\n• Movimentações de estoque\n• Faturamentos da safra\n\nEsta ação não pode ser desfeita!')">🗑️</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -680,16 +710,16 @@
                     <input type="text" id="edit_nome" name="nome" placeholder="Milho 2025" required>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="edit_dataInicio">Data de Início</label>
-                        <input type="date" id="edit_dataInicio" name="dataInicio" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit_dataInicio">Data de Início</label>
+                            <input type="date" id="edit_dataInicio" name="dataInicio" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_dataTermino">Data de Término</label>
+                            <input type="date" id="edit_dataTermino" name="dataTermino" placeholder="Opcional">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="edit_dataTermino">Data de Término</label>
-                        <input type="date" id="edit_dataTermino" name="dataTermino" placeholder="Opcional">
-                    </div>
-                </div>
 
                 <div class="form-group">
                     <label for="edit_area_hectare">Área (ha)</label>

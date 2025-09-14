@@ -97,20 +97,57 @@ final class SafraDAO extends DAO
     }
 
     /**
-     * deletar uma safra pelo ID 
+     * deletar uma safra pelo ID com deleção em cascata
      */
     public function deletar(int $idSafra, ?int $propriedadeId = null) : bool
     {
-        $sql = "DELETE FROM Safra WHERE id_safra = ?";
-        if ($propriedadeId !== null) {
-            $sql .= " AND propriedade_id = ?";
+        try {
+            // Verificar se a safra existe e pertence à propriedade (se especificada)
+            $safra = $this->getById($idSafra, $propriedadeId);
+            if (!$safra) {
+                return false;
+            }
+
+            // 1. Deletar faturamentos associados à safra
+            $sqlFat = "DELETE FROM Faturamento_Mes WHERE safra_id = ?";
+            $stmtFat = parent::$conexao->prepare($sqlFat);
+            $stmtFat->bindValue(1, $idSafra);
+            $stmtFat->execute();
+
+            // 2. Deletar movimentações de estoque dos itens da safra
+            $sqlMov = "DELETE FROM Movimentacao_Estoque WHERE item_id IN (SELECT id_item FROM Item_Estoque WHERE safra_id = ?)";
+            $stmtMov = parent::$conexao->prepare($sqlMov);
+            $stmtMov->bindValue(1, $idSafra);
+            $stmtMov->execute();
+
+            // 3. Deletar associações safra-movimentação (se existir)
+            $sqlAssoc = "DELETE FROM Safra_Movimentacao_Assoc WHERE safra_id = ?";
+            $stmtAssoc = parent::$conexao->prepare($sqlAssoc);
+            $stmtAssoc->bindValue(1, $idSafra);
+            $stmtAssoc->execute();
+
+            // 4. Deletar itens de estoque da safra
+            $sqlItem = "DELETE FROM Item_Estoque WHERE safra_id = ?";
+            $stmtItem = parent::$conexao->prepare($sqlItem);
+            $stmtItem->bindValue(1, $idSafra);
+            $stmtItem->execute();
+
+            // 5. Deletar a safra
+            $sql = "DELETE FROM Safra WHERE id_safra = ?";
+            if ($propriedadeId !== null) {
+                $sql .= " AND propriedade_id = ?";
+            }
+            $stmt = parent::$conexao->prepare($sql);
+            $stmt->bindValue(1, $idSafra);
+            if ($propriedadeId !== null) {
+                $stmt->bindValue(2, $propriedadeId);
+            }
+            
+            return $stmt->execute();
+        } catch (\Exception $e) {
+            error_log("Erro ao deletar safra: " . $e->getMessage());
+            return false;
         }
-        $stmt = parent::$conexao->prepare($sql);
-        $stmt->bindValue(1, $idSafra);
-        if ($propriedadeId !== null) {
-            $stmt->bindValue(2, $propriedadeId);
-        }
-        return $stmt->execute();
     }
 
     public function listarPorUsuario(int $usuarioId) : array
@@ -126,6 +163,7 @@ final class SafraDAO extends DAO
         }
         return $safras;
     }
+
 
     /**
      * Lista todas as safras disponíveis
@@ -143,5 +181,35 @@ final class SafraDAO extends DAO
             $resultado[] = new Safra($linha);
         }
         return $resultado;
+    }
+
+    /**
+     * Conta safras ativas de uma propriedade
+     */
+    public function contarSafrasAtivas(int $propriedadeId) : int
+    {
+        $sql = "SELECT COUNT(*) as total FROM Safra WHERE propriedade_id = ? AND status = 'em_andamento'";
+        
+        $stmt = parent::$conexao->prepare($sql);
+        $stmt->bindValue(1, $propriedadeId);
+        $stmt->execute();
+        
+        $resultado = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return (int) $resultado['total'];
+    }
+
+    /**
+     * Conta total de hectares de safras ativas de uma propriedade
+     */
+    public function totalHectaresAtivos(int $propriedadeId) : float
+    {
+        $sql = "SELECT COALESCE(SUM(area_hectare), 0) as total FROM Safra WHERE propriedade_id = ? AND status = 'em_andamento' AND area_hectare IS NOT NULL";
+        
+        $stmt = parent::$conexao->prepare($sql);
+        $stmt->bindValue(1, $propriedadeId);
+        $stmt->execute();
+        
+        $resultado = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return (float) $resultado['total'];
     }
 }

@@ -15,9 +15,19 @@ final class ItemEstoqueController
 
         $erro = "";
         $usuarioId = $_SESSION['usuario_id'];
+        $propriedadeId = $_SESSION['propriedade_id'] ?? null;
+        
         // Buscar propriedade do usuário
         $propriedadeDAO = new \app\dao\PropriedadeDAO();
         $propriedade = $propriedadeDAO->buscarPorUsuario($usuarioId);
+
+        // Buscar safras para o select (precisa estar antes do processamento POST)
+        $safraDAO = new \app\dao\SafraDAO();
+        if ($propriedadeId) {
+            $safras = $safraDAO->listarPorPropriedade($propriedadeId);
+        } else {
+            $safras = $safraDAO->listarPorUsuario($usuarioId);
+        }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -31,11 +41,22 @@ final class ItemEstoqueController
                 $estoque_minimo = trim($_POST['estoque_minimo'] ?? '');
                 $validade       = trim($_POST['validade']       ?? '');
                 $valor_unitario = trim($_POST['valor_unitario'] ?? '');
-                $safra_id = isset($_POST['safra_id']) ? intval($_POST['safra_id']) : null;
+                $unidade_medida = trim($_POST['unidade_medida'] ?? 'UNIDADE');
+                $safra_id_input = $_POST['safra_id'] ?? '';
+                $safra_id = null;
+                
+                // Tratar opção "Todas as Safras"
+                if ($safra_id_input === 'all') {
+                    // Para "Todas as Safras", usar a primeira safra disponível como padrão
+                    if (isset($safras) && is_array($safras) && count($safras) > 0) {
+                        $safra_id = $safras[0]->id_safra;
+                    }
+                } elseif (is_numeric($safra_id_input)) {
+                    $safra_id = intval($safra_id_input);
+                }
 
-
-                if ($nome === '' || $estoque_minimo === '' || $validade === '' || !$safra_id) {
-                    $erro = 'Preencha os campos obrigatórios, incluindo a safra.';
+                if ($nome === '' || $estoque_minimo === '' || !$safra_id) {
+                    $erro = 'Preencha os campos obrigatórios: nome, estoque mínimo e safra.';
                 } else {
                     $categoriaDAO   = new CategoriaDAO();
                     $categorias     = $categoriaDAO->listarTodos();
@@ -56,8 +77,9 @@ final class ItemEstoqueController
                         $model->categoria_id   = $categoria_id;
                         $model->estoque_atual  = $estoque_atual;
                         $model->estoque_minimo = $estoque_minimo;
-                        $model->validade       = $validade;
+                        $model->validade       = empty($validade) ? null : $validade;
                         $model->valor_unitario = $valor_unitario;
+                        $model->unidade_medida = $unidade_medida;
                         $model->safra_id       = $safra_id;
 
                         $itemRegistrado = $model->registrar();
@@ -76,10 +98,6 @@ final class ItemEstoqueController
         $categoriaDAO = new CategoriaDAO();
         $categorias = $categoriaDAO->listarTodos();
 
-        // Buscar safras para o select
-        $safraDAO = new \app\dao\SafraDAO();
-        $safras = $safraDAO->listarPorUsuario($usuarioId);
-
         // Busca por nome, categoria e safra
         $filtro_nome = isset($_GET['busca']) ? trim($_GET['busca']) : '';
         $filtro_categoria = isset($_GET['categoria']) ? trim($_GET['categoria']) : '';
@@ -90,14 +108,14 @@ final class ItemEstoqueController
         $alertas_baixo = 0;
         $proximos_validade = 0;
         $valor_total_estoque = 0.0;
-        if ($propriedade) {
+        if ($propriedade && $propriedadeId) {
             $dao = new ItemEstoqueDAO();
             if ($filtro_safra) {
-                $itens = \app\model\ItemEstoque::listarTodosPorSafra($usuarioId, $filtro_safra);
+                $itens = $dao->listarTodosPorSafraEPropriedade($filtro_safra, $propriedadeId);
             } elseif ($filtro_nome !== '' || $filtro_categoria !== '') {
-                $itens = $dao->buscarPorUsuarioNomeCategoria($usuarioId, $filtro_nome, $filtro_categoria);
+                $itens = $dao->buscarPorPropriedadeNomeCategoria($propriedadeId, $filtro_nome, $filtro_categoria);
             } else {
-                $itens = ItemEstoqueDAO::listarTodosPorUsuario($usuarioId);
+                $itens = ItemEstoqueDAO::listarTodosPorPropriedade($propriedadeId);
             }
 
             // Calcular métricas
@@ -106,7 +124,7 @@ final class ItemEstoqueController
             foreach ($itens as $it) {
                 $qtd = (float) $it->estoque_atual;
                 $min = (float) $it->estoque_minimo;
-                if ($qtd <= $min) {
+                if ($qtd < $min) {
                     $alertas_baixo++;
                 }
 
@@ -141,6 +159,7 @@ final class ItemEstoqueController
             $estoque_minimo = trim($_POST['estoque_minimo'] ?? '');
             $validade       = trim($_POST['validade']       ?? '');
             $valor_unitario = trim($_POST['valor_unitario'] ?? '');
+            $unidade_medida = trim($_POST['unidade_medida'] ?? 'UNIDADE');
 
             // Buscar categoria_id
             $categoriaDAO = new \app\dao\CategoriaDAO();
@@ -163,8 +182,9 @@ final class ItemEstoqueController
                 $model->categoria_id   = $categoria_id;
                 $model->estoque_atual  = $estoque_atual;
                 $model->estoque_minimo = $estoque_minimo;
-                $model->validade       = $validade;
+                $model->validade       = empty($validade) ? null : $validade;
                 $model->valor_unitario = $valor_unitario;
+                $model->unidade_medida = $unidade_medida;
                 $model->atualizar();
                 header("Location: /sistema-agricola/app/estoque");
                 exit;

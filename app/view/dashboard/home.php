@@ -793,6 +793,320 @@ if (isset($_GET['logout'])) {
         .profile-pic-preview:hover .edit-icon {
             display: flex;
         }
+
+        /* Classes para limpeza de estilos inline */
+        .logo-circle {
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .variacao-positiva {
+            color: #28a745;
+        }
+
+        .variacao-negativa {
+            color: #dc3545;
+        }
+
+        .info-text {
+            color: #666;
+        }
+
+        .chart-canvas {
+            max-height: 180px;
+        }
+
+        .chart-no-data {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+        }
+
+        .scrollable-container {
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .no-data-message {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .safra-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .safra-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .safra-success {
+            color: #28a745;
+        }
+
+        .movimentacoes-container {
+            margin-top: 20px;
+        }
+
+        .movimentacoes-scroll {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .movimentacao-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .movimentacao-content {
+            flex: 1;
+        }
+
+        .movimentacao-header {
+            margin-bottom: 4px;
+        }
+
+        .movimentacao-badge {
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .badge-entrada {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-saida {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .movimentacao-date {
+            color: #666;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .movimentacao-details {
+            color: #666;
+        }
+
+        .movimentacao-observacao {
+            color: #666;
+            font-style: italic;
+        }
+
+        .movimentacao-quantidade {
+            font-weight: bold;
+        }
+
+        .quantidade-entrada {
+            color: #28a745;
+        }
+
+        .quantidade-saida {
+            color: #dc3545;
+        }
+
+        .movimentacao-valor {
+            color: #1e472d;
+            font-weight: 500;
+        }
+
+        .historico-container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #1e472d;
+        }
+
+        .historico-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            color: #1e472d;
+        }
+
+        .historico-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .historico-card {
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .card-entradas {
+            background: #e8f5e8;
+        }
+
+        .card-saidas {
+            background: #fff3cd;
+        }
+
+        .card-lucro {
+            background: #d1ecf1;
+        }
+
+        .card-total {
+            background: #f8d7da;
+        }
+
+        .historico-number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .historico-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .number-entradas {
+            color: #28a745;
+        }
+
+        .number-saidas {
+            color: #856404;
+        }
+
+        .number-lucro {
+            color: #0c5460;
+        }
+
+        .number-total {
+            color: #721c24;
+        }
+
+        .table-overflow {
+            overflow-x: auto;
+        }
+
+        .historico-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .historico-table thead tr {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .historico-table th {
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        .historico-table th:nth-child(2),
+        .historico-table th:nth-child(3),
+        .historico-table th:nth-child(4) {
+            text-align: center;
+        }
+
+        .historico-table tbody tr {
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .historico-table td {
+            padding: 10px;
+            font-size: 13px;
+        }
+
+        .historico-table td:first-child {
+            color: #1e472d;
+            font-weight: 500;
+        }
+
+        .historico-table td:nth-child(2),
+        .historico-table td:nth-child(3),
+        .historico-table td:nth-child(4) {
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .historico-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            color: #999;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .form-group-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-delete {
+            background: #bf3f4a;
+            border: none;
+            width: 100%;
+        }
     </style>
 
 </head>
@@ -803,11 +1117,11 @@ if (isset($_GET['logout'])) {
         <header class="header-sidebar">
             <!-- perfil -->
             <nav class="perfil">
-                <div class="logo-circle profile-pic-preview" onclick="openProfileModal()" style="cursor: pointer; overflow: hidden; position: relative;">
+                <div class="logo-circle profile-pic-preview" onclick="openProfileModal()">
                     <?php
                         $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
                     ?>
-                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" />
                     <span class="edit-icon">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z"/></svg>
                     </span>
@@ -871,24 +1185,43 @@ if (isset($_GET['logout'])) {
                 </button>
             </header>
 
+            <!-- CARDS PRINCIPAIS COM DADOS REAIS -->
             <div class="metrics-row">
                 <div class="metric-card">
-                    <div class="metric-icon blue">💳</div>
+                    <div class="metric-icon blue">💰</div>
                     <div class="metric-info">
-                        <h3>Faturamento</h3>
-                        <p>vs. ano anterior</p>
+                        <h3>R$ <?= number_format($resumoCards['faturamento_atual'] ?? 0, 2, ',', '.') ?></h3>
+                        <p>
+                            <?php 
+                            $faturamentoAtual = $resumoCards['faturamento_atual'] ?? 0;
+                            $faturamentoAnterior = $resumoCards['faturamento_anterior'] ?? 0;
+                            if ($faturamentoAnterior > 0) {
+                                $variacao = (($faturamentoAtual - $faturamentoAnterior) / $faturamentoAnterior) * 100;
+                                $sinal = $variacao >= 0 ? '+' : '';
+                                $cor = $variacao >= 0 ? '#28a745' : '#dc3545';
+                                echo '<span class="' . ($variacao >= 0 ? 'variacao-positiva' : 'variacao-negativa') . '">' . $sinal . number_format($variacao, 1) . '%</span> vs. ano anterior';
+                            } else {
+                                echo 'Faturamento do ano';
+                            }
+                            ?>
+                        </p>
                     </div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-icon green">$</div>
+                    <div class="metric-icon green">📦</div>
                     <div class="metric-info">
-                        <h3>Valor em estoque</h3>
+                        <h3>R$ <?= number_format($resumoCards['valor_estoque_total'] ?? 0, 2, ',', '.') ?></h3>
+                        <p>Valor em estoque</p>
                     </div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-icon red">✕</div>
+                    <div class="metric-icon blue">🌱</div>
                     <div class="metric-info">
-                        <h3>Ruptura de Estoque</h3>
+                        <h3><?= $infoGerais['safras_ativas'] ?? 0 ?>/<?= $infoGerais['total_safras'] ?? 0 ?></h3>
+                        <p>Safras ativas</p>
+                        <small class="info-text">
+                            <?= $infoGerais['total_itens'] ?? 0 ?> itens no estoque
+                        </small>
                     </div>
                 </div>
             </div>
@@ -903,20 +1236,197 @@ if (isset($_GET['logout'])) {
                 <div class="faturamento-card">
                     <h3 class="faturamento-title">Faturamento ao longo do tempo</h3>
                     <div class="faturamento-grafico">
-                        Gráfico de faturamento
+                        <?php if (!empty($dadosGrafico)): ?>
+                            <canvas id="graficoFaturamento" class="chart-canvas"></canvas>
+                        <?php else: ?>
+                            <div class="chart-no-data">
+                                Nenhum dado de faturamento disponível
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
 
+            <!-- SEÇÃO DE RELATÓRIOS COM DADOS REAIS -->
             <div class="bottom-section">
+                <!-- ESTOQUE POR CATEGORIA -->
                 <div class="bottom-card">
-                    <h3>Valor em estoque por categoria</h3>
-                    <div class="box-icon"></div>
+                    <h3>📦 Estoque por Categoria</h3>
+                    <?php if (!empty($estoqueCategoria)): ?>
+                        <div class="scrollable-container">
+                            <?php foreach ($estoqueCategoria as $categoria): ?>
+                                <div class="category-item">
+                                    <div>
+                                        <strong><?= htmlspecialchars($categoria['categoria']) ?></strong>
+                                        <br><small><?= $categoria['total_itens'] ?> itens • <?= number_format($categoria['quantidade_total'], 1) ?> unidades</small>
+                                    </div>
+                                    <div class="text-right">
+                                        <strong>R$ <?= number_format($categoria['valor_total'] ?? 0, 2, ',', '.') ?></strong>
+                                        <?php if ($categoria['menor_preco'] > 0 && $categoria['maior_preco'] > 0): ?>
+                                            <br><small class="info-text">R$ <?= number_format($categoria['menor_preco'], 2, ',', '.') ?> - R$ <?= number_format($categoria['maior_preco'], 2, ',', '.') ?></small>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="no-data-message">
+                            Nenhum item em estoque
+                        </div>
+                    <?php endif; ?>
                 </div>
+
+                <!-- SAFRAS DA PROPRIEDADE -->
                 <div class="bottom-card">
-                    <h3>Detalhamento</h3>
-                    <div style="color: #999;">Detalhes do estoque</div>
+                    <h3>🌱 Safras da Propriedade</h3>
+                    <?php if (!empty($safrasPropriedade)): ?>
+                        <div class="scrollable-container">
+                            <?php foreach (array_slice($safrasPropriedade, 0, 5) as $safra): ?>
+                                <div class="safra-item">
+                                    <div class="safra-content">
+                                        <div>
+                                            <strong><?= htmlspecialchars($safra['safra_nome']) ?></strong>
+                                            <br><small><?= htmlspecialchars($safra['status_descricao']) ?> - <?= number_format($safra['area_hectare'] ?? 0, 1) ?> ha</small>
+                                            <?php if ($safra['itens_estoque'] > 0): ?>
+                                                <br><small class="safra-success">📦 <?= $safra['itens_estoque'] ?> itens em estoque</small>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="text-right">
+                                            <strong>R$ <?= number_format($safra['receita_por_hectare'] ?? 0, 0, ',', '.') ?>/ha</strong>
+                                            <br><small>R$ <?= number_format($safra['receita_total'] ?? 0, 0, ',', '.') ?> total</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="no-data-message">
+                            Nenhuma safra encontrada
+                        </div>
+                    <?php endif; ?>
                 </div>
+            </div>
+
+            <!-- MOVIMENTAÇÕES RECENTES -->
+            <?php if (!empty($movimentacoes)): ?>
+            <div class="bottom-card movimentacoes-container">
+                <h3>📋 Movimentações Recentes (30 dias)</h3>
+                <div class="movimentacoes-scroll">
+                    <?php foreach (array_slice($movimentacoes, 0, 8) as $mov): ?>
+                        <div class="movimentacao-item">
+                            <div class="movimentacao-content">
+                                <div class="movimentacao-header">
+                                    <span class="movimentacao-badge <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? 'badge-entrada' : 'badge-saida' ?>">
+                                        <?= $mov['tipo_movimentacao'] ?>
+                                    </span>
+                                    <span class="movimentacao-date">
+                                        <?= $mov['data_formatada'] ?> (<?= $mov['dias_atras'] ?> dias)
+                                    </span>
+                                </div>
+                                <strong><?= htmlspecialchars($mov['item_nome']) ?></strong>
+                                <br><small class="movimentacao-details">
+                                    <?= htmlspecialchars($mov['categoria']) ?> • <?= htmlspecialchars($mov['safra_nome']) ?>
+                                </small>
+                                <?php if (!empty($mov['observacao'])): ?>
+                                    <br><small class="movimentacao-observacao">
+                                        "<?= htmlspecialchars($mov['observacao']) ?>"
+                                    </small>
+                                <?php endif; ?>
+                            </div>
+                            <div class="text-right">
+                                <div class="movimentacao-quantidade <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? 'quantidade-entrada' : 'quantidade-saida' ?>">
+                                    <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? '+' : '-' ?><?= number_format($mov['quantidade'], 2) ?> <?= $mov['unidade_medida'] ?>
+                                </div>
+                                <small class="movimentacao-details">
+                                    Estoque: <?= number_format($mov['estoque_atual'], 2) ?>
+                                </small>
+                                <?php if ($mov['valor_movimentacao'] > 0): ?>
+                                    <br><small class="movimentacao-valor">
+                                        R$ <?= number_format($mov['valor_movimentacao'], 2, ',', '.') ?>
+                                    </small>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- HISTÓRICO SIMPLES DE ENTRADAS E SAÍDAS -->
+            <div class="historico-container">
+                <h3 class="historico-title">📊 Histórico de Entradas e Saídas</h3>
+                
+                <!-- CARDS SIMPLES -->
+                <div class="historico-grid">
+                    <div class="historico-card card-entradas">
+                        <div class="historico-number number-entradas">
+                            <?= $contagemEntradasSaidas['entradas_mes'] ?? 0 ?>
+                        </div>
+                        <div class="historico-label">Entradas este mês</div>
+                    </div>
+                    
+                    <div class="historico-card card-saidas">
+                        <div class="historico-number number-saidas">
+                            <?= $contagemEntradasSaidas['saidas_mes'] ?? 0 ?>
+                        </div>
+                        <div class="historico-label">Saídas este mês</div>
+                    </div>
+                    
+                    <div class="historico-card card-lucro">
+                        <div class="historico-number number-lucro">
+                            <?= $contagemEntradasSaidas['total_entradas'] ?? 0 ?>
+                        </div>
+                        <div class="historico-label">Total entradas (30 dias)</div>
+                    </div>
+                    
+                    <div class="historico-card card-total">
+                        <div class="historico-number number-total">
+                            <?= $contagemEntradasSaidas['total_saidas'] ?? 0 ?>
+                        </div>
+                        <div class="historico-label">Total saídas (30 dias)</div>
+                    </div>
+                </div>
+
+                <!-- TABELA SIMPLES DO HISTÓRICO -->
+                <?php if (!empty($historicoEntradasSaidas)): ?>
+                <div class="table-overflow">
+                    <table class="historico-table">
+                        <thead>
+                            <tr>
+                                <th>Período</th>
+                                <th>Tipo</th>
+                                <th>Movimentações</th>
+                                <th>Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($historicoEntradasSaidas as $historico): ?>
+                                <tr>
+                                    <td>
+                                        <?= htmlspecialchars($historico['periodo_nome']) ?>
+                                    </td>
+                                    <td>
+                                        <span class="historico-badge <?= $historico['tipo_movimentacao'] == 'ENTRADA' ? 'badge-entrada' : 'badge-saida' ?>">
+                                            <?= $historico['tipo_movimentacao'] == 'ENTRADA' ? '📈 ENTRADA' : '📉 SAÍDA' ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <?= $historico['total_movimentacoes'] ?>
+                                    </td>
+                                    <td>
+                                        <?= number_format($historico['quantidade_total'], 1) ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <div>Nenhuma movimentação encontrada</div>
+                    </div>
+                <?php endif; ?>
             </div>
 
         </main>
@@ -937,7 +1447,7 @@ if (isset($_GET['logout'])) {
                     <!-- Profile Tab -->
                     <div id="profile-tab" class="tab-content active">
                         <form id="profileForm" method="POST" action="/sistema-agricola/app/usuario/atualizar" enctype="multipart/form-data">
-                            <div class="form-group" style="display: flex; flex-direction: column; align-items: center;">
+                            <div class="form-group form-group-center">
                                 <label class="form-label">Foto de Perfil</label>
                                 <div class="profile-pic-preview" id="editProfilePicPreview">
                                     <img src="<?= htmlspecialchars(isset($_SESSION['usuario_foto']) ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png') ?>" alt="Pré-visualização" id="editProfilePicImg" />
@@ -945,7 +1455,7 @@ if (isset($_GET['logout'])) {
                                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z"/></svg>
                                     </span>
                                 </div>
-                                <input type="file" name="image" id="editProfileImage" accept="image/*" style="display: none;">
+                                <input type="file" name="image" id="editProfileImage" accept="image/*" class="hidden-input">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Nome Completo</label>
@@ -965,9 +1475,9 @@ if (isset($_GET['logout'])) {
                             </div>
                             <button type="submit" class="btn-primary">Salvar Alterações do Perfil</button>
                         </form>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 24px;">
+                        <div class="button-group">
                             <form id="deleteUserForm" method="POST" action="/sistema-agricola/app/usuario/deletar" onsubmit="return confirm('Tem certeza que deseja deletar sua conta? Todos os dados vinculados serão excluídos de forma permanente!');">
-                                <button type="submit" class="btn-primary" style="background: #bf3f4a; border: none; width: 100%;">Deletar Conta</button>
+                                <button type="submit" class="btn-primary btn-delete">Deletar Conta</button>
                             </form>
                         </div>
                     </div>
@@ -1283,6 +1793,78 @@ if (isset($_GET['logout'])) {
             }
         }
     </script>
+
+    <!-- Chart.js para o gráfico de faturamento -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <?php if (!empty($dadosGrafico)): ?>
+    <script>
+        // Dados do PHP para JavaScript
+        const dadosGrafico = <?= json_encode($dadosGrafico) ?>;
+        
+        // Preparar dados para o Chart.js
+        const labels = dadosGrafico.map(item => item.periodo_nome);
+        const valores = dadosGrafico.map(item => parseFloat(item.faturamento_total));
+        
+        // Criar o gráfico
+        const ctx = document.getElementById('graficoFaturamento').getContext('2d');
+        const graficoFaturamento = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Faturamento (R$)',
+                    data: valores,
+                    borderColor: '#1e472d',
+                    backgroundColor: 'rgba(30, 71, 45, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#1e472d',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value.toLocaleString('pt-BR');
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                elements: {
+                    point: {
+                        hoverBackgroundColor: '#1e472d'
+                    }
+                }
+            }
+        });
+    </script>
+    <?php endif; ?>
 </body>
 
 </html>

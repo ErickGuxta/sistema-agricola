@@ -573,6 +573,35 @@
                 width: 100%;
             }
         }
+
+        /* Classes para limpeza de estilos inline */
+        .logo-circle {
+            overflow: hidden;
+        }
+
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .inline-form {
+            display: inline;
+        }
+
+        .debug-info {
+            display: none;
+        }
+
+        .info-card-margin {
+            margin: 20px 0;
+        }
+
+        .link-underline {
+            color: #bf3f4a;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -581,11 +610,11 @@
         <!-- Sidebar -->
         <header class="header-sidebar">
             <nav class="perfil">
-                <div class="logo-circle" style="overflow: hidden;">
+                <div class="logo-circle">
                     <?php
                         $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
                     ?>
-                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" />
                 </div>
                 <div class="logo-text">
                     <?php
@@ -619,7 +648,7 @@
                     <h1 class="page-title">Estoque</h1>
                     <div class="divider"></div>
                     <div class="year-selector">
-                        <form method="GET" action="/sistema-agricola/app/estoque" id="filtroSafraForm" style="display:inline;">
+                        <form method="GET" action="/sistema-agricola/app/estoque" id="filtroSafraForm" class="inline-form">
                             <select name="safra_id" id="yearSelector" onchange="document.getElementById('filtroSafraForm').submit()">
                                 <option value="">Todas as Safras</option>
                                 <?php 
@@ -645,7 +674,7 @@
             </header>
 
             <!-- Debug Info -->
-            <div class="debug-info" id="debug-info" style="display: none;">
+            <div class="debug-info" id="debug-info">
                 <strong>Debug - Informações do Formulário:</strong><br>
                 Action: <span id="debug-action"></span><br>
                 Method: <span id="debug-method"></span><br>
@@ -680,7 +709,7 @@
                 </div>
             </div>
             <?php if (!empty($_SESSION['erro_movimentacao'])) { ?>
-            <div class="info-card danger" style="margin: 20px 0;">
+            <div class="info-card danger info-card-margin">
                 <div class="info-card-icon">⛔</div>
                 <div class="info-card-content">
                     <h3><?php echo htmlspecialchars($_SESSION['erro_movimentacao']); ?></h3>
@@ -689,7 +718,7 @@
             <?php unset($_SESSION['erro_movimentacao']); } ?>
 <?php if (!empty(
     $erro)) { ?>
-    <div class="info-card danger" style="margin: 20px 0;">
+    <div class="info-card danger info-card-margin">
         <div class="info-card-icon">⛔</div>
         <div class="info-card-content">
             <h3><?php echo $erro; ?></h3>
@@ -698,11 +727,11 @@
 <?php } ?>
 <?php if (isset(
     $propriedade) && !$propriedade) { ?>
-    <div class="info-card danger" style="margin: 20px 0;">
+    <div class="info-card danger info-card-margin">
         <div class="info-card-icon">⛔</div>
         <div class="info-card-content">
             <h3>Você precisa cadastrar uma propriedade antes de cadastrar itens no estoque.</h3>
-            <a href="/sistema-agricola/app/registro-propriedade" style="color: #bf3f4a; text-decoration: underline;">Clique aqui para cadastrar propriedade</a>
+            <a href="/sistema-agricola/app/registro-propriedade" class="link-underline">Clique aqui para cadastrar propriedade</a>
         </div>
     </div>
 <?php } ?>
@@ -750,11 +779,31 @@
             <td><?php echo htmlspecialchars($item->categoria); ?></td>
             <td><?php 
                 $qtd = (float)$item->estoque_atual; 
-                echo htmlspecialchars( (floor($qtd)==$qtd) ? number_format($qtd,0,',','.') : number_format($qtd,2,',','.') );
+                $unidade = $item->unidade_medida ?? 'UNIDADE';
+                $unidade_display = '';
+                switch($unidade) {
+                    case 'KG': $unidade_display = ' kg'; break;
+                    case 'L': $unidade_display = ' L'; break;
+                    case 'M': $unidade_display = ' m'; break;
+                    case 'SACA': $unidade_display = ' saca(s)'; break;
+                    case 'UNIDADE': $unidade_display = ' un'; break;
+                    default: $unidade_display = ' ' . strtolower($unidade); break;
+                }
+                echo htmlspecialchars( (floor($qtd)==$qtd) ? number_format($qtd,0,',','.') : number_format($qtd,2,',','.') ) . $unidade_display;
             ?></td>
             <td><?php 
                 $min = (float)$item->estoque_minimo; 
-                echo htmlspecialchars( (floor($min)==$min) ? number_format($min,0,',','.') : number_format($min,2,',','.') );
+                $unidade = $item->unidade_medida ?? 'UNIDADE';
+                $unidade_display = '';
+                switch($unidade) {
+                    case 'KG': $unidade_display = ' kg'; break;
+                    case 'L': $unidade_display = ' L'; break;
+                    case 'M': $unidade_display = ' m'; break;
+                    case 'SACA': $unidade_display = ' saca(s)'; break;
+                    case 'UNIDADE': $unidade_display = ' un'; break;
+                    default: $unidade_display = ' ' . strtolower($unidade); break;
+                }
+                echo htmlspecialchars( (floor($min)==$min) ? number_format($min,0,',','.') : number_format($min,2,',','.') ) . $unidade_display;
             ?></td>
             <td><?php 
                 $val = $item->validade ?? '';
@@ -786,7 +835,7 @@
     title="Editar">✏️
 </button>
                 <button class="action-btn" onclick="openMovementModal(<?php echo $item->id_item; ?>, '<?php echo htmlspecialchars($item->nome); ?>', '<?php echo $item->estoque_atual; ?>')" title="Movimentar">📦</button>
-                <form method="POST" action="/sistema-agricola/app/estoque/deletar" style="display:inline;" onsubmit="return confirm('Deseja excluir este produto?')">
+                <form method="POST" action="/sistema-agricola/app/estoque/deletar" class="inline-form" onsubmit="return confirm('Deseja excluir este produto?')">
                     <input type="hidden" name="id" value="<?php echo $item->id_item; ?>">
                     <button type="submit" class="action-btn" title="Excluir">🗑️</button>
                 </form>
@@ -830,6 +879,7 @@
                     <label for="safra_id">Safra</label>
                     <select id="safra_id" name="safra_id" required <?php if (isset($propriedade) && !$propriedade) echo 'disabled'; ?>>
                         <option value="">Selecione a safra</option>
+                        <option value="all">Todas as Safras</option>
                         <?php if (isset($safras) && is_array($safras)) {
                             foreach ($safras as $safra) {
                                 echo '<option value="' . htmlspecialchars($safra->id_safra) . '">' . htmlspecialchars($safra->nome) . '</option>';

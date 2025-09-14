@@ -3,6 +3,7 @@
 namespace app\controller;
 
 use app\dao\PropriedadeDAO;
+use app\dao\RelatorioDAO;
 
 final class HomeController
 {
@@ -39,6 +40,35 @@ final class HomeController
                 $_SESSION['nome_propriedade'] = $propriedade->nome_propriedade;
             }
         }
+
+        // Carregar dados dos relatórios para o dashboard
+        // Dashboard vinculado a UMA propriedade específica
+        $propriedadeId = (int) $_SESSION['propriedade_id'];
+        $relatorioDAO = new RelatorioDAO();
+        
+        // Dados dos cards principais (3 cards sem ruptura)
+        $resumoCards = $relatorioDAO->resumoCards($propriedadeId);
+        
+        // Dados para o gráfico de faturamento
+        $dadosGrafico = $relatorioDAO->dadosGraficoFaturamento($propriedadeId, 6);
+        
+        // Valor em estoque por categoria
+        $estoqueCategoria = $relatorioDAO->valorEstoquePorCategoria($propriedadeId);
+        
+        // Safras da propriedade
+        $safrasPropriedade = $relatorioDAO->safrasPropriedade($propriedadeId);
+        
+        // Movimentações recentes
+        $movimentacoes = $relatorioDAO->movimentacoes($propriedadeId, 30);
+        
+        // Informações gerais da propriedade
+        $infoGerais = $relatorioDAO->informacoesGerais($propriedadeId);
+        
+        // Histórico simples de entradas e saídas
+        $historicoEntradasSaidas = $relatorioDAO->historicoEntradasSaidas($propriedadeId);
+        
+        // Contagem simples de entradas e saídas
+        $contagemEntradasSaidas = $relatorioDAO->contagemEntradasSaidas($propriedadeId);
         
         include VIEWS . '/dashboard/home.php';
     }

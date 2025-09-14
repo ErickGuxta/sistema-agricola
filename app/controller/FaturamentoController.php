@@ -6,6 +6,7 @@ use app\model\Faturamento;
 use app\model\Safra;
 use app\model\Usuario;
 use app\dao\ItemEstoqueDAO;
+use app\dao\RelatorioDAO;
 
 class FaturamentoController
 {
@@ -31,7 +32,34 @@ class FaturamentoController
         // Calcular lucro
         $lucro = $receitaTotal - $custoTotal;
         
+        // Dados para o gráfico de faturamento
+        $relatorioDAO = new RelatorioDAO();
+        $dadosGrafico = $relatorioDAO->dadosGraficoFaturamentoPorSafra($propriedadeId, null, 12);
+        
         require __DIR__ . '/../view/faturamento/faturamento.php';
+    }
+
+    // Buscar dados do gráfico por safra (AJAX)
+    public static function dadosGrafico()
+    {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $usuarioId = $_SESSION['usuario_id'] ?? null;
+        $propriedadeId = $_SESSION['propriedade_id'] ?? null;
+        
+        if (!$usuarioId || !$propriedadeId) {
+            http_response_code(401);
+            echo json_encode(['error' => 'Não autorizado']);
+            return;
+        }
+
+        $safraId = $_GET['safra_id'] ?? null;
+        $meses = $_GET['meses'] ?? 12;
+        
+        $relatorioDAO = new RelatorioDAO();
+        $dadosGrafico = $relatorioDAO->dadosGraficoFaturamentoPorSafra($propriedadeId, $safraId, (int)$meses);
+        
+        header('Content-Type: application/json');
+        echo json_encode($dadosGrafico);
     }
 
     // Buscar faturamento por safra (AJAX)

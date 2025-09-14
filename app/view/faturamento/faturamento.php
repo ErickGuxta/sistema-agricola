@@ -289,6 +289,49 @@
             color: #333;
         }
 
+        /* Classes para limpeza de estilos inline */
+        .logo-circle {
+            overflow: hidden;
+        }
+
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .inline-form {
+            display: inline;
+        }
+
+        .chart-controls {
+            display: inline-block;
+            margin-left: 20px;
+        }
+
+        .chart-controls select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .chart-controls select:first-child {
+            margin-right: 10px;
+        }
+
+        .chart-no-data {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+        }
+
         /* Tabela */
         .table-container {
             background: white;
@@ -365,6 +408,11 @@
             font-size: 18px;
             font-weight: bold;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .chart-container {
@@ -530,11 +578,11 @@
         <!-- Sidebar -->
         <header class="header-sidebar">
             <nav class="perfil">
-                <div class="logo-circle" style="overflow: hidden;">
+                <div class="logo-circle">
                     <?php
                         $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
                     ?>
-                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" />
                 </div>
                 <div class="logo-text">
                 <?php
@@ -609,6 +657,7 @@
                 </div>
             </div>
 
+
             <!-- Tabela de receitas -->
             <div class="table-container">
                 <table class="products-table">
@@ -641,7 +690,7 @@
                             <td><?php echo htmlspecialchars($fat->descricao); ?></td>
                             <td class="actions">
                                 <button class="action-btn" onclick="openEditModal(<?php echo $fat->id_faturamento; ?>, '<?php echo htmlspecialchars($fat->mes); ?>', '<?php echo htmlspecialchars($fat->valor); ?>', '<?php echo htmlspecialchars($fat->descricao); ?>', '<?php echo htmlspecialchars($fat->safra_id); ?>')" title="Editar">✏️</button>
-                                <form method="POST" action="/sistema-agricola/app/faturamento/deletar" style="display:inline;" onsubmit="return confirm('Deseja excluir este faturamento?')">
+                                <form method="POST" action="/sistema-agricola/app/faturamento/deletar" class="inline-form" onsubmit="return confirm('Deseja excluir este faturamento?')">
                                     <input type="hidden" name="id_faturamento" value="<?php echo $fat->id_faturamento; ?>">
                                     <button type="submit" class="action-btn" title="Excluir">🗑️</button>
                                 </form>
@@ -657,9 +706,32 @@
 
             <!-- Gráfico de Faturamento Mensal -->
             <div class="chart-section">
-                <div class="chart-title">Faturamento Mensal</div>
+                <div class="chart-title">
+                    📈 Faturamento ao Longo do Tempo
+                    <div class="chart-controls">
+                        <select id="chartSafraFilter">
+                            <option value="">Todas as Safras</option>
+                            <?php if (isset($safras) && is_array($safras)) {
+                                foreach ($safras as $safra) {
+                                    echo '<option value="' . htmlspecialchars($safra->id_safra) . '">' . htmlspecialchars($safra->nome) . '</option>';
+                                }
+                            } ?>
+                        </select>
+                        <select id="chartPeriodFilter">
+                            <option value="6">Últimos 6 meses</option>
+                            <option value="12" selected>Últimos 12 meses</option>
+                            <option value="24">Últimos 24 meses</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="chart-container">
-                    <canvas id="faturamentoChart"></canvas>
+                    <?php if (!empty($dadosGrafico)): ?>
+                        <canvas id="graficoFaturamento"></canvas>
+                    <?php else: ?>
+                        <div class="chart-no-data">
+                            Nenhum dado de faturamento disponível
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </main>
@@ -759,7 +831,125 @@
         </div>
     </div>
 
+    <!-- Chart.js para o gráfico de faturamento -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <script>
+        // Variáveis globais para o gráfico
+        let graficoFaturamento = null;
+        
+        // Dados iniciais do gráfico
+        const dadosGraficoInicial = <?= json_encode($dadosGrafico ?? []) ?>;
+        
+        // Função para criar/atualizar o gráfico
+        function criarGrafico(dados) {
+            const ctx = document.getElementById('graficoFaturamento');
+            if (!ctx) return;
+            
+            // Destruir gráfico existente se houver
+            if (graficoFaturamento) {
+                graficoFaturamento.destroy();
+            }
+            
+            // Preparar dados para o Chart.js
+            const labels = dados.map(item => item.periodo_nome);
+            const valores = dados.map(item => parseFloat(item.faturamento_total));
+            
+            // Criar o gráfico
+            graficoFaturamento = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Faturamento (R$)',
+                        data: valores,
+                        borderColor: '#1e472d',
+                        backgroundColor: 'rgba(30, 71, 45, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#1e472d',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value.toLocaleString('pt-BR');
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+        
+        // Função para carregar dados do gráfico via AJAX
+        function carregarDadosGrafico(safraId = '', meses = 12) {
+            const url = `/sistema-agricola/app/faturamento/dados-grafico?safra_id=${safraId}&meses=${meses}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(dados => {
+                    criarGrafico(dados);
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar dados do gráfico:', error);
+                });
+        }
+        
+        // Event listeners para os filtros do gráfico
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartSafraFilter = document.getElementById('chartSafraFilter');
+            const chartPeriodFilter = document.getElementById('chartPeriodFilter');
+            
+            if (chartSafraFilter) {
+                chartSafraFilter.addEventListener('change', function() {
+                    const safraId = this.value;
+                    const meses = document.getElementById('chartPeriodFilter').value;
+                    carregarDadosGrafico(safraId, meses);
+                });
+            }
+            
+            if (chartPeriodFilter) {
+                chartPeriodFilter.addEventListener('change', function() {
+                    const meses = this.value;
+                    const safraId = document.getElementById('chartSafraFilter').value;
+                    carregarDadosGrafico(safraId, meses);
+                });
+            }
+            
+            // Criar gráfico inicial se houver dados
+            if (dadosGraficoInicial && dadosGraficoInicial.length > 0) {
+                criarGrafico(dadosGraficoInicial);
+            }
+        });
+
         function openCadastroModal() {
             document.getElementById("modal-cadastro").classList.add("active");
             document.body.style.overflow = "hidden";
@@ -837,7 +1027,7 @@
                             <td>${fat.descricao || ''}</td>
                             <td class="actions">
                                 <button class="action-btn" onclick="openEditModal(${fat.id_faturamento}, '${fat.mes}', '${fat.valor}', '${fat.descricao || ''}', '${fat.safra_id}')" title="Editar">✏️</button>
-                                <form method="POST" action="/sistema-agricola/app/faturamento/deletar" style="display:inline;" onsubmit="return confirm('Deseja excluir este faturamento?')">
+                                <form method="POST" action="/sistema-agricola/app/faturamento/deletar" class="inline-form" onsubmit="return confirm('Deseja excluir este faturamento?')">
                                     <input type="hidden" name="id_faturamento" value="${fat.id_faturamento}">
                                     <button type="submit" class="action-btn" title="Excluir">🗑️</button>
                                 </form>

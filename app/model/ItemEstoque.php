@@ -5,7 +5,7 @@ use app\dao\ItemEstoqueDAO;
 
 class ItemEstoque
 {
-    public $id_item, $usuario_id, $categoria_id, $safra_id, $nome, $categoria, $estoque_atual, $estoque_minimo, $validade, $valor_unitario;
+    public $id_item, $usuario_id, $categoria_id, $safra_id, $nome, $categoria, $estoque_atual, $estoque_minimo, $validade, $valor_unitario, $unidade_medida;
 
     public function __construct(array $dados = [])
     {
@@ -22,6 +22,7 @@ class ItemEstoque
             $this->estoque_minimo   = $dados['estoque_minimo'] ?? 0;
             $this->validade         = $dados['validade']       ?? null;
             $this->valor_unitario   = $dados['valor_unitario'] ?? null;
+            $this->unidade_medida   = $dados['unidade_medida'] ?? 'UNIDADE';
         }
     }
 

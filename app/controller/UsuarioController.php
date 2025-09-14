@@ -104,6 +104,7 @@ final class UsuarioController
                     $_SESSION['usuario_id']    = $usuario-> id_usuario;
                     $_SESSION['usuario_nome']  = $usuario-> nome_produtor;
                     $_SESSION['usuario_email'] = $usuario-> email;
+                    $_SESSION['usuario_foto']  = $usuario-> foto_perfil;
                     $_SESSION['logado']        = true;
                     $_SESSION['ultimo_acesso'] = time();
                     

@@ -128,6 +128,9 @@
 
     .botoes {
       margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
 
     /* CAMPOS DE ENTRADA */
@@ -206,15 +209,21 @@
 
     /* BOTÕES */
     button,
-    .btn-cadastrar {
-      padding: 8px;
+    .btn-cadastrar,
+    .btn-login {
+      padding: 12px 16px;
       background-color: #215c3d;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
-      width: 90px;
+      width: 120px;
+      height: 44px;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      box-sizing: border-box;
     }
 
     .pagina-propriedade .btn-cadastrar {
@@ -223,7 +232,8 @@
     }
 
     button:hover,
-    .btn-cadastrar:hover {
+    .btn-cadastrar:hover,
+    .btn-login:hover {
       background-color: #2e7e53e3;
     }
 
@@ -293,9 +303,15 @@
         width: 100%;
       }
 
-      .btn-cadastrar {
+      .btn-cadastrar,
+      .btn-login {
         width: 100% !important;
         max-width: none !important;
+      }
+
+      .botoes {
+        flex-direction: column;
+        gap: 15px;
       }
     }
     .profile-pic-upload {
@@ -356,6 +372,15 @@
         height: 80px;
       }
     }
+
+    /* Classes para limpeza de estilos inline */
+    .hidden-image {
+      display: none;
+    }
+
+    .hidden-input {
+      display: none;
+    }
   </style>
 </head>
 
@@ -394,10 +419,10 @@
             <label for="profileImage" class="profile-pic-label">
               <span>Foto de Perfil</span>
               <div class="profile-pic-preview" id="profilePicPreview">
-                <img src="/sistema-agricola/app/view/img/image5.png" alt="Pré-visualização" id="profilePicImg" style="display: none;" />
+                <img src="/sistema-agricola/app/view/img/image5.png" alt="Pré-visualização" id="profilePicImg" class="hidden-image" />
                 <span id="profilePicPlaceholder">Clique para escolher</span>
               </div>
-              <input type="file" name="image" id="profileImage" accept="image/*" style="display: none;">
+              <input type="file" name="image" id="profileImage" accept="image/*" class="hidden-input">
             </label>
             <small class="profile-pic-instructions">Formatos aceitos: JPG, PNG. Tamanho máximo: 2MB.</small>
           </div>

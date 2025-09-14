@@ -1,0 +1,24 @@
+- UML (Diagrama de Caso de Uso)
+- DER
+- Página de relatório (mínimo 5 consultas SQL)
+- Tela de admin e dashboard
+
+
+ajustar:
+
+- itens do estoque só está cadastrando com data de validades
+- a quantidade deve aparecer a unidade de medida
+- alerta de estoque baixo está considerando abaixo do estoque quando quantidade igual ao estoque minimo, no entanto só esta abaixo se for menor se a quantidade for menor que estoque minimo
+- foto de perfil sumindo quando desloga
+
+
+dashboard
+
+- faturamento do ano vs. ano anterior
+- valor em estoque
+- ruptura de estoque
+- faturamento ao logo de 6 meses
+
+- histórico de entradas e saídas com tendências
+- estoque por categoria (valor total por categoria; alertas de baixo estoque; proximas validades)
+- tabelas de detalhamento(produtividade por safra; evolução mensal)
