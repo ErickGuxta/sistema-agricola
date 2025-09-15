@@ -26,7 +26,7 @@ class FaturamentoController
         $receitaTotal = Faturamento::receitaTotalPropriedade($propriedadeId);
         
         // Buscar custos do estoque (valor total do estoque)
-        $itemDao = new ItemEstoqueDAO();
+        $itemDao    = new ItemEstoqueDAO();
         $custoTotal = $itemDao->valorTotalEstoque($propriedadeId, null);
         
         // Calcular lucro

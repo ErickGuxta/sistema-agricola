@@ -88,6 +88,7 @@ if (isset($_GET['logout'])) {
             overflow: hidden;
             transition: filter 0.2s, box-shadow 0.2s;
         }
+
         .perfil .logo-circle:hover {
             filter: brightness(0.7);
             box-shadow: 0 0 0 3px #1e472d44;
@@ -755,6 +756,7 @@ if (isset($_GET['logout'])) {
                 gap: 0;
             }
         }
+
         /* Centralizar e destacar o ícone de edição da foto de perfil */
         .profile-pic-preview {
             width: 110px;
@@ -770,6 +772,7 @@ if (isset($_GET['logout'])) {
             cursor: pointer;
             position: relative;
         }
+
         .profile-pic-preview img {
             width: 100%;
             height: 100%;
@@ -777,12 +780,13 @@ if (isset($_GET['logout'])) {
             display: block;
             border-radius: 50%;
         }
+
         .profile-pic-preview .edit-icon {
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 50%;
             padding: 8px;
             align-items: center;
@@ -790,6 +794,7 @@ if (isset($_GET['logout'])) {
             z-index: 2;
             display: none;
         }
+
         .profile-pic-preview:hover .edit-icon {
             display: flex;
         }
@@ -1119,11 +1124,14 @@ if (isset($_GET['logout'])) {
             <nav class="perfil">
                 <div class="logo-circle profile-pic-preview" onclick="openProfileModal()">
                     <?php
-                        $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
+                    $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
                     ?>
                     <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" />
                     <span class="edit-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z"/></svg>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9" />
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z" />
+                        </svg>
                     </span>
                 </div>
                 <div class="logo-text">
@@ -1166,7 +1174,7 @@ if (isset($_GET['logout'])) {
                         // Buscar todas as propriedades do usuário
                         if (isset($_SESSION['usuario_id'])) {
                             $propriedadeDAO = new \app\dao\PropriedadeDAO();
-                            $propriedades = $propriedadeDAO->listarPorUsuario($_SESSION['usuario_id']);
+                            $propriedades   = $propriedadeDAO->listarPorUsuario($_SESSION['usuario_id']);
                             foreach ($propriedades as $propriedade) {
                                 $selected = ($propriedade->id_propriedade == $_SESSION['propriedade_id']) ? 'selected' : '';
                                 echo '<option value="' . $propriedade->id_propriedade . '" ' . $selected . '>' . htmlspecialchars($propriedade->nome_propriedade) . '</option>';
@@ -1192,8 +1200,8 @@ if (isset($_GET['logout'])) {
                     <div class="metric-info">
                         <h3>R$ <?= number_format($resumoCards['faturamento_atual'] ?? 0, 2, ',', '.') ?></h3>
                         <p>
-                            <?php 
-                            $faturamentoAtual = $resumoCards['faturamento_atual'] ?? 0;
+                            <?php
+                            $faturamentoAtual    = $resumoCards['faturamento_atual']    ?? 0;
                             $faturamentoAnterior = $resumoCards['faturamento_anterior'] ?? 0;
                             if ($faturamentoAnterior > 0) {
                                 $variacao = (($faturamentoAtual - $faturamentoAnterior) / $faturamentoAnterior) * 100;
@@ -1252,18 +1260,29 @@ if (isset($_GET['logout'])) {
                 <!-- ESTOQUE POR CATEGORIA -->
                 <div class="bottom-card">
                     <h3>📦 Estoque por Categoria</h3>
+
                     <?php if (!empty($estoqueCategoria)): ?>
+
                         <div class="scrollable-container">
                             <?php foreach ($estoqueCategoria as $categoria): ?>
+
                                 <div class="category-item">
                                     <div>
                                         <strong><?= htmlspecialchars($categoria['categoria']) ?></strong>
-                                        <br><small><?= $categoria['total_itens'] ?> itens • <?= number_format($categoria['quantidade_total'], 1) ?> unidades</small>
+                                        <br>
+                                        <small>
+                                            <?= $categoria['total_itens'] ?> itens • <?= number_format($categoria['quantidade_total'], 1) ?> unidades
+                                        </small>
                                     </div>
                                     <div class="text-right">
-                                        <strong>R$ <?= number_format($categoria['valor_total'] ?? 0, 2, ',', '.') ?></strong>
+                                        <strong>
+                                            R$ <?= number_format($categoria['valor_total'] ?? 0, 2, ',', '.') ?>
+                                        </strong>
+
                                         <?php if ($categoria['menor_preco'] > 0 && $categoria['maior_preco'] > 0): ?>
+
                                             <br><small class="info-text">R$ <?= number_format($categoria['menor_preco'], 2, ',', '.') ?> - R$ <?= number_format($categoria['maior_preco'], 2, ',', '.') ?></small>
+
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -1286,14 +1305,24 @@ if (isset($_GET['logout'])) {
                                     <div class="safra-content">
                                         <div>
                                             <strong><?= htmlspecialchars($safra['safra_nome']) ?></strong>
-                                            <br><small><?= htmlspecialchars($safra['status_descricao']) ?> - <?= number_format($safra['area_hectare'] ?? 0, 1) ?> ha</small>
+                                            <br>
+
+                                            <small>
+                                                <?= htmlspecialchars($safra['status_descricao']) ?> - <?= number_format($safra['area_hectare'] ?? 0, 1) ?> ha
+                                            </small>
+
                                             <?php if ($safra['itens_estoque'] > 0): ?>
-                                                <br><small class="safra-success">📦 <?= $safra['itens_estoque'] ?> itens em estoque</small>
+                                                <br>
+                                                <small class="safra-success">📦 <?= $safra['itens_estoque'] ?> itens em estoque</small>
                                             <?php endif; ?>
+
                                         </div>
                                         <div class="text-right">
-                                            <strong>R$ <?= number_format($safra['receita_por_hectare'] ?? 0, 0, ',', '.') ?>/ha</strong>
-                                            <br><small>R$ <?= number_format($safra['receita_total'] ?? 0, 0, ',', '.') ?> total</small>
+
+                                            <strong>R$ <?= number_format($safra['receita_por_hectare'] ?? 0, 0, ',', '.') ?> /ha</strong>
+                                            <br>
+                                            <small>R$ <?= number_format($safra['receita_total']    ?? 0, 0, ',', '.')     ?> total</small>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1309,53 +1338,53 @@ if (isset($_GET['logout'])) {
 
             <!-- MOVIMENTAÇÕES RECENTES -->
             <?php if (!empty($movimentacoes)): ?>
-            <div class="bottom-card movimentacoes-container">
-                <h3>📋 Movimentações Recentes (30 dias)</h3>
-                <div class="movimentacoes-scroll">
-                    <?php foreach (array_slice($movimentacoes, 0, 8) as $mov): ?>
-                        <div class="movimentacao-item">
-                            <div class="movimentacao-content">
-                                <div class="movimentacao-header">
-                                    <span class="movimentacao-badge <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? 'badge-entrada' : 'badge-saida' ?>">
-                                        <?= $mov['tipo_movimentacao'] ?>
-                                    </span>
-                                    <span class="movimentacao-date">
-                                        <?= $mov['data_formatada'] ?> (<?= $mov['dias_atras'] ?> dias)
-                                    </span>
-                                </div>
-                                <strong><?= htmlspecialchars($mov['item_nome']) ?></strong>
-                                <br><small class="movimentacao-details">
-                                    <?= htmlspecialchars($mov['categoria']) ?> • <?= htmlspecialchars($mov['safra_nome']) ?>
-                                </small>
-                                <?php if (!empty($mov['observacao'])): ?>
-                                    <br><small class="movimentacao-observacao">
-                                        "<?= htmlspecialchars($mov['observacao']) ?>"
+                <div class="bottom-card movimentacoes-container">
+                    <h3>📋 Movimentações Recentes (30 dias)</h3>
+                    <div class="movimentacoes-scroll">
+                        <?php foreach (array_slice($movimentacoes, 0, 8) as $mov): ?>
+                            <div class="movimentacao-item">
+                                <div class="movimentacao-content">
+                                    <div class="movimentacao-header">
+                                        <span class="movimentacao-badge <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? 'badge-entrada' : 'badge-saida' ?>">
+                                            <?= $mov['tipo_movimentacao'] ?>
+                                        </span>
+                                        <span class="movimentacao-date">
+                                            <?= $mov['data_formatada'] ?> (<?= $mov['dias_atras'] ?> dias)
+                                        </span>
+                                    </div>
+                                    <strong><?= htmlspecialchars($mov['item_nome']) ?></strong>
+                                    <br><small class="movimentacao-details">
+                                        <?= htmlspecialchars($mov['categoria']) ?> • <?= htmlspecialchars($mov['safra_nome']) ?>
                                     </small>
-                                <?php endif; ?>
-                            </div>
-                            <div class="text-right">
-                                <div class="movimentacao-quantidade <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? 'quantidade-entrada' : 'quantidade-saida' ?>">
-                                    <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? '+' : '-' ?><?= number_format($mov['quantidade'], 2) ?> <?= $mov['unidade_medida'] ?>
+                                    <?php if (!empty($mov['observacao'])): ?>
+                                        <br><small class="movimentacao-observacao">
+                                            "<?= htmlspecialchars($mov['observacao']) ?>"
+                                        </small>
+                                    <?php endif; ?>
                                 </div>
-                                <small class="movimentacao-details">
-                                    Estoque: <?= number_format($mov['estoque_atual'], 2) ?>
-                                </small>
-                                <?php if ($mov['valor_movimentacao'] > 0): ?>
-                                    <br><small class="movimentacao-valor">
-                                        R$ <?= number_format($mov['valor_movimentacao'], 2, ',', '.') ?>
+                                <div class="text-right">
+                                    <div class="movimentacao-quantidade <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? 'quantidade-entrada' : 'quantidade-saida' ?>">
+                                        <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? '+' : '-' ?><?= number_format($mov['quantidade'], 2) ?> <?= $mov['unidade_medida'] ?>
+                                    </div>
+                                    <small class="movimentacao-details">
+                                        Estoque: <?= number_format($mov['estoque_atual'], 2) ?>
                                     </small>
-                                <?php endif; ?>
+                                    <?php if ($mov['valor_movimentacao'] > 0): ?>
+                                        <br><small class="movimentacao-valor">
+                                            R$ <?= number_format($mov['valor_movimentacao'], 2, ',', '.') ?>
+                                        </small>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
-            </div>
             <?php endif; ?>
 
             <!-- HISTÓRICO SIMPLES DE ENTRADAS E SAÍDAS -->
             <div class="historico-container">
                 <h3 class="historico-title">📊 Histórico de Entradas e Saídas</h3>
-                
+
                 <!-- CARDS SIMPLES -->
                 <div class="historico-grid">
                     <div class="historico-card card-entradas">
@@ -1364,21 +1393,21 @@ if (isset($_GET['logout'])) {
                         </div>
                         <div class="historico-label">Entradas este mês</div>
                     </div>
-                    
+
                     <div class="historico-card card-saidas">
                         <div class="historico-number number-saidas">
                             <?= $contagemEntradasSaidas['saidas_mes'] ?? 0 ?>
                         </div>
                         <div class="historico-label">Saídas este mês</div>
                     </div>
-                    
+
                     <div class="historico-card card-lucro">
                         <div class="historico-number number-lucro">
                             <?= $contagemEntradasSaidas['total_entradas'] ?? 0 ?>
                         </div>
                         <div class="historico-label">Total entradas (30 dias)</div>
                     </div>
-                    
+
                     <div class="historico-card card-total">
                         <div class="historico-number number-total">
                             <?= $contagemEntradasSaidas['total_saidas'] ?? 0 ?>
@@ -1389,38 +1418,38 @@ if (isset($_GET['logout'])) {
 
                 <!-- TABELA SIMPLES DO HISTÓRICO -->
                 <?php if (!empty($historicoEntradasSaidas)): ?>
-                <div class="table-overflow">
-                    <table class="historico-table">
-                        <thead>
-                            <tr>
-                                <th>Período</th>
-                                <th>Tipo</th>
-                                <th>Movimentações</th>
-                                <th>Quantidade</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($historicoEntradasSaidas as $historico): ?>
+                    <div class="table-overflow">
+                        <table class="historico-table">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <?= htmlspecialchars($historico['periodo_nome']) ?>
-                                    </td>
-                                    <td>
-                                        <span class="historico-badge <?= $historico['tipo_movimentacao'] == 'ENTRADA' ? 'badge-entrada' : 'badge-saida' ?>">
-                                            <?= $historico['tipo_movimentacao'] == 'ENTRADA' ? '📈 ENTRADA' : '📉 SAÍDA' ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <?= $historico['total_movimentacoes'] ?>
-                                    </td>
-                                    <td>
-                                        <?= number_format($historico['quantidade_total'], 1) ?>
-                                    </td>
+                                    <th>Período</th>
+                                    <th>Tipo</th>
+                                    <th>Movimentações</th>
+                                    <th>Quantidade</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($historicoEntradasSaidas as $historico): ?>
+                                    <tr>
+                                        <td>
+                                            <?= htmlspecialchars($historico['periodo_nome']) ?>
+                                        </td>
+                                        <td>
+                                            <span class="historico-badge <?= $historico['tipo_movimentacao'] == 'ENTRADA' ? 'badge-entrada' : 'badge-saida' ?>">
+                                                <?= $historico['tipo_movimentacao'] == 'ENTRADA' ? '📈 ENTRADA' : '📉 SAÍDA' ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <?= $historico['total_movimentacoes'] ?>
+                                        </td>
+                                        <td>
+                                            <?= number_format($historico['quantidade_total'], 1) ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 <?php else: ?>
                     <div class="empty-state">
                         <div class="empty-state-icon">📊</div>
@@ -1452,7 +1481,10 @@ if (isset($_GET['logout'])) {
                                 <div class="profile-pic-preview" id="editProfilePicPreview">
                                     <img src="<?= htmlspecialchars(isset($_SESSION['usuario_foto']) ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png') ?>" alt="Pré-visualização" id="editProfilePicImg" />
                                     <span class="edit-icon">
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z"/></svg>
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 20h9" />
+                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z" />
+                                        </svg>
                                     </span>
                                 </div>
                                 <input type="file" name="image" id="editProfileImage" accept="image/*" class="hidden-input">
@@ -1605,265 +1637,38 @@ if (isset($_GET['logout'])) {
 
     <!-- JavaScript for modal functionality -->
     <script>
-        // Modal functions
-        function openProfileModal() {
-            document.getElementById('profileModal').style.display = 'block';
-            // Load current data (in a real application, this would come from the server)
-            loadCurrentData();
-        }
+        // Dados da sessão para JavaScript
+        window.sessionData = {
+            usuario_nome: "<?= htmlspecialchars($_SESSION['usuario_nome']) ?>",
+            usuario_email: "<?= htmlspecialchars($_SESSION['usuario_email']) ?>",
+            propriedade_id: <?= isset($_SESSION['propriedade_id']) ? $_SESSION['propriedade_id'] : 'null' ?>
+        };
 
-        function closeProfileModal() {
-            document.getElementById('profileModal').style.display = 'none';
-        }
-
-        // Tab switching
-        function showTab(tabName) {
-            // Hide all tabs
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.remove('active'));
-
-            // Remove active class from all buttons
-            const buttons = document.querySelectorAll('.tab-button');
-            buttons.forEach(button => button.classList.remove('active'));
-
-            // Show selected tab
-            document.getElementById(tabName + '-tab').classList.add('active');
-
-            // Add active class to clicked button
-            event.target.classList.add('active');
-        }
-
-        // Load current data (placeholder function)
-        function loadCurrentData() {
-            // In a real application, you would fetch this data from the server
-            // For now, we'll use placeholder values
-            document.getElementById('userName').value = "<?= htmlspecialchars($_SESSION['usuario_nome']) ?>";
-            document.getElementById('userEmail').value = "<?= htmlspecialchars($_SESSION['usuario_email']) ?>";
-            
-            // Carregar dados da propriedade atualmente selecionada
-            const currentPropertyId = <?= isset($_SESSION['propriedade_id']) ? $_SESSION['propriedade_id'] : 'null' ?>;
-            if (currentPropertyId) {
-                updatePropertyModalData(currentPropertyId);
-            }
-        }
-
-        // Preview da imagem de perfil no modal de edição + hover do ícone
-        document.addEventListener('DOMContentLoaded', function() {
-            const input = document.getElementById('editProfileImage');
-            const preview = document.getElementById('editProfilePicPreview');
-            const img = document.getElementById('editProfilePicImg');
-            const editIcon = preview.querySelector('.edit-icon');
-            preview.addEventListener('mouseenter', function() {
-                editIcon.style.display = 'flex';
-            });
-            preview.addEventListener('mouseleave', function() {
-                editIcon.style.display = 'none';
-            });
-            preview.addEventListener('click', function() {
-                input.click();
-            });
-            input.addEventListener('change', function(e) {
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(ev) {
-                        img.src = ev.target.result;
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            });
-        });
-        // Validação de senha no modal de edição
-        document.getElementById('profileForm').addEventListener('submit', function(e) {
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            if (newPassword && newPassword !== confirmPassword) {
-                alert('As senhas não coincidem!');
-                e.preventDefault();
-                return false;
-            }
-        });
-
-        document.getElementById('propertyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const area = document.getElementById('propertyArea').value;
-            if (area && area < 0) {
-                alert('A área deve ser um valor positivo!');
-                return;
-            }
-
-            // Here you would send the data to the server
-            alert('Propriedade atualizada com sucesso!');
-            closeProfileModal();
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('profileModal');
-            if (event.target === modal) {
-                closeProfileModal();
-            }
-        });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeProfileModal();
-            }
-        });
-
-        // Modal Nova Propriedade
-        function openNewPropertyModal() {
-            document.getElementById('newPropertyModal').style.display = 'block';
-        }
-        function closeNewPropertyModal() {
-            document.getElementById('newPropertyModal').style.display = 'none';
-        }
-        // Fechar modal ao clicar fora
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('newPropertyModal');
-            if (event.target === modal) {
-                closeNewPropertyModal();
-            }
-        });
-        // Fechar modal com ESC
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeNewPropertyModal();
-            }
-        });
-        // Validação simples do formulário
-        document.getElementById('newPropertyForm').addEventListener('submit', function(e) {
-            const area = document.getElementById('newPropertyArea').value;
-            if (area && area < 0) {
-                alert('A área deve ser um valor positivo!');
-                e.preventDefault();
-                return;
-            }
-        });
-
-        // Dados das propriedades para uso no JavaScript
-        const propriedadesData = <?php
-            $propriedades = [];
-            if (isset($_SESSION['usuario_id'])) {
-                $propriedadeDAO = new \app\dao\PropriedadeDAO();
-                $propriedades = $propriedadeDAO->listarPorUsuario($_SESSION['usuario_id']);
-            }
-            echo json_encode($propriedades);
-        ?>;
-
-        // Função para trocar propriedade
-        function changeProperty(propriedadeId) {
-            if (propriedadeId) {
-                // Atualizar dados do modal de edição com a propriedade selecionada
-                updatePropertyModalData(propriedadeId);
-                
-                // Criar formulário temporário para enviar POST
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/sistema-agricola/app/dashboard/setPropriedade';
-                
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'propriedade_id';
-                input.value = propriedadeId;
-                
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-
-        // Função para atualizar dados do modal com a propriedade selecionada
-        function updatePropertyModalData(propriedadeId) {
-            const propriedade = propriedadesData.find(p => p.id_propriedade == propriedadeId);
-            if (propriedade) {
-                // Separar estado e cidade da localização
-                let estado = '';
-                let cidade = '';
-                if (propriedade.localizacao && propriedade.localizacao.includes(' - ')) {
-                    [estado, cidade] = propriedade.localizacao.split(' - ');
-                }
-                
-                // Atualizar campos do modal de edição de propriedade
-                document.getElementById('propertyName').value = propriedade.nome_propriedade || '';
-                document.getElementById('propertyArea').value = propriedade.area_total || '';
-                document.getElementById('propertyState').value = estado;
-                document.getElementById('propertyCity').value = cidade;
-            }
-        }
+        // Dados das propriedades para JavaScript
+        window.propriedadesData = <?php
+                                    $propriedades = [];
+                                    if (isset($_SESSION['usuario_id'])) {
+                                        $propriedadeDAO = new \app\dao\PropriedadeDAO();
+                                        $propriedades = $propriedadeDAO->listarPorUsuario($_SESSION['usuario_id']);
+                                    }
+                                    echo json_encode($propriedades);
+                                    ?>;
     </script>
+
+    <script src="/sistema-agricola/app/view/scripts/home.js"></script>
 
     <!-- Chart.js para o gráfico de faturamento -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <?php if (!empty($dadosGrafico)): ?>
-    <script>
-        // Dados do PHP para JavaScript
-        const dadosGrafico = <?= json_encode($dadosGrafico) ?>;
-        
-        // Preparar dados para o Chart.js
-        const labels = dadosGrafico.map(item => item.periodo_nome);
-        const valores = dadosGrafico.map(item => parseFloat(item.faturamento_total));
-        
-        // Criar o gráfico
-        const ctx = document.getElementById('graficoFaturamento').getContext('2d');
-        const graficoFaturamento = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Faturamento (R$)',
-                    data: valores,
-                    borderColor: '#1e472d',
-                    backgroundColor: 'rgba(30, 71, 45, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#1e472d',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return 'R$ ' + value.toLocaleString('pt-BR');
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0,0,0,0.1)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
-                },
-                elements: {
-                    point: {
-                        hoverBackgroundColor: '#1e472d'
-                    }
-                }
-            }
-        });
-    </script>
+
+        <script>
+            // Dados do gráfico para JavaScript
+            window.dadosGrafico = <?= json_encode($dadosGrafico) ?>;
+        </script>
+
+        <script src="/sistema-agricola/app/view/scripts/home-chart.js"></script>
+
     <?php endif; ?>
 </body>
 
