@@ -580,7 +580,7 @@
             <nav class="perfil">
                 <div class="logo-circle">
                     <?php
-                        $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
+                        $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image9.jpg';
                     ?>
                     <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" />
                 </div>

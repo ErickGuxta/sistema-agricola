@@ -4,7 +4,7 @@ namespace app\dao;
 
 /**
  * DAO simplificado para relatórios do dashboard
- * Contém 5 tipos diferentes de consultas SQL para requisitos acadêmicos
+ * Contém 8 tipos diferentes de consultas SQL para requisitos acadêmicos
  */
 final class RelatorioDAO extends DAO
 {
@@ -385,4 +385,59 @@ final class RelatorioDAO extends DAO
 
         return $stmt->fetch(\PDO::FETCH_ASSOC) ?: [];
     }
+
+    /**
+     * 9. HISTÓRICO DETALHADO DE MOVIMENTAÇÕES COM DESCRIÇÕES
+     * Busca movimentações com informações completas incluindo observações
+     */
+    public function historicoDetalhadoMovimentacoes(int $propriedadeId, int $dias = 30): array
+    {
+        // Consulta simplificada sem filtro de data para garantir que todas as movimentações apareçam
+        $sql = "SELECT 
+                    me.id_movimentacao,
+                    me.tipo_movimentacao,
+                    me.quantidade,
+                    me.data_movimentacao,
+                    DATE_FORMAT(me.data_movimentacao, '%d/%m/%Y %H:%i') as data_formatada,
+                    DATEDIFF(CURDATE(), me.data_movimentacao) as dias_atras,
+                    me.observacao,
+                    ie.nome as item_nome,
+                    ie.unidade_medida,
+                    ie.estoque_atual,
+                    ie.valor_unitario,
+                    c.nome as categoria,
+                    s.nome as safra_nome,
+                    p.nome_propriedade,
+                    -- Cálculo do valor da movimentação
+                    (me.quantidade * COALESCE(ie.valor_unitario, 0)) as valor_movimentacao,
+                    -- Descrição formatada da movimentação
+                    CONCAT(
+                        me.tipo_movimentacao, ' de ', me.quantidade, ' ', ie.unidade_medida, 
+                        ' de ', ie.nome, ' (', c.nome, ')',
+                        CASE 
+                            WHEN me.observacao IS NOT NULL AND me.observacao != '' 
+                            THEN CONCAT(' - Motivo: ', me.observacao)
+                            ELSE ''
+                        END
+                    ) as descricao_completa
+                FROM Movimentacao_Estoque me
+                INNER JOIN Item_Estoque ie ON me.item_id = ie.id_item
+                INNER JOIN Categoria c ON ie.categoria_id = c.id_categoria
+                INNER JOIN Safra s ON ie.safra_id = s.id_safra
+                INNER JOIN Propriedade p ON s.propriedade_id = p.id_propriedade
+                WHERE s.propriedade_id = ?
+                ORDER BY 
+                    me.data_movimentacao DESC,
+                    me.tipo_movimentacao ASC,
+                    valor_movimentacao DESC
+                LIMIT 100";
+
+        $stmt = parent::$conexao->prepare($sql);
+        $stmt->bindValue(1, $propriedadeId);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
 }

@@ -612,7 +612,7 @@
             <nav class="perfil">
                 <div class="logo-circle">
                     <?php
-                        $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
+                        $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image9.jpg';
                     ?>
                     <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" />
                 </div>
@@ -830,7 +830,8 @@
         '<?php echo addslashes($item->estoque_minimo ?? ''); ?>',
         '<?php echo addslashes($item->valor_unitario ?? ''); ?>',
         '<?php echo addslashes(htmlspecialchars($item->unidade_medida ?? '')); ?>',
-        '<?php echo addslashes($item->validade ?? ''); ?>'
+        '<?php echo addslashes($item->validade ?? ''); ?>',
+        '<?php echo addslashes($item->safra_id ?? ''); ?>'
     )"
     title="Editar">✏️
 </button>
@@ -947,6 +948,18 @@
                         <?php if (isset($categorias) && is_array($categorias)) {
                             foreach ($categorias as $cat) {
                                 echo '<option value="' . htmlspecialchars($cat->nome) . '">' . htmlspecialchars($cat->nome) . '</option>';
+                            }
+                        } ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-safra_id">Safra</label>
+                    <select id="edit-safra_id" name="safra_id" required>
+                        <option value="">Selecione a safra</option>
+                        <?php if (isset($safras) && is_array($safras)) {
+                            foreach ($safras as $safra) {
+                                echo '<option value="' . htmlspecialchars($safra->id_safra) . '">' . htmlspecialchars($safra->nome) . '</option>';
                             }
                         } ?>
                     </select>

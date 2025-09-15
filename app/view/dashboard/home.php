@@ -22,16 +22,33 @@ if (isset($_GET['logout'])) {
             /* sistema geral */
             --color-primary: #1e472d;
             --color-secondary: #42594C;
+            --color-accent: #2d5a3d;
+            --color-light-green: #4a7c59;
 
             /* páginas de registro */
             --color-white: #FFFFFF;
             --color-gray-primary: #D9D9D9;
             --color-gray-secondary: #262626;
+            --color-gray-light: #f8f9fa;
+            --color-gray-medium: #6c757d;
             --color-black: #000000;
 
             /* botoes */
             --color-button-red: #BF3F4A;
             --color-button-green: #1D4D33;
+            
+            /* gradientes */
+            --gradient-primary: linear-gradient(135deg, #1e472d 0%, #2d5a3d 100%);
+            --gradient-success: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            --gradient-info: linear-gradient(135deg, #007bff 0%, #17a2b8 100%);
+            --gradient-warning: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            --gradient-danger: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+            
+            /* sombras */
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+            --shadow-xl: 0 16px 48px rgba(0,0,0,0.25);
         }
 
         * {
@@ -242,43 +259,75 @@ if (isset($_GET['logout'])) {
         /* Cards de Métricas */
         .metrics-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
         }
 
         .metric-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
+            background: var(--color-white);
+            border-radius: 16px;
+            padding: 24px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            min-height: 80px;
+            gap: 20px;
+            min-height: 100px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(30, 71, 45, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
         }
 
         .metric-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 24px;
+            font-size: 28px;
             flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .metric-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            background: inherit;
+            opacity: 0.1;
+            filter: blur(8px);
         }
 
         .metric-icon.blue {
-            background: #007bff;
+            background: var(--gradient-info);
         }
 
         .metric-icon.green {
-            background: #28a745;
+            background: var(--gradient-success);
         }
 
         .metric-icon.red {
-            background: #dc3545;
+            background: var(--gradient-danger);
         }
 
         .metric-info {
@@ -286,107 +335,199 @@ if (isset($_GET['logout'])) {
         }
 
         .metric-info h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 4px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 6px;
             line-height: 1.2;
+            letter-spacing: -0.02em;
         }
 
         .metric-info p {
             font-size: 14px;
-            color: #666;
+            color: var(--color-gray-medium);
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .metric-info small {
+            font-size: 12px;
+            color: var(--color-gray-medium);
+            font-weight: 400;
+            display: block;
+            margin-top: 4px;
         }
 
         /* dashboard */
         .dashboard-section {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 24px;
+            margin-bottom: 40px;
         }
 
         .dashboard-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 30px;
+            background: var(--color-white);
+            border-radius: 20px;
+            padding: 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            min-height: 250px;
+            min-height: 280px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(30, 71, 45, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            opacity: 0.02;
+            z-index: 0;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         .dashboard-illustration {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="50" y="100" width="40" height="40" fill="%23deb887"/><rect x="100" y="80" width="40" height="40" fill="%23deb887"/><rect x="50" y="60" width="40" height="40" fill="%23deb887"/><circle cx="120" cy="40" r="15" fill="%23ff6b6b"/><rect x="110" y="55" width="20" height="40" fill="%23ff6b6b"/><rect x="105" y="95" width="30" height="20" fill="%234169e1"/><circle cx="115" cy="35" r="8" fill="%23fdbcb4"/><rect x="95" y="110" width="8" height="30" fill="%23666"/><rect x="135" y="110" width="8" height="30" fill="%23666"/></svg>') center/contain no-repeat;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 4px 8px rgba(30, 71, 45, 0.1));
         }
 
         .dashboard-title {
-            font-size: clamp(20px, 3vw, 24px);
-            font-weight: bold;
-            color: #333;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
+            font-size: clamp(24px, 4vw, 32px);
+            font-weight: 800;
+            color: var(--color-primary);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
         }
 
         .dashboard-subtitle {
-            font-size: 16px;
-            color: #666;
+            font-size: 18px;
+            color: var(--color-gray-medium);
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
         }
 
         .faturamento-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 30px;
-            min-height: 250px;
+            background: var(--color-white);
+            border-radius: 20px;
+            padding: 32px;
+            min-height: 280px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(30, 71, 45, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .faturamento-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-info);
+        }
+
+        .faturamento-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         .faturamento-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .faturamento-title::before {
+            content: '📈';
+            font-size: 24px;
         }
 
         .faturamento-grafico {
-            height: 180px;
-            background: #e9ecef;
-            border-radius: 8px;
+            height: 200px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #999;
+            color: var(--color-gray-medium);
             text-align: center;
+            border: 2px dashed rgba(30, 71, 45, 0.1);
+            position: relative;
         }
 
         /* Bottom Section */
         .bottom-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
         }
 
         .bottom-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 30px;
+            background: var(--color-white);
+            border-radius: 20px;
+            padding: 32px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            text-align: center;
+            min-height: 240px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(30, 71, 45, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bottom-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .bottom-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         .bottom-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 30px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .box-icon {
@@ -442,7 +583,18 @@ if (isset($_GET['logout'])) {
             }
 
             .metrics-row {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 20px;
+            }
+
+            .bottom-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .historico-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 16px;
             }
         }
 
@@ -465,10 +617,10 @@ if (isset($_GET['logout'])) {
                 padding: 80px 20px 20px;
             }
 
-            .header {
+            .header-main {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 15px;
+                gap: 20px;
             }
 
             .header-left {
@@ -487,62 +639,92 @@ if (isset($_GET['logout'])) {
 
             .metrics-row {
                 grid-template-columns: 1fr;
-                gap: 15px;
+                gap: 16px;
             }
 
             .metric-card {
-                padding: 15px;
+                padding: 20px;
+                min-height: 90px;
+            }
+
+            .metric-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+
+            .metric-info h3 {
+                font-size: 18px;
             }
 
             .dashboard-card,
-            .revenue-card {
-                padding: 20px;
-                min-height: 200px;
+            .faturamento-card {
+                padding: 24px;
+                min-height: 220px;
             }
 
             .dashboard-illustration {
-                width: 100px;
-                height: 100px;
+                width: 120px;
+                height: 120px;
             }
 
             .bottom-section {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
 
             .bottom-card {
-                padding: 20px;
-                min-height: 150px;
+                padding: 24px;
+                min-height: 200px;
+            }
+
+            .historico-container {
+                padding: 24px;
+            }
+
+            .historico-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 12px;
+            }
+
+            .historico-card {
+                padding: 16px;
+            }
+
+            .historico-number {
+                font-size: 24px;
             }
         }
 
         @media (max-width: 480px) {
             .main-content {
-                padding: 70px 15px 15px;
+                padding: 70px 16px 16px;
             }
 
             .dashboard-card,
-            .revenue-card,
+            .faturamento-card,
             .bottom-card {
-                padding: 15px;
+                padding: 20px;
             }
 
             .metric-card {
-                padding: 12px;
-                gap: 10px;
+                padding: 16px;
+                gap: 12px;
+                min-height: 80px;
             }
 
             .metric-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
             }
 
             .metric-info h3 {
-                font-size: 14px;
+                font-size: 16px;
             }
 
             .metric-info p {
-                font-size: 12px;
+                font-size: 13px;
             }
 
             .farm-name {
@@ -551,6 +733,27 @@ if (isset($_GET['logout'])) {
 
             .year-selector {
                 font-size: 20px;
+            }
+
+            .historico-container {
+                padding: 20px;
+            }
+
+            .historico-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 10px;
+            }
+
+            .historico-card {
+                padding: 14px;
+            }
+
+            .historico-number {
+                font-size: 22px;
+            }
+
+            .historico-label {
+                font-size: 12px;
             }
         }
 
@@ -951,58 +1154,91 @@ if (isset($_GET['logout'])) {
         }
 
         .historico-container {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            border-left: 4px solid #1e472d;
+            background: var(--color-white);
+            border-radius: 20px;
+            padding: 32px;
+            margin-top: 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(30, 71, 45, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .historico-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .historico-container:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         .historico-title {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
-            color: #1e472d;
+            gap: 12px;
+            margin-bottom: 24px;
+            color: var(--color-primary);
+            font-size: 20px;
+            font-weight: 700;
         }
 
         .historico-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
         }
 
         .historico-card {
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 16px;
+            padding: 20px;
             text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .historico-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .card-entradas {
-            background: #e8f5e8;
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
         }
 
         .card-saidas {
-            background: #fff3cd;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
         }
 
         .card-lucro {
-            background: #d1ecf1;
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
         }
 
         .card-total {
-            background: #f8d7da;
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
         }
 
         .historico-number {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
         }
 
         .historico-label {
-            font-size: 12px;
-            color: #666;
+            font-size: 13px;
+            color: var(--color-gray-medium);
+            font-weight: 500;
         }
 
         .number-entradas {
@@ -1028,20 +1264,25 @@ if (isset($_GET['logout'])) {
         .historico-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 16px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
 
         .historico-table thead tr {
-            background: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 2px solid var(--color-primary);
         }
 
         .historico-table th {
-            padding: 12px;
+            padding: 16px 12px;
             text-align: left;
-            font-size: 13px;
-            color: #495057;
-            font-weight: 600;
+            font-size: 14px;
+            color: var(--color-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .historico-table th:nth-child(2),
@@ -1051,12 +1292,18 @@ if (isset($_GET['logout'])) {
         }
 
         .historico-table tbody tr {
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid rgba(30, 71, 45, 0.1);
+            transition: background-color 0.2s ease;
+        }
+
+        .historico-table tbody tr:hover {
+            background-color: rgba(30, 71, 45, 0.02);
         }
 
         .historico-table td {
-            padding: 10px;
-            font-size: 13px;
+            padding: 14px 12px;
+            font-size: 14px;
+            font-weight: 500;
         }
 
         .historico-table td:first-child {
@@ -1072,21 +1319,28 @@ if (isset($_GET['logout'])) {
         }
 
         .historico-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-sm);
         }
 
         .empty-state {
-            color: #999;
+            color: var(--color-gray-medium);
             text-align: center;
-            padding: 40px;
+            padding: 48px 24px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+            border: 2px dashed rgba(30, 71, 45, 0.1);
         }
 
         .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
+            font-size: 56px;
+            margin-bottom: 16px;
+            opacity: 0.6;
         }
 
         .form-group-center {
@@ -1124,7 +1378,7 @@ if (isset($_GET['logout'])) {
             <nav class="perfil">
                 <div class="logo-circle profile-pic-preview" onclick="openProfileModal()">
                     <?php
-                    $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image5.png';
+                    $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image9.jpg';
                     ?>
                     <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" />
                     <span class="edit-icon">
@@ -1196,7 +1450,12 @@ if (isset($_GET['logout'])) {
             <!-- CARDS PRINCIPAIS COM DADOS REAIS -->
             <div class="metrics-row">
                 <div class="metric-card">
-                    <div class="metric-icon blue">💰</div>
+                    <div class="metric-icon blue">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
                     <div class="metric-info">
                         <h3>R$ <?= number_format($resumoCards['faturamento_atual'] ?? 0, 2, ',', '.') ?></h3>
                         <p>
@@ -1214,16 +1473,29 @@ if (isset($_GET['logout'])) {
                             ?>
                         </p>
                     </div>
+
                 </div>
                 <div class="metric-card">
-                    <div class="metric-icon green">📦</div>
+                    <div class="metric-icon green">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
                     <div class="metric-info">
                         <h3>R$ <?= number_format($resumoCards['valor_estoque_total'] ?? 0, 2, ',', '.') ?></h3>
                         <p>Valor em estoque</p>
                     </div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-icon blue">🌱</div>
+                    <div class="metric-icon blue">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
                     <div class="metric-info">
                         <h3><?= $infoGerais['safras_ativas'] ?? 0 ?>/<?= $infoGerais['total_safras'] ?? 0 ?></h3>
                         <p>Safras ativas</p>
@@ -1259,7 +1531,14 @@ if (isset($_GET['logout'])) {
             <div class="bottom-section">
                 <!-- ESTOQUE POR CATEGORIA -->
                 <div class="bottom-card">
-                    <h3>📦 Estoque por Categoria</h3>
+                    <h3>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                        Estoque por Categoria
+                    </h3>
 
                     <?php if (!empty($estoqueCategoria)): ?>
 
@@ -1297,7 +1576,14 @@ if (isset($_GET['logout'])) {
 
                 <!-- SAFRAS DA PROPRIEDADE -->
                 <div class="bottom-card">
-                    <h3>🌱 Safras da Propriedade</h3>
+                    <h3>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                        Safras da Propriedade
+                    </h3>
                     <?php if (!empty($safrasPropriedade)): ?>
                         <div class="scrollable-container">
                             <?php foreach (array_slice($safrasPropriedade, 0, 5) as $safra): ?>
@@ -1339,7 +1625,16 @@ if (isset($_GET['logout'])) {
             <!-- MOVIMENTAÇÕES RECENTES -->
             <?php if (!empty($movimentacoes)): ?>
                 <div class="bottom-card movimentacoes-container">
-                    <h3>📋 Movimentações Recentes (30 dias)</h3>
+                    <h3>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14,2 14,8 20,8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10,9 9,9 8,9"></polyline>
+                        </svg>
+                        Movimentações Recentes (30 dias)
+                    </h3>
                     <div class="movimentacoes-scroll">
                         <?php foreach (array_slice($movimentacoes, 0, 8) as $mov): ?>
                             <div class="movimentacao-item">
@@ -1381,9 +1676,16 @@ if (isset($_GET['logout'])) {
                 </div>
             <?php endif; ?>
 
-            <!-- HISTÓRICO SIMPLES DE ENTRADAS E SAÍDAS -->
+
+            <!-- HISTÓRICO DETALHADO DE MOVIMENTAÇÕES -->
             <div class="historico-container">
-                <h3 class="historico-title">📊 Histórico de Entradas e Saídas</h3>
+                <h3 class="historico-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 3v18h18"></path>
+                        <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"></path>
+                    </svg>
+                    Histórico Detalhado de Movimentações (<?= count($historicoDetalhado) ?> encontradas)
+                </h3>
 
                 <!-- CARDS SIMPLES -->
                 <div class="historico-grid">
@@ -1416,34 +1718,64 @@ if (isset($_GET['logout'])) {
                     </div>
                 </div>
 
-                <!-- TABELA SIMPLES DO HISTÓRICO -->
-                <?php if (!empty($historicoEntradasSaidas)): ?>
+                <!-- TABELA DETALHADA DAS MOVIMENTAÇÕES -->
+                <?php if (!empty($historicoDetalhado)): ?>
                     <div class="table-overflow">
                         <table class="historico-table">
                             <thead>
                                 <tr>
-                                    <th>Período</th>
+                                    <th>Data/Hora</th>
                                     <th>Tipo</th>
-                                    <th>Movimentações</th>
+                                    <th>Descrição da Movimentação</th>
                                     <th>Quantidade</th>
+                                    <th>Valor</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($historicoEntradasSaidas as $historico): ?>
+                                <?php foreach ($historicoDetalhado as $mov): ?>
                                     <tr>
                                         <td>
-                                            <?= htmlspecialchars($historico['periodo_nome']) ?>
+                                            <div style="font-size: 12px; color: #666;">
+                                                <?= htmlspecialchars($mov['data_formatada']) ?>
+                                                <br>
+                                                <small><?= $mov['dias_atras'] ?> dias atrás</small>
+                                            </div>
                                         </td>
                                         <td>
-                                            <span class="historico-badge <?= $historico['tipo_movimentacao'] == 'ENTRADA' ? 'badge-entrada' : 'badge-saida' ?>">
-                                                <?= $historico['tipo_movimentacao'] == 'ENTRADA' ? '📈 ENTRADA' : '📉 SAÍDA' ?>
+                                            <span class="historico-badge <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? 'badge-entrada' : 'badge-saida' ?>">
+                                                <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? '📈 ENTRADA' : '📉 SAÍDA' ?>
                                             </span>
                                         </td>
                                         <td>
-                                            <?= $historico['total_movimentacoes'] ?>
+                                            <div style="max-width: 300px;">
+                                                <strong><?= htmlspecialchars($mov['item_nome']) ?></strong>
+                                                <br>
+                                                <small style="color: #666;">
+                                                    <?= htmlspecialchars($mov['categoria']) ?> • <?= htmlspecialchars($mov['safra_nome']) ?>
+                                                </small>
+                                                <?php if (!empty($mov['observacao'])): ?>
+                                                    <br>
+                                                    <small style="color: #888; font-style: italic;">
+                                                        "<?= htmlspecialchars($mov['observacao']) ?>"
+                                                    </small>
+                                                <?php endif; ?>
+                                            </div>
                                         </td>
-                                        <td>
-                                            <?= number_format($historico['quantidade_total'], 1) ?>
+                                        <td style="text-align: center;">
+                                            <span style="color: <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? '#28a745' : '#dc3545' ?>; font-weight: bold;">
+                                                <?= $mov['tipo_movimentacao'] == 'ENTRADA' ? '+' : '-' ?><?= number_format($mov['quantidade'], 2) ?>
+                                            </span>
+                                            <br>
+                                            <small style="color: #666;"><?= htmlspecialchars($mov['unidade_medida']) ?></small>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <?php if ($mov['valor_movimentacao'] > 0): ?>
+                                                <strong style="color: #1e472d;">
+                                                    R$ <?= number_format($mov['valor_movimentacao'], 2, ',', '.') ?>
+                                                </strong>
+                                            <?php else: ?>
+                                                <span style="color: #999;">-</span>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -1453,7 +1785,7 @@ if (isset($_GET['logout'])) {
                 <?php else: ?>
                     <div class="empty-state">
                         <div class="empty-state-icon">📊</div>
-                        <div>Nenhuma movimentação encontrada</div>
+                        <div>Nenhuma movimentação encontrada nos últimos 30 dias</div>
                     </div>
                 <?php endif; ?>
             </div>
@@ -1672,4 +2004,5 @@ if (isset($_GET['logout'])) {
     <?php endif; ?>
 </body>
 
+</html>
 </html>

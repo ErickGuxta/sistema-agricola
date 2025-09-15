@@ -160,6 +160,7 @@ final class ItemEstoqueController
             $validade       = trim($_POST['validade']       ?? '');
             $valor_unitario = trim($_POST['valor_unitario'] ?? '');
             $unidade_medida = trim($_POST['unidade_medida'] ?? 'UNIDADE');
+            $safra_id       = trim($_POST['safra_id']       ?? '');
 
             // Buscar categoria_id
             $categoriaDAO = new \app\dao\CategoriaDAO();
@@ -185,6 +186,7 @@ final class ItemEstoqueController
                 $model->validade       = empty($validade) ? null : $validade;
                 $model->valor_unitario = $valor_unitario;
                 $model->unidade_medida = $unidade_medida;
+                $model->safra_id       = $safra_id;
                 $model->atualizar();
                 header("Location: /sistema-agricola/app/estoque");
                 exit;

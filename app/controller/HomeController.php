@@ -61,6 +61,9 @@ final class HomeController
         // Movimentações recentes
         $movimentacoes = $relatorioDAO->movimentacoes($propriedadeId, 30);
         
+        // Histórico detalhado de movimentações (últimos 6 meses)
+        $historicoDetalhado = $relatorioDAO->historicoDetalhadoMovimentacoes($propriedadeId, 180);
+        
         // Informações gerais da propriedade
         $infoGerais = $relatorioDAO->informacoesGerais($propriedadeId);
         

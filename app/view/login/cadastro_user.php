@@ -92,28 +92,33 @@
       align-items: flex-start;
       gap: 48px;
     }
-    .container-register > div:first-child {
+
+    .container-register>div:first-child {
       flex: 3 1 420px;
       min-width: 340px;
       max-width: 600px;
     }
+
     .container-register .profile-pic-upload {
       flex: 0 1 100px;
       min-width: 100px;
       max-width: 140px;
       margin-top: 32px;
     }
+
     @media (max-width: 900px) {
       .container-register {
         flex-direction: column;
         gap: 24px;
         align-items: center;
       }
-      .container-register > div:first-child {
+
+      .container-register>div:first-child {
         width: 100%;
         max-width: 100%;
         min-width: 0;
       }
+
       .container-register .profile-pic-upload {
         margin-top: 0;
         min-width: 80px;
@@ -314,6 +319,7 @@
         gap: 15px;
       }
     }
+
     .profile-pic-upload {
       display: flex;
       flex-direction: column;
@@ -321,6 +327,7 @@
       margin-top: 10px;
       gap: 6px;
     }
+
     .profile-pic-label {
       cursor: pointer;
       width: 150px;
@@ -329,6 +336,7 @@
       align-items: center;
       gap: 6px;
     }
+
     .profile-pic-preview {
       width: 110px;
       height: 110px;
@@ -343,30 +351,36 @@
       position: relative;
       transition: border-color 0.2s;
     }
+
     .profile-pic-label:hover .profile-pic-preview {
       border-color: #1f5b3c;
     }
+
     .profile-pic-preview img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
+
     #profilePicPlaceholder {
       color: #888;
       font-size: 13px;
       text-align: center;
     }
+
     .profile-pic-instructions {
       font-size: 11px;
       color: #888;
       text-align: center;
       margin-top: 2px;
     }
+
     @media (max-width: 768px) {
       .profile-pic-label {
         width: 100px;
       }
+
       .profile-pic-preview {
         width: 80px;
         height: 80px;
@@ -392,7 +406,7 @@
           <img src="/sistema-agricola/app/view/img/image6.png" alt="Logo AgroMiz" class="logo-img">
           <h1 class="logo-title">AgroMiz</h1>
         </div>
-        <p class="subtitle">Boas-vindas ao FazendaGestor</p>
+        <p class="subtitle">Boas-vindas ao AgroMiz</p>
       </div>
 
       <h2>Registre-se</h2>
@@ -407,6 +421,7 @@
         <div class="container-register">
           <div>
             <label for="nome">Nome</label>
+
             <input type="text" id="nome" placeholder="Nome do proprietário" name="nome_produtor" required value="<?= isset($_POST['nome_produtor']) ? htmlspecialchars($_POST['nome_produtor']) : '' ?>">
 
             <label for="email">E-mail</label>
@@ -418,10 +433,12 @@
           <div class="profile-pic-upload">
             <label for="profileImage" class="profile-pic-label">
               <span>Foto de Perfil</span>
+
               <div class="profile-pic-preview" id="profilePicPreview">
-                <img src="/sistema-agricola/app/view/img/image5.png" alt="Pré-visualização" id="profilePicImg" class="hidden-image" />
-                <span id="profilePicPlaceholder">Clique para escolher</span>
+                <img src="/sistema-agricola/app/view/img/image9.jpg" alt="Pré-visualização" id="profilePicImg" class="hidden-image" />
+                <!-- <span id="profilePicPlaceholder">Clique para escolher</span> -->
               </div>
+
               <input type="file" name="image" id="profileImage" accept="image/*" class="hidden-input">
             </label>
             <small class="profile-pic-instructions">Formatos aceitos: JPG, PNG. Tamanho máximo: 2MB.</small>

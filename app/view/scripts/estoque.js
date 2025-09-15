@@ -10,9 +10,9 @@ function openCadastroModal() {
 }
 
 // Abrir modal de edição
-function openEditModal(id, nome, categoria, quantidade, estoque_minimo, preco, unidade_medida, data_validade) {
+function openEditModal(id, nome, categoria, quantidade, estoque_minimo, preco, unidade_medida, data_validade, safra_id) {
     // Remover alert de debug
-    console.log('openEditModal', id, nome, categoria, quantidade, estoque_minimo, preco, unidade_medida, data_validade);
+    console.log('openEditModal', id, nome, categoria, quantidade, estoque_minimo, preco, unidade_medida, data_validade, safra_id);
     // Preencher os campos
     document.getElementById("edit-product-id").value = id;
     document.getElementById("edit-nome").value = nome;
@@ -22,6 +22,7 @@ function openEditModal(id, nome, categoria, quantidade, estoque_minimo, preco, u
     document.getElementById("edit-preco").value = preco;
     document.getElementById("edit-unidade_medida").value = unidade_medida;
     document.getElementById("edit-data-validade").value = data_validade;
+    document.getElementById("edit-safra_id").value = safra_id;
     // Abrir modal
     const modal = document.getElementById("edit-modal-overlay");
     modal.classList.add("active");

@@ -73,7 +73,7 @@ final class ItemEstoqueDAO extends DAO
     {
         $sql =
             " UPDATE Item_Estoque
-              SET nome = ?, categoria_id = ?, estoque_atual = ?, estoque_minimo = ?, valor_unitario = ?, validade = ?, unidade_medida = ?
+              SET nome = ?, categoria_id = ?, estoque_atual = ?, estoque_minimo = ?, valor_unitario = ?, validade = ?, unidade_medida = ?, safra_id = ?
               WHERE id_item = ?";
 
         $stmt = parent::$conexao->prepare($sql);
@@ -85,7 +85,8 @@ final class ItemEstoqueDAO extends DAO
         $stmt->bindValue(5, $model->valor_unitario);
         $stmt->bindValue(6, empty($model->validade) ? null : $model->validade);
         $stmt->bindValue(7, $model->unidade_medida);
-        $stmt->bindValue(8, $model->id_item);
+        $stmt->bindValue(8, $model->safra_id);
+        $stmt->bindValue(9, $model->id_item);
 
         if ($stmt->execute()) {
             return $model;
