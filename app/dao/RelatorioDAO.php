@@ -108,12 +108,13 @@ final class RelatorioDAO extends DAO
 
     /**
      * 3. CONSULTA COM MÚLTIPLOS JOINS + GROUP BY + ORDER BY
-     * Junta 3 tabelas para agrupar estoque por categoria
+     * Junta 3 tabelas para agrupar estoque por categoria e unidade
      */
     public function valorEstoquePorCategoria(int $propriedadeId): array
     {
         $sql = "SELECT 
                     c.nome as categoria,
+                    ie.unidade_medida,
                     COUNT(ie.id_item) as total_itens,
                     SUM(ie.estoque_atual) as quantidade_total,
                     SUM(ie.estoque_atual * COALESCE(ie.valor_unitario, 0)) as valor_total,
@@ -124,8 +125,8 @@ final class RelatorioDAO extends DAO
                 INNER JOIN Safra s ON ie.safra_id = s.id_safra
                 WHERE s.propriedade_id = ?
                     AND ie.estoque_atual > 0
-                GROUP BY c.id_categoria, c.nome
-                ORDER BY valor_total DESC, c.nome ASC";
+                GROUP BY c.id_categoria, c.nome, ie.unidade_medida
+                ORDER BY valor_total DESC, c.nome ASC, ie.unidade_medida ASC";
 
         $stmt = parent::$conexao->prepare($sql);
         $stmt->bindValue(1, $propriedadeId);
@@ -133,6 +134,7 @@ final class RelatorioDAO extends DAO
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
 
     /**
      * Busca safras de uma propriedade com cálculos complexos e métricas de performance

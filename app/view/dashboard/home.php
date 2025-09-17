@@ -576,6 +576,52 @@ if (isset($_GET['logout'])) {
             display: block;
         }
 
+        /* Botão de menu mobile */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: var(--color-secondary);
+            transform: scale(1.05);
+        }
+
+        .mobile-menu-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Overlay para mobile */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .dashboard-section {
@@ -603,11 +649,12 @@ if (isset($_GET['logout'])) {
                 display: block;
             }
 
-            .sidebar {
+            .header-sidebar {
                 transform: translateX(-100%);
+                transition: transform 0.3s ease;
             }
 
-            .sidebar.active {
+            .header-sidebar.active {
                 transform: translateX(0);
             }
 
@@ -694,6 +741,7 @@ if (isset($_GET['logout'])) {
             .historico-number {
                 font-size: 24px;
             }
+
         }
 
         @media (max-width: 480px) {
@@ -1058,6 +1106,7 @@ if (isset($_GET['logout'])) {
             text-align: right;
         }
 
+
         .no-data-message {
             color: #999;
             text-align: center;
@@ -1371,6 +1420,18 @@ if (isset($_GET['logout'])) {
 </head>
 
 <body>
+    <!-- Botão de menu mobile -->
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- Overlay para mobile -->
+    <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+
     <div class="container">
         <!-- header -->
         <header class="header-sidebar">
@@ -1378,7 +1439,7 @@ if (isset($_GET['logout'])) {
             <nav class="perfil">
                 <div class="logo-circle profile-pic-preview" onclick="openProfileModal()">
                     <?php
-                    $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image9.jpg';
+                    $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image8.jpg';
                     ?>
                     <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" />
                     <span class="edit-icon">
@@ -1477,8 +1538,11 @@ if (isset($_GET['logout'])) {
                 </div>
                 <div class="metric-card">
                     <div class="metric-icon green">
+                        <!-- icon estoque -->
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
                             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            
                             <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
                             <line x1="12" y1="22.08" x2="12" y2="12"></line>
                         </svg>
@@ -1490,6 +1554,8 @@ if (isset($_GET['logout'])) {
                 </div>
                 <div class="metric-card">
                     <div class="metric-icon blue">
+                        <!-- icon safras ativas -->
+
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                             <path d="M2 17l10 5 10-5"></path>
@@ -1550,7 +1616,21 @@ if (isset($_GET['logout'])) {
                                         <strong><?= htmlspecialchars($categoria['categoria']) ?></strong>
                                         <br>
                                         <small>
-                                            <?= $categoria['total_itens'] ?> itens • <?= number_format($categoria['quantidade_total'], 1) ?> unidades
+                                            <?= $categoria['total_itens'] ?> itens • 
+                                            <?= number_format($categoria['quantidade_total'], 
+                                                $categoria['unidade_medida'] === 'SACA' ? 1 : 
+                                                (in_array($categoria['unidade_medida'], ['KG', 'L']) ? 2 : 0), 
+                                                ',', '.') ?> 
+                                            <?php
+                                            $formatacoes = [
+                                                'UNIDADE' => 'unid.',
+                                                'KG' => 'kg',
+                                                'L' => 'L',
+                                                'M' => 'm',
+                                                'SACA' => 'sacas'
+                                            ];
+                                            echo $formatacoes[$categoria['unidade_medida']] ?? strtolower($categoria['unidade_medida']);
+                                            ?>
                                         </small>
                                     </div>
                                     <div class="text-right">
@@ -1848,7 +1928,7 @@ if (isset($_GET['logout'])) {
 
                     <!-- Property Tab -->
                     <div id="property-tab" class="tab-content">
-                        <form id="propertyForm">
+                        <form id="propertyForm" method="POST" action="/sistema-agricola/app/propriedade/atualizar">
                             <div class="form-group">
                                 <label class="form-label">Nome da Propriedade</label>
                                 <input type="text" class="form-input" id="propertyName" name="nome_propriedade" placeholder="Digite o nome da propriedade">
@@ -1981,16 +2061,62 @@ if (isset($_GET['logout'])) {
                                     $propriedades = [];
                                     if (isset($_SESSION['usuario_id'])) {
                                         $propriedadeDAO = new \app\dao\PropriedadeDAO();
-                                        $propriedades = $propriedadeDAO->listarPorUsuario($_SESSION['usuario_id']);
+                                        $propriedadesObjects = $propriedadeDAO->listarPorUsuario($_SESSION['usuario_id']);
+                                        
+                                        // Converter objetos para arrays
+                                        foreach ($propriedadesObjects as $propriedade) {
+                                            $propriedades[] = [
+                                                'id_propriedade' => $propriedade->id_propriedade,
+                                                'usuario_id' => $propriedade->usuario_id,
+                                                'nome_propriedade' => $propriedade->nome_propriedade,
+                                                'area_total' => $propriedade->area_total,
+                                                'localizacao' => $propriedade->localizacao
+                                            ];
+                                        }
                                     }
                                     echo json_encode($propriedades);
                                     ?>;
     </script>
 
     <script src="/sistema-agricola/app/view/scripts/home.js"></script>
+    <script src="/sistema-agricola/app/view/scripts/test-simple.js"></script>
 
     <!-- Chart.js para o gráfico de faturamento -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- JavaScript para menu mobile -->
+    <script>
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.header-sidebar');
+            const overlay = document.querySelector('.mobile-overlay');
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.querySelector('.header-sidebar');
+            const overlay = document.querySelector('.mobile-overlay');
+            
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Fechar menu ao clicar em um link de navegação
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-item a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+        });
+
+        // Fechar menu ao redimensionar a tela para desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
+            }
+        });
+    </script>
 
     <?php if (!empty($dadosGrafico)): ?>
 

@@ -2,9 +2,16 @@
 
 // Modal functions
 function openProfileModal() {
-    document.getElementById('profileModal').style.display = 'block';
-    // Load current data (in a real application, this would come from the server)
-    loadCurrentData();
+    console.log('openProfileModal chamada');
+    const modal = document.getElementById('profileModal');
+    if (modal) {
+        modal.style.display = 'block';
+        console.log('Modal aberto');
+        // Load current data (in a real application, this would come from the server)
+        loadCurrentData();
+    } else {
+        console.error('Modal profileModal não encontrado!');
+    }
 }
 
 function closeProfileModal() {
@@ -13,6 +20,8 @@ function closeProfileModal() {
 
 // Tab switching
 function showTab(tabName) {
+    console.log('showTab chamada com:', tabName);
+    
     // Hide all tabs
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => tab.classList.remove('active'));
@@ -22,14 +31,50 @@ function showTab(tabName) {
     buttons.forEach(button => button.classList.remove('active'));
 
     // Show selected tab
-    document.getElementById(tabName + '-tab').classList.add('active');
+    const targetTab = document.getElementById(tabName + '-tab');
+    if (targetTab) {
+        targetTab.classList.add('active');
+        console.log('Tab', tabName, 'ativada');
+        
+        // Se for a tab de propriedade, recarregar os dados
+        if (tabName === 'property') {
+            console.log('Recarregando dados da propriedade...');
+            loadCurrentData();
+        }
+    } else {
+        console.error('Tab', tabName + '-tab', 'não encontrada!');
+    }
 
     // Add active class to clicked button
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
 }
 
 // Load current data (placeholder function)
 function loadCurrentData() {
+    console.log('loadCurrentData chamada');
+    console.log('window.sessionData:', window.sessionData);
+    console.log('window.propriedadesData:', window.propriedadesData);
+    
+    // Verificar se os dados existem
+    if (!window.sessionData) {
+        console.error('window.sessionData não existe!');
+        return;
+    }
+    
+    if (!window.propriedadesData) {
+        console.error('window.propriedadesData não existe!');
+        return;
+    }
+    
+    if (!Array.isArray(window.propriedadesData)) {
+        console.error('window.propriedadesData não é um array!', typeof window.propriedadesData);
+        return;
+    }
+    
+    console.log('Número de propriedades:', window.propriedadesData.length);
+    
     // In a real application, you would fetch this data from the server
     // For now, we'll use placeholder values
     const userName = document.getElementById('userName');
@@ -40,8 +85,12 @@ function loadCurrentData() {
     
     // Carregar dados da propriedade atualmente selecionada
     const currentPropertyId = window.sessionData?.propriedade_id || null;
+    console.log('ID da propriedade atual:', currentPropertyId);
+    
     if (currentPropertyId) {
         updatePropertyModalData(currentPropertyId);
+    } else {
+        console.log('Nenhuma propriedade selecionada');
     }
 }
 
@@ -82,19 +131,43 @@ document.getElementById('profileForm').addEventListener('submit', function(e) {
     }
 });
 
-document.getElementById('propertyForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+// Verificar se o formulário existe antes de adicionar o event listener
+const propertyForm = document.getElementById('propertyForm');
+if (propertyForm) {
+    console.log('Formulário propertyForm encontrado, adicionando event listener');
+    propertyForm.addEventListener('submit', function(e) {
+        console.log('Formulário de propriedade sendo enviado...');
+        
+        const area = document.getElementById('propertyArea').value;
+        console.log('Área:', area);
+        
+        if (area && area < 0) {
+            e.preventDefault();
+            alert('A área deve ser um valor positivo!');
+            return;
+        }
 
-    const area = document.getElementById('propertyArea').value;
-    if (area && area < 0) {
-        alert('A área deve ser um valor positivo!');
-        return;
-    }
+        // Validar se todos os campos obrigatórios estão preenchidos
+        const nome = document.getElementById('propertyName').value;
+        const estado = document.getElementById('propertyState').value;
+        const cidade = document.getElementById('propertyCity').value;
+        
+        console.log('Dados do formulário:', { nome, estado, cidade, area });
+        
+        if (!nome || !estado || !cidade || !area) {
+            e.preventDefault();
+            alert('Todos os campos são obrigatórios!');
+            console.log('Formulário bloqueado - campos obrigatórios não preenchidos');
+            return;
+        }
 
-    // Here you would send the data to the server
-    alert('Propriedade atualizada com sucesso!');
-    closeProfileModal();
-});
+        console.log('Formulário será enviado normalmente');
+        // Se chegou até aqui, permitir o envio do formulário
+        // O formulário será enviado normalmente via POST
+    });
+} else {
+    console.error('Formulário propertyForm NÃO encontrado!');
+}
 
 // Close modal when clicking outside
 window.addEventListener('click', function(event) {
@@ -172,7 +245,18 @@ function changeProperty(propriedadeId) {
 
 // Função para atualizar dados do modal com a propriedade selecionada
 function updatePropertyModalData(propriedadeId) {
+    console.log('updatePropertyModalData called with ID:', propriedadeId);
+    console.log('propriedadesData:', propriedadesData);
+    
+    // Verificar se propriedadesData existe e é um array
+    if (!propriedadesData || !Array.isArray(propriedadesData)) {
+        console.error('propriedadesData não é um array válido!', propriedadesData);
+        return;
+    }
+    
     const propriedade = propriedadesData.find(p => p.id_propriedade == propriedadeId);
+    console.log('Propriedade encontrada:', propriedade);
+    
     if (propriedade) {
         // Separar estado e cidade da localização
         let estado = '';
@@ -181,10 +265,45 @@ function updatePropertyModalData(propriedadeId) {
             [estado, cidade] = propriedade.localizacao.split(' - ');
         }
         
-        // Atualizar campos do modal de edição de propriedade
-        document.getElementById('propertyName').value = propriedade.nome_propriedade || '';
-        document.getElementById('propertyArea').value = propriedade.area_total || '';
-        document.getElementById('propertyState').value = estado;
-        document.getElementById('propertyCity').value = cidade;
+        console.log('Estado:', estado, 'Cidade:', cidade);
+        
+        // Verificar se os elementos existem antes de atualizar
+        const propertyName = document.getElementById('propertyName');
+        const propertyArea = document.getElementById('propertyArea');
+        const propertyState = document.getElementById('propertyState');
+        const propertyCity = document.getElementById('propertyCity');
+        
+        if (propertyName) {
+            propertyName.value = propriedade.nome_propriedade || '';
+            console.log('propertyName atualizado:', propertyName.value);
+        } else {
+            console.error('Elemento propertyName não encontrado!');
+        }
+        
+        if (propertyArea) {
+            propertyArea.value = propriedade.area_total || '';
+            console.log('propertyArea atualizado:', propertyArea.value);
+        } else {
+            console.error('Elemento propertyArea não encontrado!');
+        }
+        
+        if (propertyState) {
+            propertyState.value = estado;
+            console.log('propertyState atualizado:', propertyState.value);
+        } else {
+            console.error('Elemento propertyState não encontrado!');
+        }
+        
+        if (propertyCity) {
+            propertyCity.value = cidade;
+            console.log('propertyCity atualizado:', propertyCity.value);
+        } else {
+            console.error('Elemento propertyCity não encontrado!');
+        }
+        
+        console.log('Campos atualizados com sucesso');
+    } else {
+        console.log('Propriedade não encontrada!');
+        console.log('Propriedades disponíveis:', propriedadesData.map(p => ({ id: p.id_propriedade, nome: p.nome_propriedade })));
     }
 }

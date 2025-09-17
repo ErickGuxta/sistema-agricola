@@ -435,7 +435,7 @@
               <span>Foto de Perfil</span>
 
               <div class="profile-pic-preview" id="profilePicPreview">
-                <img src="/sistema-agricola/app/view/img/image9.jpg" alt="Pré-visualização" id="profilePicImg" class="hidden-image" />
+                <img src="/sistema-agricola/app/view/img/image8.jpg" alt="Pré-visualização" id="profilePicImg" class="hidden-image" />
                 <!-- <span id="profilePicPlaceholder">Clique para escolher</span> -->
               </div>
 

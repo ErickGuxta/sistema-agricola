@@ -30,6 +30,9 @@ switch ($url) {
     case 'registro-propriedade':
         PropriedadeController::index();
         break;
+    case 'propriedade/atualizar':
+        PropriedadeController::atualizar();
+        break;
     case 'dashboard':
         HomeController::index();
         break;

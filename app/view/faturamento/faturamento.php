@@ -541,16 +541,71 @@
             background: #a63540;
         }
 
+        /* Botão de menu mobile */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: var(--color-secondary);
+            transform: scale(1.05);
+        }
+
+        .mobile-menu-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Overlay para mobile */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
             .main-content {
                 margin-left: 0;
                 border-radius: 0;
-                padding: 20px;
+                padding: 80px 20px 20px;
             }
 
             .header-sidebar {
                 transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .header-sidebar.active {
+                transform: translateX(0);
             }
 
             .form-row {
@@ -574,13 +629,25 @@
 </head>
 
 <body>
+    <!-- Botão de menu mobile -->
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- Overlay para mobile -->
+    <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+
     <div class="container">
         <!-- Sidebar -->
         <header class="header-sidebar">
             <nav class="perfil">
                 <div class="logo-circle">
                     <?php
-                        $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image9.jpg';
+                        $fotoPerfil = isset($_SESSION['usuario_foto']) && $_SESSION['usuario_foto'] ? $_SESSION['usuario_foto'] : '/sistema-agricola/app/view/img/image8.jpg';
                     ?>
                     <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil" />
                 </div>
@@ -838,5 +905,39 @@
         window.dadosGraficoInicial = <?= json_encode($dadosGrafico ?? []) ?>;
     </script>
     <script src="/sistema-agricola/app/view/scripts/faturamento.js"></script>
+
+    <!-- JavaScript para menu mobile -->
+    <script>
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.header-sidebar');
+            const overlay = document.querySelector('.mobile-overlay');
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.querySelector('.header-sidebar');
+            const overlay = document.querySelector('.mobile-overlay');
+            
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Fechar menu ao clicar em um link de navegação
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-item a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+        });
+
+        // Fechar menu ao redimensionar a tela para desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
+            }
+        });
+    </script>
 </body>
 </html>

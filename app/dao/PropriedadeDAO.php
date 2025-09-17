@@ -68,4 +68,29 @@ final class PropriedadeDAO extends DAO
       }
       return $propriedades;
    }
+
+   public function atualizar(Propriedade $model) : bool
+   {
+      error_log("PropriedadeDAO::atualizar() chamado");
+      error_log("Dados do modelo: " . print_r($model, true));
+      
+      $sql = "UPDATE Propriedade SET nome_propriedade = ?, area_total = ?, localizacao = ? WHERE id_propriedade = ? AND usuario_id = ?";
+      error_log("SQL: " . $sql);
+      
+      $stmt = parent::$conexao->prepare($sql);
+      $stmt->bindValue(1, $model->nome_propriedade);
+      $stmt->bindValue(2, $model->area_total);
+      $stmt->bindValue(3, $model->localizacao);
+      $stmt->bindValue(4, $model->id_propriedade);
+      $stmt->bindValue(5, $model->usuario_id);
+      
+      $resultado = $stmt->execute();
+      error_log("Resultado da execução: " . ($resultado ? 'true' : 'false'));
+      
+      if (!$resultado) {
+          error_log("Erro na execução: " . print_r($stmt->errorInfo(), true));
+      }
+      
+      return $resultado;
+   }
 }
